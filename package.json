@@ -1,0 +1,32 @@
+{
+  "name": "redditc",
+  "version": "1.0.0",
+  "description": "Reddit Clone",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "p": "prettier -w .",
+    "lint": "next lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@chakra-ui/react": "^2.4.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "framer-motion": "^9.0.2",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "eslint": "^8.33.0",
+    "eslint-config-next": "^13.1.6",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
+  }
+}
