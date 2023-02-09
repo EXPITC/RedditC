@@ -1,27 +1,33 @@
-import { ComponentStyleConfig, extendTheme, ThemeComponents, ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, ThemeComponents, ThemeConfig } from "@chakra-ui/react";
+// import { mode } from "@chakra-ui/theme-tools";
+import { GlobalStyleProps } from "@chakra-ui/theme-tools/dist";
 import "@fontsource/open-sans/300.css"
 import "@fontsource/open-sans/400.css"
 import "@fontsource/open-sans/700.css"
 
 
 const config: ThemeConfig = {
-  initialColorMode: "light",
-  useSystemColorMode: true,
-};
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+}
 
-const styles = {
-  global: () => ({
+interface stylesType {
+  global: (props: GlobalStyleProps) => {};
+}
+const styles: stylesType = {
+  global: (props) => ({
     body: {
+      // bg: mode("#202023", "gray.200")(props),
       bg: "gray.200",
+      fontWeight: 'normal',
       color: 'black'
-    }
+    },
   })
 }
 
 
 const components: ThemeComponents = {
   Button: {
-
     baseStyle: {
       borderRadius: '60px',
       fontsize: '10pt',
@@ -62,13 +68,12 @@ const components: ThemeComponents = {
       oauth: {
         height: '34px',
         border: '1px solid',
-        borderRadius: 'gray.300',
+        borderColor: 'gray.300',
         _hover: {
           bg: 'gray.50'
         }
       }
     }
-
   }
 }
 
