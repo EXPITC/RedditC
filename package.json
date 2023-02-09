@@ -17,6 +17,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/open-sans": "^4.5.14",
+    "firebase": "^9.17.1",
     "framer-motion": "^9.0.2",
     "next": "^13.1.6",
     "react": "^18.2.0",
