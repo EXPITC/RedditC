@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react"
 import Logo from "./navbar/logo"
+import OAuthContent from "./navbar/oAuthContent"
 import SearchInput from "./navbar/searchInput"
 
 export default function Navbar() {
@@ -11,7 +12,8 @@ export default function Navbar() {
 
         {/* <Directory /> */}
         <SearchInput />
-        {/* <RightContent /> */}
+
+        <OAuthContent />
       </Flex>
     </nav>
   )

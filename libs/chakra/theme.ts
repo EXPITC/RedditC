@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { ComponentStyleConfig, extendTheme, ThemeComponents, ThemeConfig } from "@chakra-ui/react";
 import "@fontsource/open-sans/300.css"
 import "@fontsource/open-sans/400.css"
 import "@fontsource/open-sans/700.css"
@@ -18,11 +18,57 @@ const styles = {
   })
 }
 
-const components = {
+
+const components: ThemeComponents = {
   Button: {
-    // variant: {
-    //   ""
-    // }
+
+    baseStyle: {
+      borderRadius: '60px',
+      fontsize: '10pt',
+      fontWeight: 700,
+      _focus: {
+        boxShadow: "none",
+      }
+    },
+
+    sizes: {
+      sm: {
+        fontSize: '8pt'
+      },
+      md: {
+        fontSize: '10pt'
+      },
+    },
+
+    variants: {
+      solid: {
+        color: 'white',
+        bg: 'purple.500',
+        _hover: {
+          bg: 'purple.400'
+        },
+        _active: {
+          bg: 'purple.500'
+        }
+      },
+      outline: {
+        color: 'purple.500',
+        border: '1px solid',
+        borderColor: 'purple.500',
+        _hover: {
+          bg: 'purple.50'
+        }
+      },
+      oauth: {
+        height: '34px',
+        border: '1px solid',
+        borderRadius: 'gray.300',
+        _hover: {
+          bg: 'gray.50'
+        }
+      }
+    }
+
   }
 }
 
