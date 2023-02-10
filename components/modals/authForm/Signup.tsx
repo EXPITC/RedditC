@@ -1,22 +1,34 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { Button, Flex, Input, Text } from "@chakra-ui/react"
 import { useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import { auth } from '@/libs/firebase/clientApp'
+import FirebaseErrMsg from '@/libs/firebase/errors'
 
 
 
 export default function Login() {
   const setAuthModal = useSetRecoilState(authModalState)
+  const [createUserWithEmailAndPassword, _user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
   const [form, setForm] = useState({
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   })
-  const [confirmPassword, setConfirmPass] = useState('')
+  // Just Checking math password when confirm password have value
+  const passMatch = form.confirmPassword ? form.confirmPassword === form.password : true
 
+  const [err, setErr] = useState('')
 
-  const onSubmit = (e) => {
-
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (err) setErr('')
+    if (!passMatch) return setErr('Password do not match')
+    createUserWithEmailAndPassword(form.email, form.password)
+    if (error) setErr(FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' '))
   }
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     setForm(prev => ({
@@ -26,7 +38,7 @@ export default function Login() {
 
   }
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} method="post">
       <Input type="email"
         name="email" placeholder="Email"
         mb="2" onChange={onChange}
@@ -69,6 +81,7 @@ export default function Login() {
         required
         bg="gray.50"
         fontSize="10pt"
+        borderColor={!passMatch ? 'red' : 'transparent'}
         _placeholder={{ color: "gray.500", fontWeight: "bold" }}
         _hover={{
           bg: "white",
@@ -78,10 +91,13 @@ export default function Login() {
         _focus={{
           boxShadow: "none",
           outline: "none",
-          borderColor: "purple.500"
+          borderColor: !passMatch ? 'red' : 'purple.500'
         }}
       />
-      <Button w="full" type="submit">Continue</Button>
+      {err &&
+        <Text textAlign="center" color="red" mb="2" fontWeight="500" fontSize="10pt">{err}</Text>
+      }
+      <Button w="full" type="submit" isLoading={loading}>Continue</Button>
       <Flex fontSize="9pt" my="2" justifyContent="center">
         <Text mr="1">Already a redditor?</Text>
         <Text color="purple.500"

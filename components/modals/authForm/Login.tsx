@@ -1,18 +1,24 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { Button, Flex, Input, Text } from "@chakra-ui/react"
 import { useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
-
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import FirebaseErrMsg from '@/libs/firebase/errors'
+import { auth } from '@/libs/firebase/clientApp'
 
 
 export default function Login() {
   const setAuthModal = useSetRecoilState(authModalState)
+  const [signInWithEmailAndPassword, _user, loading, error] = useSignInWithEmailAndPassword(auth)
   const [form, setForm] = useState({
     email: '',
     password: ''
   })
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    signInWithEmailAndPassword(form.email, form.password)
 
   }
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +67,10 @@ export default function Login() {
           borderColor: "purple.500"
         }}
       />
-      <Button w="full" type="submit">Login</Button>
+      <Button w="full" type="submit" isLoading={loading}>Login</Button>
+      {error &&
+        <Text fontSize="9pt" color="red" textAlign="center" mt="2">{FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' ')}</Text>
+      }
       <Flex fontSize="9pt" my="2" justifyContent="center">
         <Text mr="1">New here?</Text>
         <Text color="purple.500"
