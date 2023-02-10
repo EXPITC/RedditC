@@ -1,11 +1,11 @@
 import { authModalState } from "@/libs/atoms/authModalAtoms";
 import { auth } from "@/libs/firebase/clientApp";
-import { Flex, Modal, Text, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Divider, Box } from "@chakra-ui/react";
+import { Flex, Modal, Text, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Divider } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
-import AuthForm from "./authForm";
-import OAuthButton from "./oAuthButton";
+import AuthForm from "./authModal/authForm";
+import OAuthButton from "./authModal/oAuthButton";
 
 
 
@@ -37,6 +37,7 @@ export default function AuthModal() {
             display="flex" alignItems="center" justifyContent="center"
           >
             <Flex direction="column" align="center" justify="center" width="70%">
+
               <OAuthButton />
               <Flex my="5" w="full" justify="center" align="center" >
                 <Divider bg="gray.300" />

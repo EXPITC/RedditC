@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { Button, Flex, Input, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Input, Text } from "@chakra-ui/react"
 import { useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
@@ -71,12 +71,20 @@ export default function Login() {
       {error &&
         <Text fontSize="9pt" color="red" textAlign="center" mt="2">{FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' ')}</Text>
       }
-      <Flex fontSize="9pt" my="2" justifyContent="center">
-        <Text mr="1">New here?</Text>
-        <Text color="purple.500"
-          cursor="pointer" fontWeight="700"
-          onClick={() => setAuthModal({ open: true, view: 'Sign Up' })}>SIGN UP</Text>
-      </Flex>
+      <Box fontSize="9pt" my="2">
+        <Flex justify="center">
+          <Text mr="1">Forget your</Text>
+          <Text color="purple.500"
+            cursor="pointer" fontWeight="700"
+            onClick={() => { }}>password ?</Text>
+        </Flex>
+        <Flex justify="center">
+          <Text mr="1">New here?</Text>
+          <Text color="purple.500"
+            cursor="pointer" fontWeight="700"
+            onClick={() => setAuthModal({ open: true, view: 'Sign Up' })}>SIGN UP</Text>
+        </Flex>
+      </Box>
     </form>
   )
 }
