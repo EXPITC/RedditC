@@ -1,9 +1,9 @@
 import AuthModal from '@/components/modals/authModal'
 import { Flex } from '@chakra-ui/react'
-import AuthButtons from './oAuthContent/authButton'
+import AuthButtons from './rightContents/authButton'
 
 
-export default function OAuthContent() {
+export default function rightContents() {
 
   return (
     <>
