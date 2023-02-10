@@ -5,4 +5,6 @@ const FirebaseErrMsg = {
   'Firebase: Error (auth/user-not-found).': 'Invalid email or password',
 }
 
+// https://firebase.google.com/docs/reference/js/auth#autherrorcodes
+
 export default FirebaseErrMsg
