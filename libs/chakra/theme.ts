@@ -39,6 +39,9 @@ const components: ThemeComponents = {
       },
       _hover: {
         bg: 'purple.50'
+      },
+      _active: {
+        opacity: 0.5
       }
     },
 
