@@ -3,6 +3,8 @@ import { extendTheme, ThemeComponents, ThemeConfig } from "@chakra-ui/react";
 import { GlobalStyleProps } from "@chakra-ui/theme-tools/dist";
 import "@fontsource/open-sans/300.css"
 import "@fontsource/open-sans/400.css"
+import "@fontsource/open-sans/500.css"
+import "@fontsource/open-sans/600.css"
 import "@fontsource/open-sans/700.css"
 
 
@@ -19,7 +21,7 @@ const styles: stylesType = {
     body: {
       // bg: mode("#202023", "gray.200")(props),
       bg: "gray.200",
-      fontWeight: 'normal',
+      fontWeight: 500,
       color: 'black'
     },
   })
@@ -34,6 +36,9 @@ const components: ThemeComponents = {
       fontWeight: 700,
       _focus: {
         boxShadow: "none",
+      },
+      _hover: {
+        bg: 'purple.50'
       }
     },
 
@@ -66,9 +71,10 @@ const components: ThemeComponents = {
         }
       },
       oauth: {
-        height: '34px',
+        height: '40px',
         border: '1px solid',
         borderColor: 'gray.300',
+        fontWeight: 600,
         _hover: {
           bg: 'gray.50'
         }
