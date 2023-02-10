@@ -1,9 +1,12 @@
+import { auth } from "@/libs/firebase/clientApp"
 import { Flex } from "@chakra-ui/react"
+import { useAuthState } from "react-firebase-hooks/auth"
 import Logo from "./navbar/logo"
 import RightContents from "./navbar/rightContents"
 import SearchInput from "./navbar/searchInput"
 
 export default function Navbar() {
+  const [user, loading, error] = useAuthState(auth)
 
   return (
     <nav>
@@ -13,7 +16,7 @@ export default function Navbar() {
         {/* <Directory /> */}
         <SearchInput />
 
-        <RightContents />
+        <RightContents user={user} />
       </Flex>
     </nav>
   )
