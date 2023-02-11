@@ -21,11 +21,12 @@ export default function Login() {
 
   const [err, setErr] = useState('')
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (err) setErr('')
+
     if (!passMatch) return setErr('Password do not match')
-    createUserWithEmailAndPassword(form.email, form.password)
+    await createUserWithEmailAndPassword(form.email, form.password)
     if (error) setErr(FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' '))
   }
 

@@ -14,12 +14,14 @@ export default function Login() {
     email: '',
     password: ''
   })
+  const [err, setErr] = useState('')
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (err) setErr('')
 
-    signInWithEmailAndPassword(form.email, form.password)
-
+    await signInWithEmailAndPassword(form.email, form.password)
+    if (error) setErr(FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' '))
   }
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -68,15 +70,15 @@ export default function Login() {
         }}
       />
       <Button w="full" type="submit" isLoading={loading}>Login</Button>
-      {error &&
-        <Text fontSize="9pt" color="red" textAlign="center" mt="2">{FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] || error.message.split('/')[1].split(')')[0].replace('-', ' ')}</Text>
+      {err &&
+        <Text fontSize="9pt" color="red" textAlign="center" mt="2">{err}</Text>
       }
       <Box fontSize="9pt" my="2">
         <Flex justify="center">
           <Text mr="1">Forget your</Text>
           <Text color="purple.500"
             cursor="pointer" fontWeight="700"
-            onClick={() => { }}>password ?</Text>
+            onClick={() => setAuthModal({ open: true, view: 'Reset Password' })}>password ?</Text>
         </Flex>
         <Flex justify="center">
           <Text mr="1">New here?</Text>
