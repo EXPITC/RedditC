@@ -13,23 +13,23 @@ export default function IconsDecoration() {
       <Flex display={['none', 'none', 'flex']} align="center"
         borderRight="1px solid" borderColor="gray.200"
       >
-        <Button variant="icon" >
+        <Button variant="iconList" >
           <BsArrowUpRightCircle />
         </Button>
-        <Button variant="icon" >
+        <Button variant="iconList" >
           <IoFilter />
         </Button>
-        <Button variant="icon" >
+        <Button variant="iconList" >
           <IoVideocamOutline />
         </Button>
       </Flex>
-      <Button variant="icon" >
+      <Button variant="iconList" >
         <TbMessageCircle />
       </Button>
-      <Button variant="icon" >
+      <Button variant="iconList" >
         <TfiBell />
       </Button>
-      <Button variant="icon" >
+      <Button variant="iconList" >
         <AiOutlinePlus />
       </Button>
     </Flex >

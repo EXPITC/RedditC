@@ -84,6 +84,22 @@ const components: ThemeComponents = {
       },
       icon: {
         bg: 'transparent',
+        h: "35px",
+        padding: 'unset',
+        fontSize: '20px',
+        color: 'gray.500',
+        border: "1px solid",
+        borderColor: 'gray.100',
+        paddingLeft: "15px",
+        paddingRight: "15px",
+        borderRadius: '3px',
+        _hover: {
+          bg: 'gray.50',
+          borderColor: 'gray.200'
+        }
+      },
+      iconList: {
+        bg: 'transparent',
         padding: 'unset',
         fontSize: '20px',
         color: 'gray.500',

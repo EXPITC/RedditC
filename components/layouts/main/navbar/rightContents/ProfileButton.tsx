@@ -12,7 +12,7 @@ export default function ProfileButton() {
 
   return (
     <Menu>
-      <MenuButton as={Button} variant="icon" h="35px" border="1px solid" borderColor="gray.100" px="15px" borderRadius="3px" _hover={{ bg: 'gray.50', borderColor: 'gray.200' }}>
+      <MenuButton as={Button} variant="icon" >
         {user ?
           <Flex align="center" justify="space-between">
             <Flex>
