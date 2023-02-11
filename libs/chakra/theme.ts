@@ -81,6 +81,15 @@ const components: ThemeComponents = {
         _hover: {
           bg: 'gray.50'
         }
+      },
+      icon: {
+        bg: 'transparent',
+        padding: 'unset',
+        fontSize: '20px',
+        borderRadius: '5px',
+        _hover: {
+          bg: 'gray.100',
+        }
       }
     }
   }
