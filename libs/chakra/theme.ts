@@ -86,7 +86,7 @@ const components: ThemeComponents = {
         bg: 'transparent',
         padding: 'unset',
         fontSize: '20px',
-        color: 'gray.600',
+        color: 'gray.500',
         borderRadius: '5px',
         _hover: {
           bg: 'gray.100',
