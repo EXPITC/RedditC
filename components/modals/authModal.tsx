@@ -6,6 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import AuthForm from "./authModal/authForm";
 import OAuthButton from "./authModal/oAuthButton";
+import ResetPassword from "./authModal/resetPassword";
 
 
 
@@ -30,22 +31,26 @@ export default function AuthModal() {
       <Modal isOpen={modalState.open} onClose={handleClose}>
 
         <ModalOverlay />
-        <ModalContent bg="white" >
-          <ModalHeader textAlign="center">{modalState.view}</ModalHeader>
+        <ModalContent bg="white" py="4" display="flex" alignItems="center" justifyContent="center">
+          {modalState.view != 'Reset Password' &&
+            <ModalHeader textAlign="center">{modalState.view}</ModalHeader>
+          }
           <ModalCloseButton color="gray.400" />
           <ModalBody
             display="flex" alignItems="center" justifyContent="center"
           >
-            <Flex direction="column" align="center" justify="center" width="70%">
-
-              <OAuthButton />
-              <Flex my="5" w="full" justify="center" align="center" >
-                <Divider bg="gray.300" />
-                <Text fontSize="11pt" mx="4" color="gray.500" fontWeight="bold">OR</Text>
-                <Divider bg="gray.300" />
-              </Flex>
-              <AuthForm />
-              {/* <AuthInput /> */}
+            <Flex direction="column" align="center" justify="center" w="70%">
+              {modalState.view === 'Reset Password' ? <ResetPassword /> :
+                <>
+                  <OAuthButton />
+                  <Flex my="5" w="full" justify="center" align="center" >
+                    <Divider bg="gray.300" />
+                    <Text fontSize="11pt" mx="4" color="gray.500" fontWeight="bold">OR</Text>
+                    <Divider bg="gray.300" />
+                  </Flex>
+                  <AuthForm />
+                </>
+              }
             </Flex>
           </ModalBody>
         </ModalContent>
