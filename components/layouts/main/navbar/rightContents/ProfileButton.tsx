@@ -23,12 +23,14 @@ export default function ProfileButton() {
                     src="/images/redditProfileHead.png" width={90} height={90} alt="reddit profile" />
                 </Flex>
               </Box>
-              <Flex flexDirection="column" justify="space-between" py="0.5" textAlign="left" >
+              <Flex flexDirection="column" display={['none', 'none', 'none', 'flex']} justify="space-between" py="0.5" textAlign="left" >
                 <Text fontSize="8pt">{user?.displayName || user.email?.split('@')[0]}</Text>
                 <Text fontSize="7pt">This karma</Text>
               </Flex>
             </Flex>
-            <BsChevronDown fontSize="10pt" style={{ marginLeft: '50px' }} />
+            <Box ml={[0, 0, 0, '50px']} >
+              <BsChevronDown fontSize="10pt" />
+            </Box>
           </Flex>
           :
           <Flex align="center" >
