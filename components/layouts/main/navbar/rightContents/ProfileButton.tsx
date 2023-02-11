@@ -17,7 +17,7 @@ export default function ProfileButton() {
           <Flex align="center" justify="space-between">
             <Flex>
               <Box >
-                <Flex position="relative">
+                <Flex position="relative" mr="1">
                   <Box position="relative" w="30px" h="30.9px" borderRadius="full" bg="blackAlpha.200" />
                   <Image style={{ position: 'absolute' }}
                     src="/images/redditProfileHead.png" width={90} height={90} alt="reddit profile" />
