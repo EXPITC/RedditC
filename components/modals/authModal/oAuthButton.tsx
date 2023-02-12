@@ -1,5 +1,6 @@
 import { auth } from "@/libs/firebase/clientApp";
 import FirebaseErrMsg from "@/libs/firebase/errors";
+import storeAccToFirestore from "@/libs/firebase/storeAccToFirestore";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -7,8 +8,8 @@ import { useSignInWithApple, useSignInWithGoogle } from 'react-firebase-hooks/au
 
 
 export default function OAuthButton() {
-  const [signInWithGoogle, _userGoogle, loadingGoogle, errorGoogle] = useSignInWithGoogle(auth)
-  const [signInWithApple, _userApple, loadingApple, errorApple] = useSignInWithApple(auth);
+  const [signInWithGoogle, userGoogle, loadingGoogle, errorGoogle] = useSignInWithGoogle(auth)
+  const [signInWithApple, userApple, loadingApple, errorApple] = useSignInWithApple(auth);
   const [err, setErr] = useState('')
 
   const handleClick = (platform: 'google' | 'apple') => {
@@ -26,6 +27,13 @@ export default function OAuthButton() {
       setErr(oAuthErr)
     }
   }, [errorApple, errorGoogle])
+
+  useEffect(() => {
+    const user = userApple || userGoogle
+
+    if (user) storeAccToFirestore(user.user)
+
+  }, [userApple, userGoogle])
 
 
   return (

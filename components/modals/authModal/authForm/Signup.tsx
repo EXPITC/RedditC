@@ -1,16 +1,17 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Button, Flex, Input, Text } from "@chakra-ui/react"
 import { useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { auth } from '@/libs/firebase/clientApp'
 import FirebaseErrMsg from '@/libs/firebase/errors'
+import storeAccToFirestore from '@/libs/firebase/storeAccToFirestore'
 
 
 
 export default function Login() {
   const setAuthModal = useSetRecoilState(authModalState)
-  const [createUserWithEmailAndPassword, _user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -38,6 +39,12 @@ export default function Login() {
     }))
 
   }
+
+  useEffect(() => {
+    if (user) storeAccToFirestore(user.user)
+
+  }, [user])
+
   return (
     <form onSubmit={onSubmit} method="post">
       <Input type="email"
