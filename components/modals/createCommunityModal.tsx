@@ -1,5 +1,8 @@
+import { auth } from "@/libs/firebase/clientApp";
+import createCommunity from "@/libs/firebase/createCommunity";
 import { Button, Stack, Radio, Text, ModalFooter, ModalOverlay, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Flex, Divider, Box, Input, RadioGroup } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FaRegEye, FaUser } from "react-icons/fa";
 
@@ -9,8 +12,10 @@ interface props {
 }
 
 export default function CreateComunityModal({ isOpen, onClose }: props) {
+  const [user] = useAuthState(auth)
   const [communityName, setCommunityName] = useState('')
   const [type, setType] = useState('Public')
+  const [loading, setLoading] = useState(false)
   const [err, setErr] = useState('')
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,12 +24,17 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
     setCommunityName(e.target.value)
   }
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+    if (err) setErr('')
+
     const regex = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/
     if (regex.test(communityName) || communityName.length < 3)
       return setErr('Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.')
 
-    setErr('')
+    setLoading(true)
+    const fail = await createCommunity(communityName, type, user)
+    if (fail) setErr(fail)
+    setLoading(false)
   }
 
   return (
@@ -106,7 +116,7 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
             <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="solid" onClick={handleCreate}>Create Community</Button>
+            <Button variant="solid" onClick={handleCreate} isLoading={loading}>Create Community</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
