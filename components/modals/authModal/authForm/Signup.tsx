@@ -41,7 +41,7 @@ export default function Login() {
   }
 
   useEffect(() => {
-    if (user) storeAccToFirestore(user.user, true)
+    if (user) storeAccToFirestore(user.user)
 
   }, [user])
 
