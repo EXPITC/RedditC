@@ -1,18 +1,43 @@
+import Header from "@/components/r/header"
+import getComunnityData from "@/libs/firebase/comunnityData"
+import { GetServerSideProps } from "next"
 
+interface serverProps extends GetServerSideProps {
+  params: {
+    comunnityID: string
+  }
+}
 
-export const getServerSideProps = ({ params: { comunnityID } }: { params: { comunnityID: string } }) => {
+export const getServerSideProps = async ({ params: { comunnityID } }: serverProps) => {
+
+  const comunnityData = await getComunnityData(comunnityID)
 
   return {
     props: {
-      comunnityID
+      comunnityData
     }
   }
 }
 
+interface comunnityData {
+  comunnityData: {
+    id: string,
+    comunnityName: string,
+    createdAt: {
+      seconds: number,
+      nanoseconds: number
+    },
+    creatorId: string,
+    numberOfmember: number
+  }
+}
 
-export default function CommunityPage({ comunnityID }: { comunnityID: string }) {
+export default function ComunnityPage({ comunnityData }: comunnityData) {
 
   return (
-    <h1>Welcome to {comunnityID}</h1>
+    <>
+      <Header comunnityID={comunnityData.id} comunnityName={comunnityData.comunnityName} />
+      <h1> Welcome to {comunnityData.comunnityName}</h1>
+    </>
   )
 }
