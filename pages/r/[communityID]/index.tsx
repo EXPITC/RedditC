@@ -1,3 +1,4 @@
+import ContentLayouts from "@/components/layouts/content"
 import PageR404 from "@/components/r/404"
 import Header from "@/components/r/header"
 import getcommunityData from "@/libs/firebase/communityData"
@@ -39,7 +40,14 @@ export default function communityPage({ communityData }: communityData) {
   return (
     <>
       <Header communityID={communityData.id} communityName={communityData.communityName} />
-      <h1> Welcome to {communityData.communityName}</h1>
+      <ContentLayouts>
+        <>
+          <h3>Middle</h3>
+        </>
+        <>
+          <h3>Info</h3>
+        </>
+      </ContentLayouts>
     </>
   )
 }
