@@ -2,15 +2,15 @@ import { doc, getDoc, DocumentData } from "firebase/firestore"
 import { firestore } from "./clientApp"
 import collections from "./firestoreCollectionsID"
 
-const getComunnityData = async (comunnityID: string): Promise<DocumentData | false> => {
+const getcommunityData = async (communityID: string): Promise<DocumentData | false> => {
 
-  const comunnityRef = doc(firestore, collections.COMUNNITIES.id, comunnityID)
+  const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID)
   try {
-    const comunnityData = await getDoc(comunnityRef)
-    if (!comunnityData.exists()) return false
+    const communityData = await getDoc(communityRef)
+    if (!communityData.exists()) return false
 
 
-    const _ = comunnityData.data()
+    const _ = communityData.data()
     return {
       ..._,
       // Serialize time stamp from fire store double object timestamp signature firestore cannot be parse so we need to break down the seconds and nanoscond
@@ -25,4 +25,4 @@ const getComunnityData = async (comunnityID: string): Promise<DocumentData | fal
 }
 
 
-export default getComunnityData
+export default getcommunityData

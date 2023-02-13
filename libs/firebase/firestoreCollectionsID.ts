@@ -1,16 +1,16 @@
 // This exits to globalize the collections and prevent typo under the string hood
-const COMUNNITIES = 'comunnities'
+const COMMUNITIES = 'communities'
 const USERS = 'users'
-const COMUNNITYSUBS = 'comunnitySubs'
+const COMMUNITYSUBS = 'communitySubs'
 
 const collections = {
-  COMUNNITIES: {
-    id: COMUNNITIES
+  COMMUNITIES: {
+    id: COMMUNITIES
   },
   USERS: {
     id: USERS,
-    COMUNNITYSUBS: {
-      id: COMUNNITYSUBS
+    COMMUNITYSUBS: {
+      id: COMMUNITYSUBS
     }
   }
 }
