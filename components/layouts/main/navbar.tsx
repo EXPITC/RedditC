@@ -11,7 +11,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <Flex bg="white" h="47px" p="3px 20px" align="center" justifyContent="space-between">
+      <Flex bg="white" h="47px" p={["3px 2px", "3px 10px", "3px 15px", "3px 20px"]} align="center" justifyContent="space-between">
         <Logo />
 
         {user && <CommunityHome />}

@@ -1,5 +1,5 @@
 import { auth } from "@/libs/firebase/clientApp";
-import createCommunity from "@/libs/firebase/createComunnity";
+import createCommunity from "@/libs/firebase/createCommunity";
 import { Button, Stack, Radio, Text, ModalFooter, ModalOverlay, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Flex, Divider, Box, Input, RadioGroup } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";

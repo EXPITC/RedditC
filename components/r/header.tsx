@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { useState } from "react"
 
 interface props {
-  comunnityID: string,
-  comunnityName: string
+  communityID: string,
+  communityName: string
 }
 
 const ButtonHeader = ({ join = false }: { join: boolean }) => {
@@ -29,7 +29,7 @@ const ButtonHeader = ({ join = false }: { join: boolean }) => {
   )
 }
 
-const Header = ({ comunnityID, comunnityName }: props) => {
+const Header = ({ communityID, communityName }: props) => {
 
   const user = {
     join: true
@@ -38,7 +38,7 @@ const Header = ({ comunnityID, comunnityName }: props) => {
   return (
     <>
       <Head>
-        <title>{`${comunnityName}`}</title>
+        <title>{`${communityName}`}</title>
       </Head>
       <Box height="164px" >
         <Box bg="purple.500" h="50%" w="full" />
@@ -52,8 +52,8 @@ const Header = ({ comunnityID, comunnityName }: props) => {
             </Box>
             <Flex pl="16px" mt="24px">
               <Flex direction="column" pr="24px">
-                <Text fontWeight="800" fontSize="16pt">{comunnityName}</Text>
-                <Text fontWeight="600" fontSize="10pt" color="gray.500">r/{comunnityID}</Text>
+                <Text fontWeight="800" fontSize="16pt">{communityName}</Text>
+                <Text fontWeight="600" fontSize="10pt" color="gray.500">r/{communityID}</Text>
               </Flex>
               <ButtonHeader join={user.join} />
             </Flex>
