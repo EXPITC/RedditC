@@ -17,9 +17,7 @@ export default function Main({ children }: props) {
       <Box as="main">
         <Navbar />
 
-        <Container>
-          {children}
-        </Container>
+        {children}
 
         {/* <Footer /> */}
       </Box>
