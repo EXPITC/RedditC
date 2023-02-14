@@ -39,7 +39,7 @@ export default function communityPage({ communityData }: communityData) {
 
   return (
     <>
-      <Header communityID={communityData.id} communityName={communityData.communityName} />
+      <Header communityId={communityData.id} communityName={communityData.communityName} />
       <ContentLayouts>
         <>
           <h3>Middle</h3>
