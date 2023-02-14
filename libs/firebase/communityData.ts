@@ -1,4 +1,5 @@
-import { doc, getDoc, DocumentData } from "firebase/firestore"
+import { doc, getDoc, DocumentData, getDocs, collection } from "firebase/firestore"
+import { communitySubsCollection } from "../atoms/communitiesAtoms"
 import { firestore } from "./clientApp"
 import collections from "./firestoreCollectionsID"
 
@@ -24,5 +25,10 @@ const getcommunityData = async (communityID: string): Promise<DocumentData | fal
   }
 }
 
+const getUserCommunitySubs = async (userId: string) => {
+  const subsDoc = await getDocs(collection(firestore, `${collections.USERS.id}/${userId}/${collections.USERS.COMMUNITYSUBS.id}`))
 
-export default getcommunityData
+  return subsDoc.docs.map(doc => ({ ...doc.data() })) as communitySubsCollection
+}
+
+export { getcommunityData as default, getUserCommunitySubs }

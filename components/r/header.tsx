@@ -1,39 +1,39 @@
+import useCommunityData from "@/libs/hooks/useCommunityData"
 import { Box, Button, Flex, Text } from "@chakra-ui/react"
 import Head from "next/head"
 import Image from 'next/image'
 import { useState } from "react"
 
-interface props {
-  communityID: string,
+interface HeaderProps {
+  communityId: string,
   communityName: string
 }
 
-const ButtonHeader = ({ join = false }: { join: boolean }) => {
+interface ButtonHeaderProps {
+  isJoin: boolean,
+  loading: boolean,
+  handleClick: () => void
+}
+
+const ButtonHeader = ({ isJoin = false, loading, handleClick }: ButtonHeaderProps) => {
   const [joined, setJoined] = useState('Joined')
 
-  const handleOnClick = () => {
-    if (join) return console.log('Leave')
-    console.log('Join')
-
-  }
   return (
-    <Button variant={join ? 'outline' : 'solid'}
+    <Button onClick={handleClick} isLoading={loading}
       fontWeight="700" fontSize="11pt"
       minWidth="32px" maxHeight="32px" w="96px"
-      onClick={handleOnClick}
-      onMouseEnter={() => join ? setJoined('Leave') : null}
-      onMouseLeave={() => join ? setJoined('Joined') : null}
+
+      variant={isJoin ? 'outline' : 'solid'}
+      onMouseEnter={() => isJoin ? setJoined('Leave') : null}
+      onMouseLeave={() => isJoin ? setJoined('Joined') : null}
     >
-      {join ? joined : 'Join'}
+      {isJoin ? joined : 'Join'}
     </Button>
   )
 }
 
-const Header = ({ communityID, communityName }: props) => {
-
-  const user = {
-    join: true
-  }
+const Header = ({ communityId, communityName }: HeaderProps) => {
+  const { isJoin, joinOrleaveCommunity, loading } = useCommunityData({ communityId, communityName })
 
   return (
     <>
@@ -53,9 +53,9 @@ const Header = ({ communityID, communityName }: props) => {
             <Flex pl="16px" mt="24px">
               <Flex direction="column" pr="24px">
                 <Text fontWeight="800" fontSize="16pt">{communityName}</Text>
-                <Text fontWeight="600" fontSize="10pt" color="gray.500">r/{communityID}</Text>
+                <Text fontWeight="600" fontSize="10pt" color="gray.500">r/{communityId}</Text>
               </Flex>
-              <ButtonHeader join={user.join} />
+              <ButtonHeader isJoin={isJoin} loading={loading} handleClick={joinOrleaveCommunity} />
             </Flex>
           </Flex>
         </Flex>
