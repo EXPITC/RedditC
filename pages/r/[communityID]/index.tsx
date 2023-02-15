@@ -1,6 +1,7 @@
 import ContentLayouts from "@/components/layouts/content"
 import PageR404 from "@/components/r/404"
 import Header from "@/components/r/header"
+import LinkPost from "@/components/r/linkPost"
 import getcommunityData from "@/libs/firebase/communityData"
 import { GetServerSideProps } from "next"
 
@@ -42,7 +43,7 @@ export default function communityPage({ communityData }: communityData) {
       <Header communityId={communityData.id} communityName={communityData.communityName} />
       <ContentLayouts>
         <>
-          <h3>Middle</h3>
+          <LinkPost />
         </>
         <>
           <h3>Info</h3>
