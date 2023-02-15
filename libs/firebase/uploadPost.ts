@@ -13,6 +13,9 @@ const uploadPost = async ({ newPost, imgUrl }: uploadPostProps) => {
   try {
     const collectionPostPath = collection(firestore, collections.POSTS.id)
     const postRef = await addDoc(collectionPostPath, newPost)
+    await updateDoc(postRef, {
+      id: postRef.id
+    })
 
     if (!imgUrl) return
     const collectionPostImgPath = `${collections.POSTS.id}/${postRef.id}/image`

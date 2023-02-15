@@ -70,7 +70,7 @@ const PostForm = ({ user }: PostForm) => {
 
     const { communityID } = router.query
     const post: Post = {
-      id: 'heck',
+      id: '',
       communityId: communityID as string,
       creatorId: user!.uid,
       creatorName: user!.displayName || user!.email!.split('@')[0],
