@@ -17,7 +17,7 @@ const ContentLayouts = ({ children }: props) => (
         {/* Mid content */}
         <Flex
           direction="column"
-          width={['100%', '65%']}
+          width={['100%', '68%']}
           mr={["0", "6"]}
         >
           {children[0 as keyof typeof children]}
