@@ -4,24 +4,18 @@ import { Post } from "../atoms/postsAtom"
 import { firestore, storage } from "./clientApp"
 import collections from "./firestoreCollectionsID"
 
-interface uploadPostProps {
-  newPost: Post
-  imgUrl: string
-}
-const uploadPost = async ({ newPost, imgUrl }: uploadPostProps) => {
+const uploadPost = async (newPost: Post, imgUrl: string) => {
 
   try {
     const collectionPostPath = collection(firestore, collections.POSTS.id)
     const postRef = await addDoc(collectionPostPath, newPost)
-    await updateDoc(postRef, {
-      id: postRef.id
-    })
+    const id = postRef.id
+    await updateDoc(postRef, { id })
 
-    if (!imgUrl) return
-    const collectionPostImgPath = `${collections.POSTS.id}/${postRef.id}/image`
+    if (!imgUrl) return { id }
+    const collectionPostImgPath = `${collections.POSTS.id}/${id}/image`
     const imgRef = ref(storage, collectionPostImgPath)
 
-    console.log(imgUrl)
     // https://firebase.google.com/docs/storage/web/upload-files
     await uploadString(imgRef, imgUrl, "data_url")
     const getImgUrl = await getDownloadURL(imgRef)
@@ -31,9 +25,16 @@ const uploadPost = async ({ newPost, imgUrl }: uploadPostProps) => {
       imgUrl: getImgUrl
     })
 
+    return {
+      id,
+      imgUrl: getImgUrl
+    }
+
   } catch (e: any) {
     console.error('upload post ', e.message)
-    return 'Error Creating Post'
+    return {
+      err: 'Error Creating Post',
+    }
   }
 }
 

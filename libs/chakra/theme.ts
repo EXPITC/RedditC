@@ -114,7 +114,8 @@ const components: ThemeComponents = {
 
 const colors = {
   brand: {
-    100: "#FF1c00"
+    100: "#FF1c00",
+    200: "#7193ff"
   }
 }
 

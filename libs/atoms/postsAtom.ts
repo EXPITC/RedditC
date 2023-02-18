@@ -10,18 +10,27 @@ export interface Post {
   title: string,
   body: string,
   numberOfComments: number,
-  voteStatus: number,
+  vote: number,
   imgUrl?: string,
   communityImgUrl?: string,
   createdAt: Timestamp
 }
-interface PostState {
+export interface votePost {
+  postId: string,
+  communityId: string,
+  vote: number
+}
+export interface PostState {
   selectedPost: Post | null,
+  totalCollections: number,
+  userVotePost: votePost[]
   posts: Post[]
 }
 
 const defaultPostState: PostState = {
   selectedPost: null,
+  totalCollections: 0,
+  userVotePost: [],
   posts: []
 }
 

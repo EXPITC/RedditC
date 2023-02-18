@@ -4,6 +4,7 @@ const USERS = 'users'
 const COMMUNITYSUBS = 'communitySubs'
 const POSTS = 'posts'
 const IMAGE = 'image'
+const VOTEPOST = 'votePost'
 
 const collections = {
   POSTS: {
@@ -21,6 +22,9 @@ const collections = {
     id: USERS,
     COMMUNITYSUBS: {
       id: COMMUNITYSUBS
+    },
+    VOTEPOST: {
+      id: VOTEPOST
     }
   }
 }
