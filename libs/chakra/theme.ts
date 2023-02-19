@@ -1,32 +1,30 @@
-import { extendTheme, ThemeComponents, ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, ThemeComponents, ThemeConfig } from '@chakra-ui/react'
 // import { mode } from "@chakra-ui/theme-tools";
-import { GlobalStyleProps } from "@chakra-ui/theme-tools/dist";
-import "@fontsource/open-sans/300.css"
-import "@fontsource/open-sans/400.css"
-import "@fontsource/open-sans/500.css"
-import "@fontsource/open-sans/600.css"
-import "@fontsource/open-sans/700.css"
-
+import { GlobalStyleProps } from '@chakra-ui/theme-tools/dist'
+import '@fontsource/open-sans/300.css'
+import '@fontsource/open-sans/400.css'
+import '@fontsource/open-sans/500.css'
+import '@fontsource/open-sans/600.css'
+import '@fontsource/open-sans/700.css'
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
-  useSystemColorMode: false,
+  useSystemColorMode: false
 }
 
 interface stylesType {
-  global: (props: GlobalStyleProps) => {};
+  global: (props: GlobalStyleProps) => {}
 }
 const styles: stylesType = {
-  global: (props) => ({
+  global: props => ({
     body: {
       // bg: mode("#202023", "gray.200")(props),
-      bg: "gray.200",
+      bg: 'gray.200',
       fontWeight: 500,
       color: 'black'
-    },
+    }
   })
 }
-
 
 const components: ThemeComponents = {
   Button: {
@@ -35,7 +33,7 @@ const components: ThemeComponents = {
       fontsize: '10pt',
       fontWeight: 700,
       _focus: {
-        boxShadow: "none",
+        boxShadow: 'none'
       },
       _hover: {
         bg: 'purple.50'
@@ -51,7 +49,7 @@ const components: ThemeComponents = {
       },
       md: {
         fontSize: '10pt'
-      },
+      }
     },
 
     variants: {
@@ -84,14 +82,14 @@ const components: ThemeComponents = {
       },
       icon: {
         bg: 'transparent',
-        h: "35px",
+        h: '35px',
         padding: 'unset',
         fontSize: '20px',
         color: 'gray.500',
-        border: "1px solid",
+        border: '1px solid',
         borderColor: 'gray.100',
-        paddingLeft: "15px",
-        paddingRight: "15px",
+        paddingLeft: '15px',
+        paddingRight: '15px',
         borderRadius: '3px',
         _hover: {
           bg: 'gray.50',
@@ -105,7 +103,7 @@ const components: ThemeComponents = {
         color: 'gray.500',
         borderRadius: '5px',
         _hover: {
-          bg: 'gray.100',
+          bg: 'gray.100'
         }
       }
     }
@@ -114,16 +112,14 @@ const components: ThemeComponents = {
 
 const colors = {
   brand: {
-    100: "#FF1c00",
-    200: "#7193ff"
+    100: '#FF1c00',
+    200: '#7193ff'
   }
 }
 
 const fonts = {
-  body: "Open Sans, sans-serif"
+  body: 'Open Sans, sans-serif'
 }
-
-
 
 const theme = extendTheme({
   config,

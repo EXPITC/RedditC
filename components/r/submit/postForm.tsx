@@ -1,15 +1,24 @@
-import { BsLink45Deg, BsMic } from "react-icons/bs";
-import { BiPoll } from "react-icons/bi";
-import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { Flex, Tab, TabList, Tabs, Icon, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
-import TabPanelList from "./postform/tabPanel";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Post, postState } from "@/libs/atoms/postsAtom";
-import { User } from "firebase/auth";
-import { useRouter } from "next/router";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
-import uploadPost from "@/libs/firebase/uploadPost";
-import { useSetRecoilState } from "recoil";
+import { BsLink45Deg, BsMic } from 'react-icons/bs'
+import { BiPoll } from 'react-icons/bi'
+import { IoDocumentText, IoImageOutline } from 'react-icons/io5'
+import {
+  Flex,
+  Tab,
+  TabList,
+  Tabs,
+  Icon,
+  Alert,
+  AlertIcon,
+  AlertTitle
+} from '@chakra-ui/react'
+import TabPanelList from './postform/tabPanel'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { Post, postState } from '@/libs/atoms/postsAtom'
+import { User } from 'firebase/auth'
+import { useRouter } from 'next/router'
+import { serverTimestamp, Timestamp } from 'firebase/firestore'
+import uploadPost from '@/libs/firebase/uploadPost'
+import { useSetRecoilState } from 'recoil'
 
 const formTabs = [
   {
@@ -35,12 +44,12 @@ const formTabs = [
 ]
 
 export interface TabItem {
-  title: string,
+  title: string
   icon: React.ReactNode
 }
 
 interface PostForm {
-  user: User | undefined | null,
+  user: User | undefined | null
 }
 
 const PostForm = ({ user }: PostForm) => {
@@ -69,7 +78,6 @@ const PostForm = ({ user }: PostForm) => {
     }))
   }
   const handleUpload = async () => {
-
     const { communityID } = router.query
     const post: Post = {
       id: '',
@@ -85,13 +93,15 @@ const PostForm = ({ user }: PostForm) => {
 
     setLoading(true)
     try {
-
       const upload = await uploadPost(post, imgUrl)
       if (upload.err) return setErr(upload.err)
       setPostState(prev => ({
         ...prev,
         totalCollections: prev.totalCollections + 1,
-        posts: [{ ...post, id: upload.id!, imgUrl: upload?.imgUrl }, ...prev.posts]
+        posts: [
+          { ...post, id: upload.id!, imgUrl: upload?.imgUrl },
+          ...prev.posts
+        ]
       }))
     } catch (e: any) {
       console.error('deleted post', e.message)
@@ -112,26 +122,42 @@ const PostForm = ({ user }: PostForm) => {
 
   return (
     <Flex direction="column" bg="white" borderRadius="4">
-
-      <Tabs index={tab} onChange={setTab}
-        overflow="hidden" borderRadius="4px">
+      <Tabs index={tab} onChange={setTab} overflow="hidden" borderRadius="4px">
         <TabList justifyContent="space-between" bg="gray.200">
-
-          {formTabs.map(i =>
-            <Tab key={i.title}
-              bg="white" color="gray.500" fontSize={["8pt", "9pt", "11pt"]} fontWeight="semibold"
-              p={["0", "4px 2px", "4px 2px", "15px 17px"]} w={['full', 'auto']} minWidth={['auto', 'auto', "101px"]}
-              borderBottom="1px" borderColor="gray.200"
-              _selected={{ color: 'purple.400', borderColor: 'purple.400', borderBottom: "2px", bg: "purple.50" }}>
-              <Icon as={i.icon} fontSize={["13pt", "16pt"]} mr={['0', '5px']} /> {i.title}
+          {formTabs.map(i => (
+            <Tab
+              key={i.title}
+              bg="white"
+              color="gray.500"
+              fontSize={['8pt', '9pt', '11pt']}
+              fontWeight="semibold"
+              p={['0', '4px 2px', '4px 2px', '15px 17px']}
+              w={['full', 'auto']}
+              minWidth={['auto', 'auto', '101px']}
+              borderBottom="1px"
+              borderColor="gray.200"
+              _selected={{
+                color: 'purple.400',
+                borderColor: 'purple.400',
+                borderBottom: '2px',
+                bg: 'purple.50'
+              }}
+            >
+              <Icon as={i.icon} fontSize={['13pt', '16pt']} mr={['0', '5px']} />{' '}
+              {i.title}
             </Tab>
-          )}
-
+          ))}
         </TabList>
         <TabPanelList
-          inputText={inputText} onChange={onChange}
-          imgUrl={imgUrl} setImgUrl={setImgUrl} setTab={setTab}
-          upload={handleUpload} loading={loading} setErr={setErr} err={err}
+          inputText={inputText}
+          onChange={onChange}
+          imgUrl={imgUrl}
+          setImgUrl={setImgUrl}
+          setTab={setTab}
+          upload={handleUpload}
+          loading={loading}
+          setErr={setErr}
+          err={err}
         />
       </Tabs>
       {err && (
@@ -140,10 +166,8 @@ const PostForm = ({ user }: PostForm) => {
           <AlertTitle mr="2">{err}</AlertTitle>
         </Alert>
       )}
-
     </Flex>
   )
 }
-
 
 export default PostForm

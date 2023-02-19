@@ -1,24 +1,49 @@
-import { collection, CollectionReference, QueryDocumentSnapshot, DocumentData, getDocs, limit, orderBy, QueryOrderByConstraint, query, QueryFieldFilterConstraint, where, QueryLimitConstraint, startAfter, doc, getCountFromServer, Query, getDoc } from "firebase/firestore"
-import { ref } from "firebase/storage"
-import { Post } from "../atoms/postsAtom"
-import { firestore } from "./clientApp"
-import collections from "./firestoreCollectionsID"
-
-
-
+import {
+  collection,
+  CollectionReference,
+  QueryDocumentSnapshot,
+  DocumentData,
+  getDocs,
+  limit,
+  orderBy,
+  QueryOrderByConstraint,
+  query,
+  QueryFieldFilterConstraint,
+  where,
+  QueryLimitConstraint,
+  startAfter,
+  doc,
+  getCountFromServer,
+  Query,
+  getDoc
+} from 'firebase/firestore'
+import { ref } from 'firebase/storage'
+import { Post } from '../atoms/postsAtom'
+import { firestore } from './clientApp'
+import collections from './firestoreCollectionsID'
 
 const getPosts = async (communityId: string, lastPostId?: string | null) => {
-
   const collectionPath = collection(firestore, collections.POSTS.id)
   // https://firebase.google.com/docs/firestore/query-data/query-cursors
-  const keyword: [CollectionReference<DocumentData>, QueryFieldFilterConstraint, QueryOrderByConstraint, QueryLimitConstraint] = [
+  const keyword: [
+    CollectionReference<DocumentData>,
+    QueryFieldFilterConstraint,
+    QueryOrderByConstraint,
+    QueryLimitConstraint
+  ] = [
     collectionPath,
     where('communityId', '==', communityId),
     orderBy('createdAt', 'desc'),
     limit(20)
   ]
-  const thisPostCommunity = query(collectionPath, where('communityId', '==', communityId))
-  const packPostToObject = (doc: QueryDocumentSnapshot<DocumentData>) => ({ id: doc.id, ...doc.data() })
+  const thisPostCommunity = query(
+    collectionPath,
+    where('communityId', '==', communityId)
+  )
+  const packPostToObject = (doc: QueryDocumentSnapshot<DocumentData>) => ({
+    id: doc.id,
+    ...doc.data()
+  })
 
   try {
     const snapshot = await getCountFromServer(thisPostCommunity)
@@ -44,13 +69,11 @@ const getPosts = async (communityId: string, lastPostId?: string | null) => {
       totalCollections: snapshot.data().count,
       data: nextPost.docs.map(packPostToObject) as Post[]
     }
-
   } catch (e: any) {
     console.error(e.message)
 
     throw new Error('Fail to fetch the posts')
   }
 }
-
 
 export default getPosts

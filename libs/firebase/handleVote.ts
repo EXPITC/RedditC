@@ -1,9 +1,20 @@
-import { writeBatch, doc, increment, getDocs, collection, deleteDoc } from "firebase/firestore"
-import { votePost } from "../atoms/postsAtom"
-import collections from "../firebase/firestoreCollectionsID"
-import { firestore } from "./clientApp"
+import {
+  writeBatch,
+  doc,
+  increment,
+  getDocs,
+  collection,
+  deleteDoc
+} from 'firebase/firestore'
+import { votePost } from '../atoms/postsAtom'
+import collections from '../firebase/firestoreCollectionsID'
+import { firestore } from './clientApp'
 
-type handleVoteProps = (userId: string, voteData: votePost, n: number) => Promise<{ err: string, vote: number }>
+type handleVoteProps = (
+  userId: string,
+  voteData: votePost,
+  n: number
+) => Promise<{ err: string; vote: number }>
 
 const handleVote: handleVoteProps = async (userId, voteData, n) => {
   const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
@@ -43,7 +54,6 @@ const handleVote: handleVoteProps = async (userId, voteData, n) => {
     }
     await batch.commit()
 
-
     return {
       err: '',
       vote: vote === 0 ? n * -1 : vote
@@ -60,12 +70,11 @@ const handleVote: handleVoteProps = async (userId, voteData, n) => {
 
 const getUserVote = async (userId: string) => {
   try {
-
     const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
     const userVoteCollection = collection(firestore, userVotePath)
     const voteDocs = await getDocs(userVoteCollection)
 
-    return voteDocs.docs.map(doc => (doc.data())) as votePost[]
+    return voteDocs.docs.map(doc => doc.data()) as votePost[]
   } catch (e: any) {
     console.error('get vote', e.message)
   }
@@ -73,7 +82,6 @@ const getUserVote = async (userId: string) => {
 
 const deleteVote = async (userId: string, voteId: string) => {
   try {
-
     const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
     const voteDocRef = doc(firestore, userVotePath, voteId)
     await deleteDoc(voteDocRef)
@@ -88,6 +96,5 @@ const deleteVote = async (userId: string, voteId: string) => {
     }
   }
 }
-
 
 export { handleVote as default, getUserVote, deleteVote }
