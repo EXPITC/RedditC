@@ -27,14 +27,17 @@ const useCommunityData = ({
   const getSubsList = async () => {
     const subs = user ? await getUserCommunitySubs(user.uid) : null
 
-    if (subs) setCommunitySubs(subs)
+    if (subs) setCommunitySubs(prev => ({
+      ...prev,
+      subs
+    }))
   }
   useEffect(() => {
     if (user) getSubsList()
   }, [user])
 
   // Pass the communityId to check user join or not
-  const isJoin = !!communitySubs.find(subs => subs.communityId === communityId)
+  const isJoin = !!communitySubs.subs.find(subs => subs.communityId === communityId)
 
   // Register user to community
   const join = async () => {
@@ -67,7 +70,10 @@ const useCommunityData = ({
       // Execute the changes
       await batch.commit()
 
-      setCommunitySubs([...communitySubs, newSubData])
+      setCommunitySubs(prev => ({
+        ...prev,
+        subs: [...communitySubs.subs, newSubData]
+      }))
     } catch (e: any) {
       console.log('join err ', e.message)
     }
@@ -95,8 +101,10 @@ const useCommunityData = ({
       })
 
       await batch.commit()
-      setCommunitySubs(
-        communitySubs.filter(prev => prev.communityId != communityId)
+      setCommunitySubs(prev => ({
+        ...prev,
+        subs: communitySubs.subs.filter(prev => prev.communityId != communityId)
+      })
       )
     } catch (e: any) {
       console.log('leave err ', e.message)
