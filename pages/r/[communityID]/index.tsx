@@ -3,9 +3,11 @@ import PageR404 from '@/components/r/404'
 import Header from '@/components/r/header'
 import LinkPost from '@/components/r/linkpost'
 import PostTimeline from '@/components/r/postTimeline'
-import { communityData } from '@/libs/atoms/communitiesAtoms'
+import { communityData, communitySubsState } from '@/libs/atoms/communitiesAtoms'
 import getcommunityData from '@/libs/firebase/communityData'
 import { GetServerSideProps } from 'next'
+import { useEffect } from 'react'
+import { useSetRecoilState } from 'recoil'
 
 interface serverProps extends GetServerSideProps {
   params: {
@@ -28,7 +30,14 @@ export const getServerSideProps = async ({
 
 export default function communityPage({ communityData }: { communityData: communityData }) {
   if (!communityData) return <PageR404 />
+  const setCommunitySubs = useSetRecoilState(communitySubsState)
 
+  useEffect(() => {
+    setCommunitySubs(prev => ({
+      ...prev,
+      currentCommunity: communityData
+    }))
+  }, [])
   return (
     <>
       <Header
