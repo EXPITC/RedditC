@@ -7,6 +7,7 @@ import { SetterOrUpdater, useResetRecoilState, useSetRecoilState } from "recoil"
 import { authModalState } from "@/libs/atoms/authModalAtoms";
 import { signOut } from "firebase/auth";
 import { communitySubsState } from "@/libs/atoms/communitiesAtoms";
+import { postState } from "@/libs/atoms/postsAtom";
 
 
 const LoginItem = ({ signOut }: { signOut: () => void }) => (
@@ -44,10 +45,15 @@ export default function ProfileItems() {
   const [user, _loading, _error] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const resetCommunitySubsState = useResetRecoilState(communitySubsState)
+  const setPostState = useSetRecoilState(postState)
 
   const logout = async () => {
     await signOut(auth)
     resetCommunitySubsState()
+    setPostState(prev => ({
+      ...prev,
+      userVotePost: []
+    }))
   }
 
   return (

@@ -1,14 +1,15 @@
 import { BsLink45Deg, BsMic } from "react-icons/bs";
 import { BiPoll } from "react-icons/bi";
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { Flex, Text, Tab, TabList, Tabs, Icon, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
+import { Flex, Tab, TabList, Tabs, Icon, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import TabPanelList from "./postform/tabPanel";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Post } from "@/libs/atoms/postsAtom";
+import { Post, postState } from "@/libs/atoms/postsAtom";
 import { User } from "firebase/auth";
 import { useRouter } from "next/router";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
 import uploadPost from "@/libs/firebase/uploadPost";
+import { useSetRecoilState } from "recoil";
 
 const formTabs = [
   {
@@ -58,6 +59,7 @@ const PostForm = ({ user }: PostForm) => {
   const [imgUrl, setImgUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
+  const setPostState = useSetRecoilState(postState)
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (err) setErr('')
@@ -77,11 +79,23 @@ const PostForm = ({ user }: PostForm) => {
       title: inputText.title,
       body: inputText.body,
       numberOfComments: 0,
-      voteStatus: 0,
+      vote: 0,
       createdAt: serverTimestamp() as Timestamp
     }
+
     setLoading(true)
-    setErr(await uploadPost({ newPost: post, imgUrl }))
+    try {
+
+      const upload = await uploadPost(post, imgUrl)
+      if (upload.err) return setErr(upload.err)
+      setPostState(prev => ({
+        ...prev,
+        totalCollections: prev.totalCollections + 1,
+        posts: [{ ...post, id: upload.id!, imgUrl: upload?.imgUrl }, ...prev.posts]
+      }))
+    } catch (e: any) {
+      console.error('deleted post', e.message)
+    }
     setLoading(false)
 
     if (err) return
