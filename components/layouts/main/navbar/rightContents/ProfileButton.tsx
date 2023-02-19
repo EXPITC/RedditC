@@ -19,7 +19,7 @@ export default function ProfileButton() {
 
   return (
     <Menu>
-      <MenuButton as={Button} variant="icon">
+      <MenuButton as={Button} variant="icon" px={['1px', '15px']}>
         {user ? (
           <Flex align="center" justify="space-between">
             <Flex>

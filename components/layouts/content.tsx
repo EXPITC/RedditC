@@ -8,9 +8,9 @@ const ContentLayouts = ({ children }: props) =>
   // If children not exist its not render
   children ? (
     <Flex p="20px 0" justify="center">
-      <Flex width="95%" maxWidth="860px" justify="center">
+      <Flex width="95%" maxWidth="976px" justify="center">
         {/* Mid content */}
-        <Flex direction="column" width={['100%', '68%']} mr={['0', '6']}>
+        <Flex direction="column" width={['100%', '100%', '64%']}>
           {children[0 as keyof typeof children]}
         </Flex>
 
@@ -19,6 +19,7 @@ const ContentLayouts = ({ children }: props) =>
           direction="column"
           flexGrow="1"
           display={['none', 'none', 'none', 'flex']}
+          ml="24px"
         >
           {children[1 as keyof typeof children]}
         </Flex>

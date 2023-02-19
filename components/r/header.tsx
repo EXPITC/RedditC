@@ -54,7 +54,7 @@ const Header = ({ communityId, communityName }: HeaderProps) => {
       <Box height="164px">
         <Box bg="purple.500" h="50%" w="full" />
         <Flex flexGrow="1" h="50%" bg="white" justify="center">
-          <Flex width="95%" maxWidth="860px" mt="-14px" mb="12px">
+          <Flex width="95%" maxWidth="976px" mt="-14px" mb="12px">
             <Box>
               <Image
                 src="/images/redditFace.svg"

@@ -76,38 +76,38 @@ const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
 )
 
 const PostOptions = (Post: PostProps) => (
-  <Flex ml="1" mb="0.5" color="gray.500">
+  <Flex mb="0.5" color="gray.500" >
     <Button
       variant="iconList"
       alignItems="center"
-      fontSize="12px"
-      p="8px 10px"
+      fontSize={["10px", "12px"]}
+      p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
     >
-      <Icon as={BsChat} mr="2" fontSize="20px" />
+      <Icon as={BsChat} mr={['1', '2']} fontSize={["16px", "20px"]} />
       {Post.numberOfComments} Comments
     </Button>
     <Button
       variant="iconList"
       alignItems="center"
-      fontSize="12px"
-      p="8px 10px"
+      fontSize={["10px", "12px"]}
+      p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
     >
-      <Icon as={IoArrowRedoOutline} mr="2" fontSize="20px" />
+      <Icon as={IoArrowRedoOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
       Share
     </Button>
     <Button
       variant="iconList"
       alignItems="center"
-      fontSize="12px"
-      p="8px 10px"
+      fontSize={["10px", "12px"]}
+      p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
     >
-      <Icon as={IoBookmarkOutline} mr="2" fontSize="20px" />
+      <Icon as={IoBookmarkOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
       Save
     </Button>
     {Post.isUserCreator && (
@@ -116,12 +116,12 @@ const PostOptions = (Post: PostProps) => (
         isLoading={Post.loading === Post.id && true}
         variant="iconList"
         alignItems="center"
-        fontSize="12px"
-        p="8px 10px"
+        fontSize={["10px", "12px"]}
+        p={['0px 2px', '4px 5px', "8px 10px"]}
         borderRadius="4px"
         _hover={{ bg: 'gray.200' }}
       >
-        <Icon as={AiOutlineDelete} mr="2" fontSize="20px" />
+        <Icon as={AiOutlineDelete} mr={['1', '2']} fontSize={["16px", "20px"]} />
         Delete
       </Button>
     )}
@@ -133,7 +133,7 @@ const Post = (Post: PostProps) => {
 
   return (
     <Flex
-      onClick={() => {}}
+      onClick={() => { }}
       bg="white"
       border="1px solid"
       borderColor="gray.300"
@@ -183,7 +183,7 @@ const Post = (Post: PostProps) => {
                 }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 onLoadingComplete={() => setImgLoading(false)}
-                onError={() => {}}
+                onError={() => { }}
               />
               {imgLoading && <ImageSkeleton />}
             </Flex>
