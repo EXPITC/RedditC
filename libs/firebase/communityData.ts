@@ -1,27 +1,28 @@
 import {
   doc,
   getDoc,
-  DocumentData,
   getDocs,
   collection
 } from 'firebase/firestore'
-import { communitySubsCollection } from '../atoms/communitiesAtoms'
+import { communityData, communitySub } from '../atoms/communitiesAtoms'
 import { firestore } from './clientApp'
 import collections from './firestoreCollectionsID'
 
 const getcommunityData = async (
   communityID: string
-): Promise<DocumentData | false> => {
+): Promise<communityData | false> => {
   const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID)
   try {
     const communityData = await getDoc(communityRef)
     if (!communityData.exists()) return false
 
-    const _ = communityData.data()
+    const _ = communityData.data() as communityData
+
     return {
       ..._,
       // Serialize time stamp from fire store double object timestamp signature firestore cannot be parse so we need to break down the seconds and nanoscond
-      createdAt: { ..._.createdAt }
+      createdAt: { ..._.createdAt } as { seconds: number, nanoseconds: number }
+
     }
   } catch (e: any) {
     console.log(e.message)
@@ -38,7 +39,7 @@ const getUserCommunitySubs = async (userId: string) => {
     )
   )
 
-  return subsDoc.docs.map(doc => ({ ...doc.data() })) as communitySubsCollection
+  return subsDoc.docs.map(doc => ({ ...doc.data() })) as communitySub[]
 }
 
 export { getcommunityData as default, getUserCommunitySubs }

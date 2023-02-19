@@ -5,10 +5,37 @@ export type communitySub = {
   communityName: string
   isModerator: boolean
 }
+export type communityData = {
+  id: string
+  communityName: string
+  createdAt: {
+    seconds: number
+    nanoseconds: number
+  }
+  creatorId: string
+  numberOfmember: number
+}
 
-export interface communitySubsCollection extends Array<communitySub> {}
+export interface communitySubsCollection {
+  subs: communitySub[],
+  currentCommunity: communityData
+}
+
+const defaultCommunitySubs: communitySubsCollection = {
+  subs: [],
+  currentCommunity: {
+    id: '',
+    communityName: '',
+    createdAt: {
+      seconds: 0,
+      nanoseconds: 0
+    },
+    creatorId: '',
+    numberOfmember: 0
+  }
+}
 
 export const communitySubsState = atom<communitySubsCollection>({
   key: 'communitySubsState',
-  default: []
+  default: defaultCommunitySubs
 })
