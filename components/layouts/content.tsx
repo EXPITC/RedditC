@@ -10,14 +10,13 @@ const ContentLayouts = ({ children }: props) =>
     <Flex p="20px 0" justify="center">
       <Flex width="95%" maxWidth="976px" justify="center">
         {/* Mid content */}
-        <Flex direction="column" width={['100%', '100%', '64%']}>
+        <Flex direction="column" minW={['100%', '100%', '640px']}>
           {children[0 as keyof typeof children]}
         </Flex>
 
         {/* Right Info */}
         <Flex
           direction="column"
-          flexGrow="1"
           display={['none', 'none', 'none', 'flex']}
           ml="24px"
         >
