@@ -16,7 +16,12 @@ const collections = {
     }
   },
   COMMUNITIES: {
-    id: COMMUNITIES
+    id: COMMUNITIES,
+    storage: {
+      image: {
+        id: IMAGE
+      }
+    }
   },
   USERS: {
     id: USERS,
