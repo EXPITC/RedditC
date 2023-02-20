@@ -31,6 +31,7 @@ const createcommunity = async (
     const newcommunity = {
       id: communityCollectionID,
       communityName,
+      imageUrl: '',
       creatorId: user?.uid,
       createdAt: serverTimestamp(),
       numberOfmember: 1,
