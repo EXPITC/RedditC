@@ -17,10 +17,11 @@ export interface ImagePanelProps {
   setImgUrl: Dispatch<SetStateAction<string>>
   setTab: Dispatch<SetStateAction<number>>
   setErr: Dispatch<SetStateAction<string | undefined>>
-  err: string | undefined
+  err: string | undefined,
+  convertToDataUrlAndSaveToImgUrl: (File: Blob) => {}
 }
 
-interface TabPanelListProps extends InputPanelProps, ImagePanelProps {}
+interface TabPanelListProps extends InputPanelProps, ImagePanelProps { }
 
 const TabPanelList = ({
   inputText,
@@ -31,7 +32,8 @@ const TabPanelList = ({
   upload,
   loading,
   setErr,
-  err
+  err,
+  convertToDataUrlAndSaveToImgUrl
 }: TabPanelListProps) => (
   <TabPanels>
     <TabPanel>
@@ -44,6 +46,7 @@ const TabPanelList = ({
     </TabPanel>
     <TabPanel>
       <ImagePanel
+        convertToDataUrlAndSaveToImgUrl={convertToDataUrlAndSaveToImgUrl}
         imgUrl={imgUrl}
         setImgUrl={setImgUrl}
         setTab={setTab}

@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import uploadPost from '@/libs/firebase/uploadPost'
 import { useSetRecoilState } from 'recoil'
+import useSelectImage from '@/libs/hooks/useSelectImage'
 
 const formTabs = [
   {
@@ -65,7 +66,7 @@ const PostForm = ({ user }: PostForm) => {
     title: '',
     body: ''
   })
-  const [imgUrl, setImgUrl] = useState('')
+  const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl } = useSelectImage()
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
   const setPostState = useSetRecoilState(postState)
@@ -153,6 +154,7 @@ const PostForm = ({ user }: PostForm) => {
           onChange={onChange}
           imgUrl={imgUrl}
           setImgUrl={setImgUrl}
+          convertToDataUrlAndSaveToImgUrl={convertToDataUrlAndSaveToImgUrl}
           setTab={setTab}
           upload={handleUpload}
           loading={loading}
