@@ -7,7 +7,8 @@ export type communitySub = {
 }
 export type communityData = {
   id: string
-  communityName: string
+  communityName: string,
+  imageUrl: string,
   createdAt: {
     seconds: number
     nanoseconds: number
@@ -26,6 +27,7 @@ const defaultCommunitySubs: communitySubsCollection = {
   currentCommunity: {
     id: '',
     communityName: '',
+    imageUrl: '',
     createdAt: {
       seconds: 0,
       nanoseconds: 0
