@@ -1,3 +1,4 @@
+import Info from '@/components/info'
 import ContentLayouts from '@/components/layouts/content'
 import PageR404 from '@/components/r/404'
 import Header from '@/components/r/header'
@@ -50,7 +51,7 @@ export default function communityPage({ communityData }: { communityData: commun
           <PostTimeline communityId={communityData.id} />
         </>
         <>
-          <h3>Info</h3>
+          <Info />
         </>
       </ContentLayouts>
     </>

@@ -41,7 +41,7 @@ const ButtonHeader = ({
 }
 
 const Header = ({ communityId, communityName }: HeaderProps) => {
-  const { isJoin, joinOrleaveCommunity, loading } = useCommunityData({
+  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData({
     communityId,
     communityName
   })
@@ -57,7 +57,7 @@ const Header = ({ communityId, communityName }: HeaderProps) => {
           <Flex width="95%" maxWidth="976px" mt="-14px" mb="12px">
             <Box>
               <Image
-                src="/images/redditFace.svg"
+                src={communitySubs.currentCommunity.imageUrl ? communitySubs.currentCommunity.imageUrl : "/images/redditFace.svg"}
                 alt="community logo"
                 style={{ border: '4px solid white', borderRadius: '100%' }}
                 width={72}
