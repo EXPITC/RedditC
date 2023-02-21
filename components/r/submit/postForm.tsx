@@ -66,7 +66,7 @@ const PostForm = ({ user }: PostForm) => {
     title: '',
     body: ''
   })
-  const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl } = useSelectImage()
+  const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl, err: selectImgErr } = useSelectImage()
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
   const setPostState = useSetRecoilState(postState)
@@ -120,6 +120,10 @@ const PostForm = ({ user }: PostForm) => {
     // Dont use back cause when user reload do same in the same page it will just back to history stack not to communityID
     router.push(`/r/${communityID}`)
   }
+
+  useEffect(() => {
+    setErr(selectImgErr)
+  }, [selectImgErr])
 
   return (
     <Flex direction="column" bg="white" borderRadius="4">
