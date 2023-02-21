@@ -129,7 +129,7 @@ const PostForm = ({ user }: PostForm) => {
     <Flex direction="column" bg="white" borderRadius="4">
       <Tabs index={tab} onChange={setTab} overflow="hidden" borderRadius="4px">
         <TabList justifyContent="space-between" bg="gray.200">
-          {formTabs.map(i => (
+          {formTabs.map((i, index) => (
             <Tab
               key={i.title}
               bg="white"
@@ -138,7 +138,9 @@ const PostForm = ({ user }: PostForm) => {
               fontWeight="semibold"
               p={['0', '4px 2px', '4px 2px', '15px 17px']}
               w={['full', 'auto']}
-              minWidth={['auto', 'auto', '101px']}
+              // minWidth={['auto', 'auto', 'auto']}
+              flexGrow="1"
+              ml={index == 0 ? 'unset' : "1px"}
               borderBottom="1px"
               borderColor="gray.200"
               _selected={{
