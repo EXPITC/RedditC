@@ -18,7 +18,7 @@ export interface ImagePanelProps {
   setTab: Dispatch<SetStateAction<number>>
   setErr: Dispatch<SetStateAction<string | undefined>>
   err: string | undefined,
-  convertToDataUrlAndSaveToImgUrl: (File: Blob) => {}
+  convertToDataUrlAndSaveToImgUrl: (File: Blob) => void
 }
 
 interface TabPanelListProps extends InputPanelProps, ImagePanelProps { }
