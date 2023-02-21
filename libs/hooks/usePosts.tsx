@@ -149,7 +149,7 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
   useEffect(() => {
     // Initial
     // Initial post return 20 post desc
-    if (!postStateValue.posts.length) populateCommunityPost()
+    if (postStateValue.totalCollections === 0) populateCommunityPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
   }, [userId])
 
