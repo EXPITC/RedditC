@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
@@ -22,6 +23,7 @@ export interface usePost {
 
 const usePost = (communityId: string, userId: string | undefined): usePost => {
   const [postStateValue, setPostState] = useRecoilState(postState)
+  const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
   const [err, setErr] = useState({
     id: '',
@@ -80,6 +82,7 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
       }))
     } finally {
       setLoading('')
+      if (postStateValue.selectedPost) router.push(`/r/${communityId}`)
     }
   }
 
