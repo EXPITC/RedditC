@@ -7,20 +7,10 @@ const ImagePanel = ({
   setImgUrl,
   setTab,
   setErr,
-  err
+  err,
+  convertToDataUrlAndSaveToImgUrl
 }: ImagePanelProps) => {
   const ref = useRef<HTMLInputElement>(null)
-
-  const convertToDataUrlAndSaveToImgUrl = (file: Blob) => {
-    const reader = new FileReader()
-
-    // https://firebase.google.com/docs/storage/web/upload-files
-    reader.readAsDataURL(file)
-    reader.onload = e => {
-      if (!e.target?.result) return
-      setImgUrl(e.target.result as string)
-    }
-  }
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
