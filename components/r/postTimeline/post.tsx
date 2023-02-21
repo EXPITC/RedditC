@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import moment from 'moment'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsChat } from 'react-icons/bs'
@@ -129,11 +130,12 @@ const PostOptions = (Post: PostProps) => (
 )
 
 const Post = (Post: PostProps) => {
+  const router = useRouter()
   const [imgLoading, setImgLoading] = useState(true)
 
   return (
     <Flex
-      onClick={() => { }}
+      onClick={() => router.push(`${Post.communityId}/comments/${Post.id}`)}
       bg="white"
       border="1px solid"
       borderColor="gray.300"
