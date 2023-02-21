@@ -34,7 +34,7 @@ const Info = () => {
 
   const handleClick = () => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
-    router.push(`${communitySubs.currentCommunity.id}/submit`)
+    router.push(`/r/${communitySubs.currentCommunity.id}/submit`)
   }
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
