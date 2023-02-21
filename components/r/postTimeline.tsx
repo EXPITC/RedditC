@@ -31,7 +31,6 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
       {postStateValue.posts.map(post => (
         <Post
           key={post.id}
-          listId={post.id}
           isUserCreator={user?.uid === post.creatorId}
           userVoteValue={
             postStateValue.userVotePost.filter(i => i.postId === post.id)[0]
