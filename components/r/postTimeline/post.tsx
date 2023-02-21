@@ -41,7 +41,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
     borderRadius="4"
   >
     <Button
-      onClick={() => onVote!(id!, 1)}
+      onClick={(e) => onVote!(id!, 1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -56,7 +56,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
     </Button>
     {vote}
     <Button
-      onClick={() => onVote!(id!, -1)}
+      onClick={(e) => onVote!(id!, -1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -113,7 +113,7 @@ const PostOptions = (Post: PostProps) => (
     </Button>
     {Post.isUserCreator && (
       <Button
-        onClick={() => Post.onDelete(Post.id, Post?.imgUrl)}
+        onClick={(e) => Post.onDelete(Post.id, Post?.imgUrl, e)}
         isLoading={Post.loading === Post.id && true}
         variant="iconList"
         alignItems="center"

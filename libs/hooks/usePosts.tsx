@@ -15,8 +15,8 @@ export interface usePost {
     msg: string
   }
   loading: string
-  onVote: (postId: string, n: number) => void
-  onDelete: (id: string, imgUrl: string | undefined) => void
+  onVote: (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onDelete: (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onSelect: () => void
 }
 
@@ -57,7 +57,8 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     )
   }
 
-  const onDelete = async (id: string, imgUrl: string | undefined) => {
+  const onDelete = async (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
     const existingVoteData = postStateValue.userVotePost.filter(
       vote => vote.postId === id
     )[0]
@@ -82,7 +83,8 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     }
   }
 
-  const onVote = async (postId: string, n: number) => {
+  const onVote = async (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
     if (!userId) return setAuthModalState({ open: true, view: 'Login' })
 
     const existingVoteData = postStateValue.userVotePost.filter(
@@ -142,7 +144,7 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     }))
   }
 
-  const onSelect = async () => {}
+  const onSelect = async () => { }
 
   useEffect(() => {
     // Initial
