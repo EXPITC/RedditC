@@ -140,6 +140,7 @@ const useCommunityData = ({
 
   return {
     communitySubs,
+    setCommunitySubs,
     isJoin,
     joinOrleaveCommunity,
     loading

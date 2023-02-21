@@ -1,4 +1,3 @@
-import { communityData, communitySubsState } from "@/libs/atoms/communitiesAtoms"
 import { Alert, AlertDescription, AlertIcon, Box, Button, Divider, Flex, Icon, Input, Stack, Text } from "@chakra-ui/react"
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { GiCakeSlice } from 'react-icons/gi'
@@ -6,21 +5,24 @@ import moment from "moment"
 import { useRouter } from "next/router"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "@/libs/firebase/clientApp"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useSetRecoilState } from "recoil"
 import { authModalState } from "@/libs/atoms/authModalAtoms"
 import { GoPrimitiveDot } from 'react-icons/go'
 import useSelectImage from "@/libs/hooks/useSelectImage"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import uploadCommunityProfile from "@/libs/firebase/uploadCommunityProfile"
+import useCommunityData from "@/libs/hooks/useCommunityData"
 
 
 
 const Info = () => {
   const router = useRouter()
+  const { communityID } = router.query
+  if (typeof communityID !== 'string') return
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
-  const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
+  const { communitySubs, setCommunitySubs } = useCommunityData({ communityId: communityID, communityName: '' })
   const communityData = communitySubs.currentCommunity
   const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl, err: errHook } = useSelectImage()
   const communityProfile = imgUrl || communityData.imageUrl
