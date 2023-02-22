@@ -19,7 +19,7 @@ import useCommunityData from "@/libs/hooks/useCommunityData"
 const Info = () => {
   const router = useRouter()
   const { communityID } = router.query
-  if (typeof communityID !== 'string') return
+  if (typeof communityID !== 'string') return <></>
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const { communitySubs, setCommunitySubs } = useCommunityData({ communityId: communityID, communityName: '' })
