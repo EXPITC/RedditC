@@ -2,8 +2,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
+import { communitySubsState } from '../atoms/communitiesAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
+import getcommunityData from '../firebase/communityData'
 import deletePost from '../firebase/deletePost'
+import getPost from '../firebase/getPost'
 import getPosts from '../firebase/getPosts'
 import handleVote, { deleteVote, getUserVote } from '../firebase/handleVote'
 
@@ -18,13 +21,15 @@ export interface usePost {
   loading: string
   onVote: (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onDelete: (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onSelect: () => void
+  onSelect: (pid: string) => void
 }
 
-const usePost = (communityId: string, userId: string | undefined): usePost => {
+// selectedPost contain id of post
+const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
   const [postStateValue, setPostState] = useRecoilState(postState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
+  const setCommunitySubs = useSetRecoilState(communitySubsState)
   const [err, setErr] = useState({
     id: '',
     msg: ''
@@ -82,7 +87,7 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
       }))
     } finally {
       setLoading('')
-      if (postStateValue.selectedPost) router.push(`/r/${communityId}`)
+      if (selectedPostId) router.push(`/r/${communityId}`)
     }
   }
 
@@ -133,7 +138,8 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     setPostState(prev => ({
       ...prev,
       userVotePost: updatedDataUser,
-      posts: updatedDataPost
+      posts: updatedDataPost,
+      selectedPost: updatedDataPost.filter(post => post.id === selectedPostId)[0]
     }))
   }
 
@@ -147,14 +153,37 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     }))
   }
 
-  const onSelect = async () => { }
+  const onSelect = (pid: string) => {
+
+    if (!!postStateValue.selectedPost) return
+
+    // populate selected data post before redirect to comments
+    setPostState(prev => ({
+      ...prev,
+      selectedPost: prev.posts.filter(post => post.id === pid)[0]
+    }))
+    router.push(`${communityId}/comments/${pid}`)
+  }
+
+  const populateSelectedPost = async () => {
+    const post = await getPost(selectedPostId)
+    if (post.err) return setErr({ id: selectedPostId, msg: post.err })
+
+    setPostState(prev => ({
+      ...prev,
+      selectedPost: post.data,
+      posts: [post.data!]
+    }))
+  }
 
   useEffect(() => {
     // Initial
     // Initial post return 20 post desc
-    if (postStateValue.totalCollections === 0) populateCommunityPost()
+    if (postStateValue.totalCollections === 0 && !selectedPostId) populateCommunityPost()
+    if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
-  }, [userId])
+
+  }, [userId, selectedPostId, postStateValue])
 
   return {
     postStateValue,

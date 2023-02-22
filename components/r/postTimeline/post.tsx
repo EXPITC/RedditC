@@ -12,8 +12,7 @@ import {
 } from '@chakra-ui/react'
 import moment from 'moment'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsChat } from 'react-icons/bs'
 import {
@@ -30,10 +29,10 @@ interface PostProps extends PostType, usePost {
   userVoteValue: number
 }
 
-const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
+const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<PostProps>) => (
   <Flex
     direction="column"
-    bg="gray.100"
+    bg={postStateValue?.selectedPost ? "white" : "gray.100"}
     align="center"
     width="40px"
     p="2"
@@ -129,25 +128,18 @@ const PostOptions = (Post: PostProps) => (
 )
 
 const Post = (Post: PostProps) => {
-  const router = useRouter()
   const [imgLoading, setImgLoading] = useState(true)
   const selectedPost = Post.postStateValue.selectedPost
 
-  const handleCommentPageRedirect = () => {
-    if (!!selectedPost) return
-
-    router.push(`${Post.communityId}/comments/${Post.id}`)
-  }
-
   return (
     <Flex
-      onClick={handleCommentPageRedirect}
+      onClick={() => Post.onSelect(Post.id)}
       bg="white"
-      border="1px solid"
+      border={selectedPost ? 'unset' : "1px solid"}
       borderColor="gray.300"
-      borderRadius="4"
+      borderRadius={selectedPost ? "4px 4px 0 0" : "4"}
       _hover={{ borderColor: 'gray.500' }}
-      cursor="pointer"
+      cursor={selectedPost ? 'unset' : "pointer"}
     >
       <Votebar {...Post} />
       <Flex direction="column" flexGrow="1">
