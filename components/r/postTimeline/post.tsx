@@ -34,7 +34,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<Po
     direction="column"
     bg={postStateValue?.selectedPost ? "white" : "gray.100"}
     align="center"
-    width="40px"
+    width={['30px', "40px"]}
     p="2"
     borderRadius="4"
   >
