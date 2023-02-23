@@ -13,6 +13,7 @@ const getcommunityData = async (
 ): Promise<communityData | false> => {
   const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID)
   try {
+    if (!communityID) return false
     const communityData = await getDoc(communityRef)
     if (!communityData.exists()) return false
 

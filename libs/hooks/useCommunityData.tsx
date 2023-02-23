@@ -130,13 +130,13 @@ const useCommunityData = ({
   useEffect(() => {
     if (communitySubs.subs.find(subs => subs.communityId === communityId)) return
     if (user) getSubsList()
-  }, [user, communitySubs])
+  }, [user, communitySubs, communityId])
 
   useEffect(() => {
     if (communitySubs.currentCommunity.id === communityId) return // Its same data  
     getCurrentCommunity()
 
-  }, [])
+  }, [communityId])
 
   return {
     communitySubs,
