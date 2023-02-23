@@ -4,7 +4,7 @@ import { Stack, Box, Alert, AlertIcon, Text } from '@chakra-ui/react'
 import { useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import PostSkeleton from '../skeleton/postSkeleton'
+import PostsSkeleton from '../skeleton/postSkeleton'
 import Post from './postTimeline/post'
 
 const PostTimeline = ({ communityId }: { communityId: string }) => {
@@ -41,7 +41,7 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
         />
       ))}
 
-      {loading && <PostSkeleton />}
+      {loading && <PostsSkeleton />}
 
       {err.id === communityId && (
         <Alert status="error">

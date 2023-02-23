@@ -7,19 +7,20 @@ import {
   IoBookmarkOutline
 } from 'react-icons/io5'
 
-export const ImageSkeleton = () => <Skeleton height="460px" width="full" />
+const ImageSkeleton = () => <Skeleton height="460px" width="full" />
 
-const Skeleton_ = () => (
+const PostSkeleton = ({ key = 0, selectedPost = false }) => (
   <Flex
+    key={key}
     bg="white"
-    border="1px solid"
+    border={selectedPost ? 'unset' : "1px solid"}
     borderColor="gray.300"
-    borderRadius="4"
+    borderRadius={selectedPost ? "4px 4px 0 0" : "4"}
     cursor="progress"
   >
     <Flex
       direction="column"
-      bg="gray.100"
+      bg={selectedPost ? "white" : "gray.100"}
       align="center"
       width={['30px', "40px"]}
       p="2"
@@ -99,13 +100,10 @@ const Skeleton_ = () => (
   </Flex>
 )
 
-const PostSkeleton = () => (
+const PostsSkeleton = () => (
   <>
-    <Skeleton_ key={'skeleton key 0'} />
-    <Skeleton_ key={'skeleton key 1'} />
-    <Skeleton_ key={'skeleton key 2'} />
-    <Skeleton_ key={'skeleton key 3'} />
+    {[0, 1, 2, 3].map(i => <PostSkeleton key={i} />)}
   </>
 )
 
-export default PostSkeleton
+export { PostsSkeleton as default, PostSkeleton, ImageSkeleton }
