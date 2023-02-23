@@ -21,7 +21,7 @@ const Skeleton_ = () => (
       direction="column"
       bg="gray.100"
       align="center"
-      width="40px"
+      width={['30px', "40px"]}
       p="2"
       borderRadius="4"
     >
@@ -56,8 +56,8 @@ const Skeleton_ = () => (
 
     <Flex direction="column" flexGrow="1">
       <Stack spacing="1" p="10px">
-        <Skeleton height="9pt" width="220px" />
-        <Skeleton height="14pt" width="340px" />
+        <Skeleton height="9pt" maxW="220px" />
+        <Skeleton height="14pt" maxW="340px" />
         <ImageSkeleton />
 
         <Flex ml="1" mb="0.5" color="gray.500">
