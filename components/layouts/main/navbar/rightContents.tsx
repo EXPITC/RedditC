@@ -10,7 +10,6 @@ interface props {
 }
 
 export default function rightContents({ user }: props) {
-
   return (
     <>
       <AuthModal />
