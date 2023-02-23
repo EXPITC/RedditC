@@ -10,7 +10,7 @@ const COMMENTS = 'comments'
 const collections = {
   POSTS: {
     id: POSTS,
-    xPost: {
+    storage: {
       image: {
         id: IMAGE
       }
