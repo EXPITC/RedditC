@@ -9,9 +9,8 @@ import {
 
 const ImageSkeleton = () => <Skeleton height="460px" width="full" />
 
-const PostSkeleton = ({ key = 0, selectedPost = false }) => (
+const PostSkeleton = ({ selectedPost = false }) => (
   <Flex
-    key={key}
     bg="white"
     border={selectedPost ? 'unset' : "1px solid"}
     borderColor="gray.300"
