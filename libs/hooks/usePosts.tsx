@@ -2,9 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
-import { communitySubsState } from '../atoms/communitiesAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
-import getcommunityData from '../firebase/communityData'
 import deletePost from '../firebase/deletePost'
 import getPost from '../firebase/getPost'
 import getPosts from '../firebase/getPosts'
@@ -29,7 +27,6 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
   const [postStateValue, setPostState] = useRecoilState(postState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
-  const setCommunitySubs = useSetRecoilState(communitySubsState)
   const [err, setErr] = useState({
     id: '',
     msg: ''
@@ -177,6 +174,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
   }
 
   useEffect(() => {
+    if (!communityId && !selectedPostId) return
     // Initial
     // Initial post return 20 post desc
     if (postStateValue.totalCollections === 0 && !selectedPostId) populateCommunityPost()
