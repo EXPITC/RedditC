@@ -63,10 +63,20 @@ const comments = ({ user, selectedPost, setPostState }: commentsProps) => {
 
       setComment('')
       setComments([uploadedComment.data!, ...comments])
-      setPostState(prev => ({
-        ...prev,
-        selectedPost: { ...prev.selectedPost!, numberOfComments: prev.selectedPost!.numberOfComments + 1 }
-      }))
+
+      setPostState(prev => {
+        const postIndex = prev.posts.findIndex(i => i.id === uploadedComment.data!.postId)
+        let posts = [...prev.posts]
+        if (postIndex !== -1) posts[postIndex] = {
+          ...posts[postIndex],
+          numberOfComments: posts[postIndex].numberOfComments + 1
+        }
+        return {
+          ...prev,
+          selectedPost: { ...prev.selectedPost!, numberOfComments: prev.selectedPost!.numberOfComments + 1 },
+          posts
+        }
+      })
     } finally {
       setLoading(false)
     }
@@ -80,12 +90,19 @@ const comments = ({ user, selectedPost, setPostState }: commentsProps) => {
       if (deletedComment.err) return setErr({ id: cid, msg: deletedComment.err })
 
       setComments(prev => prev.filter(comment => comment.id != deletedComment.id))
-      setPostState(prev => ({
-        ...prev,
-        selectedPost: {
-          ...prev.selectedPost!, numberOfComments: prev.selectedPost!.numberOfComments - 1
+      setPostState(prev => {
+        const postIndex = prev.posts.findIndex(i => i.id === selectedPost!.id)
+        let posts = [...prev.posts]
+        if (postIndex !== -1) posts[postIndex] = {
+          ...posts[postIndex],
+          numberOfComments: posts[postIndex].numberOfComments - 1
         }
-      }))
+        return {
+          ...prev,
+          selectedPost: { ...prev.selectedPost!, numberOfComments: prev.selectedPost!.numberOfComments - 1 },
+          posts
+        }
+      })
 
     } finally {
       setLoadingDelete('')

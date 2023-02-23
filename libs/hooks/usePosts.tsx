@@ -169,7 +169,6 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     setPostState(prev => ({
       ...prev,
       selectedPost: post.data,
-      posts: [post.data!]
     }))
   }
 
