@@ -50,7 +50,7 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
         </Alert>
       )}
       <Box ref={ref} id="Hit this and fetch more content" />
-      {postStateValue.totalCollections != 0 && postStateValue.posts.length === postStateValue.totalCollections && (
+      {postStateValue.totalCollections >= 100 && postStateValue.posts.length === postStateValue.totalCollections && (
         <Alert status="info" colorScheme="purple">
           <AlertIcon />
           Few...

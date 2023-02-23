@@ -176,7 +176,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     if (!communityId && !selectedPostId) return
     // Initial
     // Initial post return 20 post desc
-    if (postStateValue.totalCollections === 0 && !selectedPostId) populateCommunityPost()
+    if (postStateValue.totalCollections === -1 && !selectedPostId) populateCommunityPost()
     if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
 
