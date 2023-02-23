@@ -12,7 +12,7 @@ const uploadPost = async (newPost: Post, imgUrl: string) => {
     await updateDoc(postRef, { id })
 
     if (!imgUrl) return { id }
-    const collectionPostImgPath = `${collections.POSTS.id}/${id}/image`
+    const collectionPostImgPath = `${collections.POSTS.id}/${id}/${collections.POSTS.storage.image.id}`
     const imgRef = ref(storage, collectionPostImgPath)
 
     // https://firebase.google.com/docs/storage/web/upload-files

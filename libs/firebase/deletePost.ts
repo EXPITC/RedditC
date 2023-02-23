@@ -17,7 +17,7 @@ const deletePost = async ({
     if (imgUrl) {
       const imgRef = ref(
         storage,
-        `${collections.POSTS.id}/${id}/${collections.POSTS.xPost.image.id}`
+        `${collections.POSTS.id}/${id}/${collections.POSTS.storage.image.id}`
       )
       await deleteObject(imgRef)
     }

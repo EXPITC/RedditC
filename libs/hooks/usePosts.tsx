@@ -1,8 +1,10 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
 import deletePost from '../firebase/deletePost'
+import getPost from '../firebase/getPost'
 import getPosts from '../firebase/getPosts'
 import handleVote, { deleteVote, getUserVote } from '../firebase/handleVote'
 
@@ -15,13 +17,15 @@ export interface usePost {
     msg: string
   }
   loading: string
-  onVote: (postId: string, n: number) => void
-  onDelete: (id: string, imgUrl: string | undefined) => void
-  onSelect: () => void
+  onVote: (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onDelete: (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onSelect: (pid: string) => void
 }
 
-const usePost = (communityId: string, userId: string | undefined): usePost => {
+// selectedPost contain id of post
+const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
   const [postStateValue, setPostState] = useRecoilState(postState)
+  const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
   const [err, setErr] = useState({
     id: '',
@@ -57,7 +61,8 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     )
   }
 
-  const onDelete = async (id: string, imgUrl: string | undefined) => {
+  const onDelete = async (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
     const existingVoteData = postStateValue.userVotePost.filter(
       vote => vote.postId === id
     )[0]
@@ -79,10 +84,12 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
       }))
     } finally {
       setLoading('')
+      if (selectedPostId) router.push(`/r/${communityId}`)
     }
   }
 
-  const onVote = async (postId: string, n: number) => {
+  const onVote = async (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
     if (!userId) return setAuthModalState({ open: true, view: 'Login' })
 
     const existingVoteData = postStateValue.userVotePost.filter(
@@ -128,7 +135,8 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     setPostState(prev => ({
       ...prev,
       userVotePost: updatedDataUser,
-      posts: updatedDataPost
+      posts: updatedDataPost,
+      selectedPost: updatedDataPost.filter(post => post.id === selectedPostId)[0]
     }))
   }
 
@@ -142,14 +150,37 @@ const usePost = (communityId: string, userId: string | undefined): usePost => {
     }))
   }
 
-  const onSelect = async () => {}
+  const onSelect = (pid: string) => {
+
+    if (!!postStateValue.selectedPost) return
+
+    // populate selected data post before redirect to comments
+    setPostState(prev => ({
+      ...prev,
+      selectedPost: prev.posts.filter(post => post.id === pid)[0]
+    }))
+    router.push(`${communityId}/comments/${pid}`)
+  }
+
+  const populateSelectedPost = async () => {
+    const post = await getPost(selectedPostId)
+    if (post.err) return setErr({ id: selectedPostId, msg: post.err })
+
+    setPostState(prev => ({
+      ...prev,
+      selectedPost: post.data,
+    }))
+  }
 
   useEffect(() => {
+    if (!communityId && !selectedPostId) return
     // Initial
     // Initial post return 20 post desc
-    if (!postStateValue.posts.length) populateCommunityPost()
+    if (postStateValue.totalCollections === 0 && !selectedPostId) populateCommunityPost()
+    if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
-  }, [userId])
+
+  }, [userId, selectedPostId, postStateValue])
 
   return {
     postStateValue,

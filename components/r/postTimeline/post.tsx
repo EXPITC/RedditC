@@ -25,22 +25,21 @@ import {
 } from 'react-icons/io5'
 
 interface PostProps extends PostType, usePost {
-  listId: string
   isUserCreator: boolean
   userVoteValue: number
 }
 
-const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
+const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<PostProps>) => (
   <Flex
     direction="column"
-    bg="gray.100"
+    bg={postStateValue?.selectedPost ? "white" : "gray.100"}
     align="center"
-    width="40px"
+    width={['30px', "40px"]}
     p="2"
     borderRadius="4"
   >
     <Button
-      onClick={() => onVote!(id!, 1)}
+      onClick={(e) => onVote!(id!, 1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -55,7 +54,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id }: Partial<PostProps>) => (
     </Button>
     {vote}
     <Button
-      onClick={() => onVote!(id!, -1)}
+      onClick={(e) => onVote!(id!, -1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -112,7 +111,7 @@ const PostOptions = (Post: PostProps) => (
     </Button>
     {Post.isUserCreator && (
       <Button
-        onClick={() => Post.onDelete(Post.id, Post?.imgUrl)}
+        onClick={(e) => Post.onDelete(Post.id, Post?.imgUrl, e)}
         isLoading={Post.loading === Post.id && true}
         variant="iconList"
         alignItems="center"
@@ -130,16 +129,17 @@ const PostOptions = (Post: PostProps) => (
 
 const Post = (Post: PostProps) => {
   const [imgLoading, setImgLoading] = useState(true)
+  const selectedPost = Post.postStateValue.selectedPost
 
   return (
     <Flex
-      onClick={() => { }}
+      onClick={() => Post.onSelect(Post.id)}
       bg="white"
-      border="1px solid"
+      border={selectedPost ? 'unset' : "1px solid"}
       borderColor="gray.300"
-      borderRadius="4"
+      borderRadius={selectedPost ? "4px 4px 0 0" : "4"}
       _hover={{ borderColor: 'gray.500' }}
-      cursor="pointer"
+      cursor={selectedPost ? 'unset' : "pointer"}
     >
       <Votebar {...Post} />
       <Flex direction="column" flexGrow="1">

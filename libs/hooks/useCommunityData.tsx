@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
 import { communitySub, communitySubsState } from '../atoms/communitiesAtoms'
 import { auth, firestore } from '../firebase/clientApp'
-import { getUserCommunitySubs } from '../firebase/communityData'
+import getcommunityData, { getUserCommunitySubs } from '../firebase/communityData'
 import collections from '../firebase/firestoreCollectionsID'
 
 interface useCommunityDataT {
@@ -32,9 +32,6 @@ const useCommunityData = ({
       subs
     }))
   }
-  useEffect(() => {
-    if (user) getSubsList()
-  }, [user])
 
   // Pass the communityId to check user join or not
   const isJoin = !!communitySubs.subs.find(subs => subs.communityId === communityId)
@@ -120,8 +117,30 @@ const useCommunityData = ({
     join()
   }
 
+  const getCurrentCommunity = async () => {
+
+    const currentCommunity = await getcommunityData(communityId)
+    if (!currentCommunity) return console.error('Fail to fetch community data to current community')
+    setCommunitySubs(prev => ({
+      ...prev,
+      currentCommunity
+    }))
+  }
+
+  useEffect(() => {
+    if (communitySubs.subs.find(subs => subs.communityId === communityId)) return
+    if (user) getSubsList()
+  }, [user, communitySubs, communityId])
+
+  useEffect(() => {
+    if (communitySubs.currentCommunity.id === communityId) return // Its same data  
+    getCurrentCommunity()
+
+  }, [communityId])
+
   return {
     communitySubs,
+    setCommunitySubs,
     isJoin,
     joinOrleaveCommunity,
     loading

@@ -4,7 +4,7 @@ import { Stack, Box, Alert, AlertIcon, Text } from '@chakra-ui/react'
 import { useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import PostSkeleton from '../skeleton/postSkeleton'
+import PostsSkeleton from '../skeleton/postSkeleton'
 import Post from './postTimeline/post'
 
 const PostTimeline = ({ communityId }: { communityId: string }) => {
@@ -31,7 +31,6 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
       {postStateValue.posts.map(post => (
         <Post
           key={post.id}
-          listId={post.id}
           isUserCreator={user?.uid === post.creatorId}
           userVoteValue={
             postStateValue.userVotePost.filter(i => i.postId === post.id)[0]
@@ -41,7 +40,9 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
           {...usePostHook}
         />
       ))}
-      {loading && <PostSkeleton />}
+
+      {loading && <PostsSkeleton />}
+
       {err.id === communityId && (
         <Alert status="error">
           <AlertIcon />
@@ -49,7 +50,7 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
         </Alert>
       )}
       <Box ref={ref} id="Hit this and fetch more content" />
-      {postStateValue.posts.length === postStateValue.totalCollections && (
+      {postStateValue.totalCollections != 0 && postStateValue.posts.length === postStateValue.totalCollections && (
         <Alert status="info" colorScheme="purple">
           <AlertIcon />
           Few...

@@ -1,3 +1,4 @@
+import Info from '@/components/info'
 import ContentLayouts from '@/components/layouts/content'
 import PostForm from '@/components/r/submit/postForm'
 import { auth } from '@/libs/firebase/clientApp'
@@ -16,7 +17,11 @@ export default function Submit() {
         </Box>
         <PostForm user={user} />
       </>
-      <></>
+      <>
+        <Box pt="8">
+          <Info />
+        </Box>
+      </>
     </ContentLayouts>
   )
 }
