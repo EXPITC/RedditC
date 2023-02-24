@@ -11,7 +11,7 @@ import collections from './firestoreCollectionsID'
 const getcommunityData = async (
   communityID: string
 ): Promise<communityData | false> => {
-  const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID)
+  const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID.toLowerCase())
   try {
     if (!communityID) return false
     const communityData = await getDoc(communityRef)
