@@ -2,7 +2,6 @@ import {
   Menu,
   Text,
   MenuButton,
-  MenuItem,
   Button,
   MenuList,
   Flex
@@ -21,12 +20,12 @@ export default function ComunityHome() {
           fontSize="10pt"
           color="black"
           px={[0, '10px', '15px']}
-          w="200px"
+          w={["120px", "150px", "200px"]}
         >
           <Flex
             align="center"
             justify={['center', 'center', 'space-between']}
-            max-w="200px"
+            maxW="200px"
           >
             <Flex align="center">
               <AiFillHome fontSize="15pt" />

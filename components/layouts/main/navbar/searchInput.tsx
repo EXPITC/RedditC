@@ -10,7 +10,7 @@ export default function SearchInput({ user }: props) {
   return (
     <Flex
       flexGrow="1"
-      mr="2"
+      mx={["1", "2"]}
       maxW={user ? 'auto' : '640px'}
       h="34px"
       align="center"
@@ -18,7 +18,7 @@ export default function SearchInput({ user }: props) {
       <InputGroup>
         <InputLeftElement
           pointerEvents="none"
-          children={<SearchIcon color="blackAlpha.500" fontSize="14pt" />}
+          children={<SearchIcon color="blackAlpha.500" fontSize={["10pt", "14pt"]} />}
         />
         <Input
           type="text"
@@ -26,7 +26,7 @@ export default function SearchInput({ user }: props) {
           bg="gray.50"
           borderRadius="full"
           placeholder="Search Reddit"
-          _placeholder={{ color: 'gray.500' }}
+          _placeholder={{ color: 'gray.500', textOverflow: 'ellipsis' }}
           _focus={{
             boxShadow: 'none',
             outline: 'none',

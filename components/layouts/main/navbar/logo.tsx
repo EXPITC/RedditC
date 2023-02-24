@@ -3,7 +3,7 @@ import Image from 'next/image'
 import styles from '@/styles/Logo.module.css'
 
 const Logo = () => (
-  <Flex align="center" minWidth="fit-content">
+  <Flex align="center" minWidth="fit-content" mx={["1", "2"]}>
     <Image
       src="/images/redditFace.svg"
       alt="redditFace"
