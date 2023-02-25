@@ -24,6 +24,7 @@ export interface usePost {
 
 // selectedPost contain id of post
 const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
+  communityId = communityId.toLowerCase()
   const [postStateValue, setPostState] = useRecoilState(postState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
@@ -107,7 +108,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
 
     const votePostData = postStateValue.posts.filter(
       vote => vote.id === postId
-    )[0]
+    )[0] || postStateValue.selectedPost
 
     const votePostKey = postStateValue.posts.findIndex(
       vote => vote.id === postId
@@ -120,6 +121,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
 
     const updatedDataPost = [...postStateValue.posts]
     const updatedDataUser = [...postStateValue.userVotePost]
+    let updatedSelectedPost = postStateValue.selectedPost ? { ...postStateValue.selectedPost } : null
 
     const voteUser = voteUserData.vote + toFirebase.vote
     const votePost = votePostData.vote + toFirebase.vote
@@ -128,15 +130,19 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
       ...voteUserData,
       vote: voteUser
     }
-    updatedDataPost[votePostKey] = {
-      ...updatedDataPost[votePostKey],
-      vote: votePost
-    }
+    if (updatedDataPost.length > 0)
+      updatedDataPost[votePostKey] = {
+        ...updatedDataPost[votePostKey],
+        vote: votePost
+      }
+    if (updatedSelectedPost)
+      updatedSelectedPost = { ...updatedSelectedPost, vote: votePost }
+
     setPostState(prev => ({
       ...prev,
       userVotePost: updatedDataUser,
       posts: updatedDataPost,
-      selectedPost: updatedDataPost.filter(post => post.id === selectedPostId)[0]
+      selectedPost: updatedSelectedPost
     }))
   }
 
@@ -176,7 +182,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     if (!communityId && !selectedPostId) return
     // Initial
     // Initial post return 20 post desc
-    if (postStateValue.totalCollections === -1 && !selectedPostId) populateCommunityPost()
+    if (postStateValue.totalCollections < 0 && !selectedPostId) populateCommunityPost()
     if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
 
