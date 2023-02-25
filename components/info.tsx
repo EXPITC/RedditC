@@ -19,14 +19,19 @@ import useCommunityData from "@/libs/hooks/useCommunityData"
 const Info = () => {
   const router = useRouter()
   let { communityID } = router.query
-  communityID = typeof communityID === 'string' ? communityID : ''
+  communityID = typeof communityID === 'string' ? communityID : ''//just for safety
+
+  //core data
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const { communitySubs, setCommunitySubs } = useCommunityData({ communityId: communityID, communityName: '' })
   const communityData = communitySubs.currentCommunity
+
+  //Handle the image input variable
   const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl, err: errHook } = useSelectImage()
   const communityProfile = imgUrl || communityData.imageUrl
   const ref = useRef<HTMLInputElement>(null)
+
   const [err, setErr] = useState('')
   const [loading, setLoading] = useState(false)
 
