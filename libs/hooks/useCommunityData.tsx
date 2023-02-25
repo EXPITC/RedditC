@@ -1,10 +1,13 @@
-import { doc, increment, writeBatch } from 'firebase/firestore'
+import { doesNotMatch } from 'assert'
+import { collection, deleteDoc, doc, getDoc, increment, writeBatch, where, query, getDocs } from 'firebase/firestore'
+import { deleteObject, ref } from 'firebase/storage'
+import router from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
 import { communitySub, communitySubsState } from '../atoms/communitiesAtoms'
-import { auth, firestore } from '../firebase/clientApp'
+import { auth, firestore, storage } from '../firebase/clientApp'
 import getcommunityData, { getUserCommunitySubs } from '../firebase/communityData'
 import collections from '../firebase/firestoreCollectionsID'
 
@@ -17,6 +20,7 @@ const useCommunityData = ({
   communityId,
   communityName
 }: useCommunityDataT) => {
+  communityId = communityId.toLowerCase()
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
@@ -34,7 +38,7 @@ const useCommunityData = ({
   }
 
   // Pass the communityId to check user join or not
-  const isJoin = !!communitySubs.subs.find(subs => subs.communityId === communityId)
+  const isJoin = !!communitySubs.subs.find(sub => sub.communityId === communityId)
 
   // Register user to community
   const join = async () => {
@@ -70,7 +74,11 @@ const useCommunityData = ({
 
       setCommunitySubs(prev => ({
         ...prev,
-        subs: [...communitySubs.subs, newSubData]
+        subs: [...communitySubs.subs, newSubData],
+        currentCommunity: {
+          ...prev.currentCommunity,
+          numberOfmember: prev.currentCommunity.numberOfmember + 1
+        }
       }))
     } catch (e: any) {
       console.log('join err ', e.message)
@@ -99,11 +107,86 @@ const useCommunityData = ({
       })
 
       await batch.commit()
+      const latestCommunityData = await getDoc(communityDoc)
+      if (latestCommunityData.exists()) {
+        if (latestCommunityData.data().numberOfmember === 0) {
+          // new iteration for batch
+          const batch2 = writeBatch(firestore)
+          batch2.delete(communityDoc)
+
+          //Variable need to get the data
+          const postCollectionPath = collection(firestore, collections.POSTS.id)
+          const commentCollectionPath = collection(firestore, collections.COMMENTS.id)
+
+          const selectOnlyCommunityRelated = where('communityId', '==', communityId)
+
+          const postQuery = query(postCollectionPath, selectOnlyCommunityRelated)
+          const commentQuery = query(commentCollectionPath, selectOnlyCommunityRelated)
+
+          //Get the data
+          const postCollection = await getDocs(postQuery)
+          const commentCollection = await getDocs(commentQuery)
+
+          //execute
+          for (const userId of latestCommunityData.data().intractedUserId) {
+            const voteUserCollectionPath = collection(firestore, `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`)
+            const voteUserQuery = query(voteUserCollectionPath, selectOnlyCommunityRelated)
+
+            //get the latest data
+            const voteUserCollection = await getDocs(voteUserQuery)
+
+            voteUserCollection.forEach(doc => batch2.delete(doc.ref))
+          }
+
+          postCollection.forEach(doc => batch2.delete(doc.ref))
+          commentCollection.forEach(doc => batch2.delete(doc.ref))
+
+          // execute for storage
+          await batch2.commit()
+            .then(() => {
+              // delete image posted
+              postCollection.forEach(async doc => {
+                if (doc.data().imgUrl) {
+                  const imgRef = ref(storage, `${collections.POSTS.id}/${doc.id}/${collections.POSTS.storage.image.id}`)
+                  await deleteObject(imgRef)
+                }
+              })
+
+              setCommunitySubs(prev => ({
+                ...prev,
+                subs: communitySubs.subs.filter(prev => prev.communityId != communityId),
+                currentCommunity: {
+                  id: '',
+                  communityName: '',
+                  imageUrl: '',
+                  createdAt: {
+                    seconds: 0,
+                    nanoseconds: 0
+                  },
+                  creatorId: '',
+                  numberOfmember: 0,
+                  intractedUserId: [],
+                  privacyType: ''
+                }
+              })
+              )
+
+              setLoading(false)
+              router.push('/')
+            }
+            )
+        }
+      }
       setCommunitySubs(prev => ({
         ...prev,
-        subs: communitySubs.subs.filter(prev => prev.communityId != communityId)
+        subs: communitySubs.subs.filter(prev => prev.communityId != communityId),
+        currentCommunity: {
+          ...prev.currentCommunity,
+          numberOfmember: prev.currentCommunity.numberOfmember - 1
+        }
       })
       )
+
     } catch (e: any) {
       console.log('leave err ', e.message)
     }
@@ -130,7 +213,7 @@ const useCommunityData = ({
 
   useEffect(() => {
     if (communitySubs.subs.find(subs => subs.communityId === communityId)) return
-    if (user) getSubsList()
+    if (user && communitySubs.subs.length === 0) getSubsList()
   }, [user, communitySubs, communityId])
 
   useEffect(() => {

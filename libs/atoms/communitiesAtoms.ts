@@ -16,6 +16,8 @@ export type communityData = {
   }
   creatorId: string
   numberOfmember: number
+  intractedUserId: string[],
+  privacyType: string
 }
 
 export interface communitySubsCollection {
@@ -34,7 +36,9 @@ const defaultCommunitySubs: communitySubsCollection = {
       nanoseconds: 0
     },
     creatorId: '',
-    numberOfmember: 0
+    numberOfmember: 0,
+    intractedUserId: [],
+    privacyType: ''
   }
 }
 

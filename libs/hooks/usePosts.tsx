@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
+import { communitySubsState } from '../atoms/communitiesAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
 import deletePost from '../firebase/deletePost'
 import getPost from '../firebase/getPost'
@@ -26,6 +27,7 @@ export interface usePost {
 const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
   communityId = communityId.toLowerCase()
   const [postStateValue, setPostState] = useRecoilState(postState)
+  const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
   const [err, setErr] = useState({
@@ -93,6 +95,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     e.stopPropagation()
     if (!userId) return setAuthModalState({ open: true, view: 'Login' })
 
+
     const existingVoteData = postStateValue.userVotePost.filter(
       vote => vote.postId === postId
     )[0]
@@ -102,7 +105,8 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
       vote: 0
     }
     const voteUserData = existingVoteData || defaultVoteData
-    const toFirebase = await handleVote(userId, voteUserData, n)
+    const userAlreadyInteracted = communitySubs.currentCommunity.id ? communitySubs.currentCommunity.intractedUserId.find(prevUserId => prevUserId === userId) : false // string | undifiend | false
+    const toFirebase = await handleVote(userId, voteUserData, n, userAlreadyInteracted)
 
     if (toFirebase.err) return
 
@@ -143,6 +147,13 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
       userVotePost: updatedDataUser,
       posts: updatedDataPost,
       selectedPost: updatedSelectedPost
+    }))
+    setCommunitySubs(prev => ({
+      ...prev,
+      currentCommunity: {
+        ...prev.currentCommunity,
+        intractedUserId: [userId, ...prev.currentCommunity.intractedUserId]
+      }
     }))
   }
 
