@@ -4,7 +4,8 @@ import {
   increment,
   getDocs,
   collection,
-  deleteDoc
+  deleteDoc,
+  getDoc
 } from 'firebase/firestore'
 import { votePost } from '../atoms/postsAtom'
 import collections from '../firebase/firestoreCollectionsID'
@@ -38,18 +39,27 @@ const handleVote: handleVoteProps = async (userId, voteData, n) => {
       batch.delete(userVote)
       // bring back the existency of post vote value to neutral 0
       batch.update(postVote, {
-        vote: increment(n * -1)
+        vote: increment(n * -1),
       })
     }
     if (voteData.vote != n) {
       // Modify/set value
       batch.set(userVote, {
         ...voteData,
-        vote
+        vote: n,
       })
 
+      // Get lastest community data
+      const communityVoteDocRef = doc(firestore, collections.COMMUNITIES.id, voteData.communityId.toLowerCase())
+      const communityVoteDoc = await getDoc(communityVoteDocRef)
+
+      const intractedUserId = [...communityVoteDoc.data()!.intractedUserId]
+      intractedUserId.find(intractedUserId => intractedUserId === userId) ? 'Skip' : intractedUserId.push(userId)
+      console.log('cmon', intractedUserId)
+
       batch.update(postVote, {
-        vote: increment(vote)
+        vote: increment(vote),
+        intractedUserId,
       })
     }
     await batch.commit()
