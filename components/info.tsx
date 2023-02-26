@@ -195,8 +195,12 @@ const Info = () => {
           </Alert>
         }
 
-        <Text color="gray.500" fontSize="9px" fontWeight="semibold">{communityData.creatorId === user?.uid && 'Admin'} r/{communityData.id}</Text>
-
+        <Text color="gray.500" fontSize="9px" fontWeight="semibold">
+          {communityData.creatorId === user?.uid && 'Creator'}{' '}
+          {communityData.creatorId === user?.uid && communitySubs.subs.find(sub => sub.communityId === communityID)?.isModerator && '&'}{' '}
+          {communitySubs.subs.find(sub => sub.communityId === communityID)?.isModerator && 'Admin'}{' '}
+          r/{communityData.id}
+        </Text>
       </Stack>
     </Box >
   )
