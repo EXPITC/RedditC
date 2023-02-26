@@ -51,7 +51,7 @@ const comments = ({ user, selectedPost, setPostState }: commentsProps) => {
         creatorId: user.uid,
         creatorUserName: user.displayName || user.email!.split('@')[0],
         creatorPhotoUrl: user.photoURL,
-        communityId: selectedPost.communityId,
+        communityId: selectedPost.communityId.toLowerCase(),
         postId: selectedPost.id,
         postTitle: selectedPost.title,
         text: comment,

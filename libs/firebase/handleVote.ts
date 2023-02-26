@@ -4,7 +4,9 @@ import {
   increment,
   getDocs,
   collection,
-  deleteDoc
+  deleteDoc,
+  getDoc,
+  arrayUnion
 } from 'firebase/firestore'
 import { votePost } from '../atoms/postsAtom'
 import collections from '../firebase/firestoreCollectionsID'
@@ -13,14 +15,18 @@ import { firestore } from './clientApp'
 type handleVoteProps = (
   userId: string,
   voteData: votePost,
-  n: number
+  n: number,
+  userAlreadyInteracted: string | undefined | false
 ) => Promise<{ err: string; vote: number }>
 
-const handleVote: handleVoteProps = async (userId, voteData, n) => {
+const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInteracted) => {
+
   const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
   const postVotePath = `${collections.POSTS.id}`
   const userVote = doc(firestore, userVotePath, voteData.postId)
   const postVote = doc(firestore, postVotePath, voteData.postId)
+  const communityVoteDoc = doc(firestore, collections.COMMUNITIES.id, voteData.communityId.toLowerCase())
+
   const vote = voteData.vote * -1 + n
   // First press up = 1
   // First press down = -1
@@ -32,24 +38,47 @@ const handleVote: handleVoteProps = async (userId, voteData, n) => {
   try {
     const batch = writeBatch(firestore)
 
+    //Delete
     if (voteData.vote === n) {
       // Bring back to zero
       // delete user vote
       batch.delete(userVote)
       // bring back the existency of post vote value to neutral 0
       batch.update(postVote, {
-        vote: increment(n * -1)
+        vote: increment(n * -1),
       })
     }
+
+    //Create
     if (voteData.vote != n) {
       // Modify/set value
       batch.set(userVote, {
         ...voteData,
-        vote
+        vote: n,
       })
 
+      //record new intracted userId 
+      if (!userAlreadyInteracted) {
+        // if there is not currentCommunity in state we retrive intractedUserId data from firebase
+        const checkInFirestore = async () => {
+          const communityData = await getDoc(communityVoteDoc)
+
+          return communityData.data()!.intractedUserId.find((prevUserId: string) => prevUserId === userId)
+        }
+
+        if (userAlreadyInteracted === false)
+          // update the value userAlreadyInteracted by db data 
+          userAlreadyInteracted = await checkInFirestore()
+
+        if (!userAlreadyInteracted) {
+          batch.update(communityVoteDoc, {
+            intractedUserId: arrayUnion(userId)
+          })
+        }
+      }
+
       batch.update(postVote, {
-        vote: increment(vote)
+        vote: increment(vote),
       })
     }
     await batch.commit()

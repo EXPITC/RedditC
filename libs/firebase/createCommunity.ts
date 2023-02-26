@@ -35,6 +35,7 @@ const createcommunity = async (
       creatorId: user?.uid,
       createdAt: serverTimestamp(),
       numberOfmember: 1,
+      intractedUserId: [],
       privacyType: type
     }
 

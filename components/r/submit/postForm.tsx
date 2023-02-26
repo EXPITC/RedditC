@@ -80,9 +80,10 @@ const PostForm = ({ user }: PostForm) => {
   }
   const handleUpload = async () => {
     const { communityID } = router.query
+    if (typeof communityID !== 'string') return
     const post: Post = {
       id: '',
-      communityId: communityID as string,
+      communityId: communityID.toLowerCase(),
       creatorId: user!.uid,
       creatorName: user!.displayName || user!.email!.split('@')[0],
       title: inputText.title,

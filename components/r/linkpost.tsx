@@ -9,7 +9,7 @@ import { TfiLink } from 'react-icons/tfi'
 import { useSetRecoilState } from 'recoil'
 
 const ImageProfileHead = () => (
-  <Box position="relative" w="75px">
+  <Box position="relative" w="75px" >
     <Box
       position="relative"
       borderRadius="0 0 50% 50%"
@@ -30,7 +30,7 @@ const ImageProfileHead = () => (
         width={50}
         height={50}
         alt="reddit profile head"
-        style={{ position: 'relative', zIndex: 2 }}
+        style={{ position: 'relative', zIndex: 0 }}
       />
     </Box>
   </Box>
