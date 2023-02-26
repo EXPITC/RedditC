@@ -4,7 +4,6 @@ export type communitySub = {
   communityId: string
   communityName: string
   isModerator: boolean
-  imageUrl: string
 }
 export type communityData = {
   id: string

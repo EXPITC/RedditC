@@ -51,8 +51,7 @@ const useCommunityData = ({
       const newSubData: communitySub = {
         communityId,
         communityName,
-        isModerator: false,
-        imageUrl: communitySubs.currentCommunity.imageUrl
+        isModerator: false
       }
       const newDocPath = doc(firestore, subsCollectionPath, communityId)
 
