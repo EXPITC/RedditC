@@ -199,6 +199,19 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
 
   }, [userId, selectedPostId, postStateValue])
 
+  useEffect(() => {
+
+    return () => {
+      if (postStateValue.posts?.[0]?.communityId !== communityId) {
+        setPostState(prev => ({
+          ...prev,
+          totalCollections: -1,
+          posts: []
+        }))
+      }
+    }
+  }, [communityId])
+
   return {
     postStateValue,
     setPostState,
