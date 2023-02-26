@@ -27,20 +27,6 @@ const useCommunityData = ({
   const [loading, setLoading] = useState(false)
   const subsCollectionPath = `${collections.USERS.id}/${user?.uid}/${collections.USERS.COMMUNITYSUBS.id}`
 
-  // If there any user get the community that user in
-  const getSubsList = async () => {
-    const subs = user ? await getUserCommunitySubs(user.uid) : null
-
-    if (!subs) return
-    if (subs.length === 0) return setCommunitySubs(prev => ({ ...prev, totalSubs: 0 }))
-
-    setCommunitySubs(prev => ({
-      ...prev,
-      totalSubs: subs.length,
-      subs
-    }))
-  }
-
   // Pass the communityId to check user join or not
   const isJoin = !!communitySubs.subs.find(sub => sub.communityId === communityId)
 
@@ -213,11 +199,6 @@ const useCommunityData = ({
       currentCommunity
     }))
   }
-
-  useEffect(() => {
-    if (communitySubs.subs.find(subs => subs.communityId === communityId)) return
-    if (user && communitySubs.totalSubs === -1) getSubsList()
-  }, [user, communitySubs, communityId])
 
   useEffect(() => {
     if (communitySubs.currentCommunity.id === communityId) return // Its same data  
