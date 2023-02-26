@@ -13,6 +13,7 @@ import Image from "next/image"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import uploadCommunityProfile from "@/libs/firebase/uploadCommunityProfile"
 import useCommunityData from "@/libs/hooks/useCommunityData"
+import communityMenuState from "@/libs/atoms/communityMenuAtoms"
 
 
 
@@ -24,6 +25,7 @@ const Info = () => {
   //core data
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
+  const setCommunityMenu = useSetRecoilState(communityMenuState)
   const { communitySubs, setCommunitySubs } = useCommunityData({ communityId: communityID, communityName: '' })
   const communityData = communitySubs.currentCommunity
 
@@ -60,11 +62,20 @@ const Info = () => {
       setLoading(true)
       setCommunitySubs(prev => ({
         ...prev,
+        subs: [...prev.subs.filter(sub => sub.communityId !== communityID), { ...prev.subs.find(sub => sub.communityId === communityID)!, imageUrl: imgUrl }],
         currentCommunity: {
           ...prev.currentCommunity,
           imageUrl: imgUrl
         }
       }))
+      setCommunityMenu(prev => ({
+        ...prev,
+        currentMenuItem: {
+          ...prev.currentMenuItem,
+          imageUrl: imgUrl
+        }
+      }))
+
       if (err) setErr('')
       const uploadToDB = await uploadCommunityProfile(communityData.id, selectedImgUrl)
 
@@ -72,8 +83,16 @@ const Info = () => {
         setErr(uploadToDB.err)
         setCommunitySubs(prev => ({
           ...prev,
+          subs: [...prev.subs.filter(sub => sub.communityId !== communityID), { ...prev.subs.find(sub => sub.communityId === communityID)!, imageUrl: prevImg }],
           currentCommunity: {
             ...prev.currentCommunity,
+            imageUrl: prevImg
+          }
+        }))
+        setCommunityMenu(prev => ({
+          ...prev,
+          currentMenuItem: {
+            ...prev.currentMenuItem,
             imageUrl: prevImg
           }
         }))
