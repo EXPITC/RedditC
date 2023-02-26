@@ -19,7 +19,7 @@ import useCommunityData from "@/libs/hooks/useCommunityData"
 const Info = () => {
   const router = useRouter()
   let { communityID } = router.query
-  communityID = typeof communityID === 'string' ? communityID : ''//just for safety
+  communityID = typeof communityID === 'string' ? communityID.toLowerCase() : ''//just for safety
 
   //core data
   const [user] = useAuthState(auth)
@@ -92,7 +92,7 @@ const Info = () => {
         <HiOutlineDotsHorizontal />
       </Flex>
       <Stack p="12px" >
-        <Text fontSize="14px" pb="4px" >Next.js is the React framework for production by Vercel.</Text>
+        <Text fontSize="14px" pb="4px" >Description not provide.</Text>
 
         <Flex >
           <GiCakeSlice fontSize="20px" />
@@ -125,7 +125,7 @@ const Info = () => {
           <Button onClick={handleClick} h="34px" flexGrow="1">Create new post</Button>
         </Flex>
 
-        {communityData.creatorId === user?.uid && (
+        {communitySubs.subs.find(sub => sub.communityId === communityID)?.isModerator && (
           <>
             <Flex py="8px" justify="center" align="center">
               <Divider borderColor="gray.300" />
