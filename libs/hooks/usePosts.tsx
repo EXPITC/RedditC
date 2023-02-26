@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
+import { communitySubsState } from '../atoms/communitiesAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
 import deletePost from '../firebase/deletePost'
 import getPost from '../firebase/getPost'
@@ -24,7 +25,9 @@ export interface usePost {
 
 // selectedPost contain id of post
 const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
+  communityId = communityId.toLowerCase()
   const [postStateValue, setPostState] = useRecoilState(postState)
+  const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
   const [err, setErr] = useState({
@@ -92,6 +95,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     e.stopPropagation()
     if (!userId) return setAuthModalState({ open: true, view: 'Login' })
 
+
     const existingVoteData = postStateValue.userVotePost.filter(
       vote => vote.postId === postId
     )[0]
@@ -101,13 +105,14 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
       vote: 0
     }
     const voteUserData = existingVoteData || defaultVoteData
-    const toFirebase = await handleVote(userId, voteUserData, n)
+    const userAlreadyInteracted = communitySubs.currentCommunity.id ? communitySubs.currentCommunity.intractedUserId.find(prevUserId => prevUserId === userId) : false // string | undifiend | false
+    const toFirebase = await handleVote(userId, voteUserData, n, userAlreadyInteracted)
 
     if (toFirebase.err) return
 
     const votePostData = postStateValue.posts.filter(
       vote => vote.id === postId
-    )[0]
+    )[0] || postStateValue.selectedPost
 
     const votePostKey = postStateValue.posts.findIndex(
       vote => vote.id === postId
@@ -120,6 +125,7 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
 
     const updatedDataPost = [...postStateValue.posts]
     const updatedDataUser = [...postStateValue.userVotePost]
+    let updatedSelectedPost = postStateValue.selectedPost ? { ...postStateValue.selectedPost } : null
 
     const voteUser = voteUserData.vote + toFirebase.vote
     const votePost = votePostData.vote + toFirebase.vote
@@ -128,15 +134,26 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
       ...voteUserData,
       vote: voteUser
     }
-    updatedDataPost[votePostKey] = {
-      ...updatedDataPost[votePostKey],
-      vote: votePost
-    }
+    if (updatedDataPost.length > 0)
+      updatedDataPost[votePostKey] = {
+        ...updatedDataPost[votePostKey],
+        vote: votePost
+      }
+    if (updatedSelectedPost)
+      updatedSelectedPost = { ...updatedSelectedPost, vote: votePost }
+
     setPostState(prev => ({
       ...prev,
       userVotePost: updatedDataUser,
       posts: updatedDataPost,
-      selectedPost: updatedDataPost.filter(post => post.id === selectedPostId)[0]
+      selectedPost: updatedSelectedPost
+    }))
+    setCommunitySubs(prev => ({
+      ...prev,
+      currentCommunity: {
+        ...prev.currentCommunity,
+        intractedUserId: [userId, ...prev.currentCommunity.intractedUserId]
+      }
     }))
   }
 
@@ -176,11 +193,24 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     if (!communityId && !selectedPostId) return
     // Initial
     // Initial post return 20 post desc
-    if (postStateValue.totalCollections === -1 && !selectedPostId) populateCommunityPost()
+    if (postStateValue.totalCollections < 0 && !selectedPostId) populateCommunityPost()
     if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
     if (!postStateValue.userVotePost.length && userId) populateUserVote()
 
   }, [userId, selectedPostId, postStateValue])
+
+  useEffect(() => {
+
+    return () => {
+      if (postStateValue.posts?.[0]?.communityId !== communityId) {
+        setPostState(prev => ({
+          ...prev,
+          totalCollections: -1,
+          posts: []
+        }))
+      }
+    }
+  }, [communityId])
 
   return {
     postStateValue,

@@ -17,6 +17,7 @@ const ContentLayouts = ({ children }: props) =>
         {/* Right Info */}
         <Flex
           direction="column"
+          flexGrow="1"
           display={['none', 'none', 'none', 'flex']}
           ml="24px"
         >

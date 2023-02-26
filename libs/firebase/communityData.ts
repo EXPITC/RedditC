@@ -11,7 +11,7 @@ import collections from './firestoreCollectionsID'
 const getcommunityData = async (
   communityID: string
 ): Promise<communityData | false> => {
-  const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID)
+  const communityRef = doc(firestore, collections.COMMUNITIES.id, communityID.toLowerCase())
   try {
     if (!communityID) return false
     const communityData = await getDoc(communityRef)
@@ -39,8 +39,23 @@ const getUserCommunitySubs = async (userId: string) => {
       `${collections.USERS.id}/${userId}/${collections.USERS.COMMUNITYSUBS.id}`
     )
   )
+  const subs: string[] = []
+  let imgUrl: { [key: string]: string } = {}
 
-  return subsDoc.docs.map(doc => ({ ...doc.data() })) as communitySub[]
+  subsDoc.docs.map(doc => subs.push(doc.data().communityId))
+
+  for (const sub of subs) {
+    const communityPath = doc(firestore, collections.COMMUNITIES.id, sub)
+    const communityDoc = await getDoc(communityPath)
+    if (communityDoc.exists()) {
+      imgUrl = {
+        ...imgUrl,
+        [communityDoc.data().id]: communityDoc.data()?.imageUrl
+      }
+    }
+  }
+
+  return subsDoc.docs.map(doc => ({ ...doc.data(), imageUrl: imgUrl[doc.data().communityId as string] })) as communitySub[]
 }
 
 export { getcommunityData as default, getUserCommunitySubs }

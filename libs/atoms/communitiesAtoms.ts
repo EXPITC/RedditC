@@ -4,6 +4,7 @@ export type communitySub = {
   communityId: string
   communityName: string
   isModerator: boolean
+  imageUrl?: string
 }
 export type communityData = {
   id: string
@@ -15,14 +16,18 @@ export type communityData = {
   }
   creatorId: string
   numberOfmember: number
+  intractedUserId: string[],
+  privacyType: string
 }
 
 export interface communitySubsCollection {
+  totalSubs: number,
   subs: communitySub[],
   currentCommunity: communityData
 }
 
 const defaultCommunitySubs: communitySubsCollection = {
+  totalSubs: -1,
   subs: [],
   currentCommunity: {
     id: '',
@@ -33,7 +38,9 @@ const defaultCommunitySubs: communitySubsCollection = {
       nanoseconds: 0
     },
     creatorId: '',
-    numberOfmember: 0
+    numberOfmember: 0,
+    intractedUserId: [],
+    privacyType: ''
   }
 }
 

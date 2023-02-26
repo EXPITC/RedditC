@@ -24,13 +24,13 @@ export default function IconsDecoration() {
           <IoVideocamOutline />
         </Button>
       </Flex>
-      <Button variant="iconList">
+      <Button variant="iconList" minW={["9", "10"]}>
         <TbMessageCircle />
       </Button>
-      <Button variant="iconList">
+      <Button variant="iconList" minW={["9", "10"]}>
         <TfiBell />
       </Button>
-      <Button variant="iconList">
+      <Button variant="iconList" minW={["9", "10"]}>
         <AiOutlinePlus />
       </Button>
     </Flex>

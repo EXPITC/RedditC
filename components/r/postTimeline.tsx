@@ -18,11 +18,8 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
 
   useEffect(() => {
     if (loading) return
-    if (
-      isInView &&
-      postStateValue.posts.length != postStateValue.totalCollections
-    )
-      getNextCommunityPost()
+    if (postStateValue.totalCollections < 20) return //Mean disable this feature if there is no yet 20 post in the community, cuz by default it fetch 20 post
+    if (isInView && postStateValue.posts.length != postStateValue.totalCollections) getNextCommunityPost()
   }, [isInView, loading])
 
   // const if20NlastContent = (length: number, i: number) => (length >= 19 && length === i)
