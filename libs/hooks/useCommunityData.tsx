@@ -31,8 +31,12 @@ const useCommunityData = ({
   const getSubsList = async () => {
     const subs = user ? await getUserCommunitySubs(user.uid) : null
 
-    if (subs) setCommunitySubs(prev => ({
+    if (!subs) return
+    if (subs.length === 0) return setCommunitySubs(prev => ({ ...prev, totalSubs: 0 }))
+
+    setCommunitySubs(prev => ({
       ...prev,
+      totalSubs: subs.length,
       subs
     }))
   }
@@ -212,7 +216,7 @@ const useCommunityData = ({
 
   useEffect(() => {
     if (communitySubs.subs.find(subs => subs.communityId === communityId)) return
-    if (user && communitySubs.subs.length === 0) getSubsList()
+    if (user && communitySubs.totalSubs === -1) getSubsList()
   }, [user, communitySubs, communityId])
 
   useEffect(() => {

@@ -21,11 +21,13 @@ export type communityData = {
 }
 
 export interface communitySubsCollection {
+  totalSubs: number,
   subs: communitySub[],
   currentCommunity: communityData
 }
 
 const defaultCommunitySubs: communitySubsCollection = {
+  totalSubs: -1,
   subs: [],
   currentCommunity: {
     id: '',
