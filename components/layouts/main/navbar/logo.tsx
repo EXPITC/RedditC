@@ -1,9 +1,10 @@
 import { Flex } from '@chakra-ui/react'
 import Image from 'next/image'
 import styles from '@/styles/Logo.module.css'
+import Link from 'next/link'
 
 const Logo = () => (
-  <Flex align="center" minWidth="fit-content" mx={["1", "2"]}>
+  <Flex align="center" minWidth="fit-content" mx={["1", "2"]} as={Link} href="/">
     <Image
       src="/images/redditFace.svg"
       alt="redditFace"
