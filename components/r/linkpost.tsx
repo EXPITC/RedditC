@@ -1,5 +1,6 @@
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { auth } from '@/libs/firebase/clientApp'
+import useCommunityMenu from '@/libs/hooks/useCommunityMenu'
 import { Box, Button, Flex, Input } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -45,11 +46,15 @@ const LinkPost = () => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
 
     const { communityID } = router.query
-    router.push({
+
+    if (communityID) return router.push({
       pathname: `${communityID}/submit`,
       query: { tabIndex }
     })
+
+    useCommunityMenu().toggleCommunityMenu()
   }
+
 
   return (
     <Flex
