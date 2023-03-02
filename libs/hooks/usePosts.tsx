@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { SetterOrUpdater, useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
-import { communitySubsState } from '../atoms/communitiesAtoms'
+import { communitySubsState, currentCommunity } from '../atoms/communitiesAtoms'
 import { PostState, postState } from '../atoms/postsAtom'
+import { auth } from '../firebase/clientApp'
 import deletePost from '../firebase/deletePost'
 import getPost from '../firebase/getPost'
 import getPosts from '../firebase/getPosts'
@@ -18,15 +20,17 @@ export interface usePost {
     msg: string
   }
   loading: string
-  onVote: (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onVote: (postId: string, communityId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onDelete: (id: string, imgUrl: string | undefined, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onSelect: (pid: string) => void
+  onSelect: (pid: string, communityId: string) => void
 }
 
 // selectedPost contain id of post
-const usePost = (communityId: string, userId: string | undefined, selectedPostId: string = ''): usePost => {
-  communityId = communityId.toLowerCase()
+const usePost = (communityId: string = '', selectedPostId: string = ''): usePost => {
+  const userId = useAuthState(auth)[0]?.uid
+  communityId = communityId?.toLowerCase()
   const [postStateValue, setPostState] = useRecoilState(postState)
+  const resetPostState = useResetRecoilState(postState)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
@@ -91,10 +95,9 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     }
   }
 
-  const onVote = async (postId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onVote = async (postId: string, communityId: string, n: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation()
     if (!userId) return setAuthModalState({ open: true, view: 'Login' })
-
 
     const existingVoteData = postStateValue.userVotePost.filter(
       vote => vote.postId === postId
@@ -167,16 +170,14 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
     }))
   }
 
-  const onSelect = (pid: string) => {
-
-    if (!!postStateValue.selectedPost) return
+  const onSelect = (pid: string, communityId: string) => {
 
     // populate selected data post before redirect to comments
     setPostState(prev => ({
       ...prev,
-      selectedPost: prev.posts.filter(post => post.id === pid)[0]
+      selectedPost: [...prev.posts].find(post => post.id === pid) || null
     }))
-    router.push(`${communityId}/comments/${pid}`)
+    router.push(`/r/${communityId}/comments/${pid}`)
   }
 
   const populateSelectedPost = async () => {
@@ -199,18 +200,22 @@ const usePost = (communityId: string, userId: string | undefined, selectedPostId
 
   }, [userId, selectedPostId, postStateValue])
 
+
   useEffect(() => {
+    const useFromHome = !communityId && !selectedPostId
+    const fromCommunityNotFromCommentPage = !!communitySubs.currentCommunity.id && !postStateValue.selectedPost?.id
+
+    // because i left currentCommunity from community or r pages and clear currentCommunity && selectedPostId when left selected page or comment page 
+    if (useFromHome && fromCommunityNotFromCommentPage) { resetPostState(), setCommunitySubs(prev => ({ ...prev, currentCommunity })) }//'From community to main' 
 
     return () => {
-      if (postStateValue.posts?.[0]?.communityId !== communityId) {
-        setPostState(prev => ({
-          ...prev,
-          totalCollections: -1,
-          posts: []
-        }))
-      }
+      // reset to default when switch between community but remaind same when access property of smae community like comments page in same community
+      if (!communityId || selectedPostId) return //from main page back to comment vise versa
+      if (communityId === communitySubs.currentCommunity.id) return //from community to comment and vise versa
+      resetPostState() //this hit when community to diffrent community page
     }
-  }, [communityId])
+  }, [communityId, communitySubs.currentCommunity, selectedPostId, postStateValue.selectedPost])
+
 
   return {
     postStateValue,
