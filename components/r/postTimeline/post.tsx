@@ -191,13 +191,13 @@ const Post = (Post: PostProps) => {
               <Image
                 src={Post.imgUrl}
                 alt={`Post Image by ${Post.creatorName}`}
-                loading="lazy"
                 fill
                 style={{
                   objectFit: 'contain',
-                  display: imgLoading ? 'none' : 'unset'
+                  opacity: imgLoading ? '0%' : '100%'
                 }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                onLoad={() => console.log('LOAD')}
                 onLoadingComplete={() => setImgLoading(false)}
                 onError={() => { }}
               />
