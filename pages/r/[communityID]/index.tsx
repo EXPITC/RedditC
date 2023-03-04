@@ -9,7 +9,7 @@ import { postState } from '@/libs/atoms/postsAtom'
 import getcommunityData from '@/libs/firebase/communityData'
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
-import { useRecoilState, useResetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 
 interface serverProps extends GetServerSideProps {
   params: {
@@ -36,7 +36,7 @@ export default function communityPage({ communityData }: { communityData: commun
 
   useEffect(() => {
     // if there any post that not match with current community request new data.
-    if (!postStateValue.posts.find(post => post.communityId !== communityData.id)) return
+    if (postStateValue.posts.find(post => post.communityId === communityData.id)) return
 
     setPostState(prev => ({
       ...prev,
