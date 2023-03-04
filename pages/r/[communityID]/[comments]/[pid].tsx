@@ -24,11 +24,12 @@ export default function PostCommentPage() {
   const usePostHook = usePost(communityID, pid)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
 
-  const { postStateValue, setPostState, loading, err } = usePostHook
+  const { postStateValue, setPostState } = usePostHook
 
   useEffect(() => {
 
     return () => {
+      // lifecycle
       setPostState(prev => ({
         ...prev,
         selectedPost: null
@@ -47,10 +48,7 @@ export default function PostCommentPage() {
         {postStateValue.selectedPost ?
           <Post
             isUserCreator={user?.uid === postStateValue.selectedPost!.creatorId}
-            userVoteValue={
-              postStateValue.userVotePost.filter(i => i.postId === postStateValue.selectedPost!.id)[0]
-                ?.vote
-            }
+            userVoteValue={postStateValue.userVotePost.find(i => i.postId === postStateValue.selectedPost!.id)?.vote || 0}
             {...postStateValue.selectedPost}
             {...usePostHook} />
           :
