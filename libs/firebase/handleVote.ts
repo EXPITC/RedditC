@@ -6,7 +6,9 @@ import {
   collection,
   deleteDoc,
   getDoc,
-  arrayUnion
+  arrayUnion,
+  query,
+  where
 } from 'firebase/firestore'
 import { votePost } from '../atoms/postsAtom'
 import collections from '../firebase/firestoreCollectionsID'
@@ -97,16 +99,26 @@ const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInter
   }
 }
 
-const getUserVote = async (userId: string) => {
+const getUserVote = async (userId: string, postsId: string[]) => {
   try {
-    const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
-    const userVoteCollection = collection(firestore, userVotePath)
-    const voteDocs = await getDocs(userVoteCollection)
+    const userVotePath = collection(firestore, `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`)
+    const userVoteQuery = query(userVotePath, where('postId', 'in', postsId))
 
-    return voteDocs.docs.map(doc => doc.data()) as votePost[]
+    const userVotesDoc = await getDocs(userVoteQuery)
+
+    return {
+      err: '',
+      data: userVotesDoc.docs.map(doc => doc.data()) as votePost[]
+    }
+
   } catch (e: any) {
-    console.error('get vote', e.message)
+    console.error('get user vote', e.message)
+    return {
+      err: 'Fail to get user vote history'
+    }
+
   }
+
 }
 
 const deleteVote = async (userId: string, voteId: string) => {

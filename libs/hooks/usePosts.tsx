@@ -34,7 +34,7 @@ const usePost = (communityId: string = '', selectedPostId: string = ''): usePost
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
   const router = useRouter()
   const setAuthModalState = useSetRecoilState(authModalState)
-  const [err, setErr] = useState({
+  const [err, setErr] = useState<{ id: 'homeFeed' | string, msg: string }>({
     id: '',
     msg: ''
   })
@@ -46,20 +46,19 @@ const usePost = (communityId: string = '', selectedPostId: string = ''): usePost
       const posts = await getPosts(communityId, startFromLastPost)
       posts.data.unshift(...postStateValue.posts)
 
-      if (typeof posts === 'string') return
+      if (posts.err) return setErr({
+        id: communityId,
+        msg: posts.err
+      })
+
       setPostState(prev => ({
         ...prev,
         totalCollections: posts.totalCollections,
         posts: posts.data
       }))
-    } catch (e: any) {
-      console.error('Fail to fetch post', e.message)
-      setErr({
-        id: communityId,
-        msg: 'Fail to fetch new post, you can try to refresh your page, if the issue still occur you can contact EXPITC for further investigation'
-      })
+    } finally {
+      setLoading('')
     }
-    setLoading('')
   }
 
   const getNextCommunityPost = async () => {
@@ -160,13 +159,15 @@ const usePost = (communityId: string = '', selectedPostId: string = ''): usePost
     }))
   }
 
-  const populateUserVote = async () => {
-    const userVotePost = await getUserVote(userId!)
-    if (!userVotePost) return console.error('Faild to populate user vote')
+  const populateUserVote = async (postsId: string[]) => {
+    if (postsId.length === 0) return
+
+    const userVotePost = await getUserVote(userId!, postsId)
+    if (userVotePost.err) return setErr({ id: 'homeFeed', msg: userVotePost.err })
 
     setPostState(prev => ({
       ...prev,
-      userVotePost
+      userVotePost: [...prev.userVotePost, ...userVotePost.data!]
     }))
   }
 
@@ -191,16 +192,43 @@ const usePost = (communityId: string = '', selectedPostId: string = ''): usePost
   }
 
   useEffect(() => {
-    if (!communityId && !selectedPostId) return
+    if (postStateValue.totalCollections > 0) return //already populate
+    if (!communityId && !selectedPostId) return //Its from home feed
     // Initial
     // Initial post return 20 post desc
-    if (postStateValue.totalCollections < 0 && !selectedPostId) populateCommunityPost()
+    if (postStateValue.totalCollections === -1 && !selectedPostId) populateCommunityPost()
+
+  }, [postStateValue.totalCollections, selectedPostId])
+
+  useEffect(() => {
+    if (!!postStateValue.selectedPost?.id) return //already populate
+
+    // initial
     if (!postStateValue.selectedPost && !!selectedPostId) populateSelectedPost()
-    if (!postStateValue.userVotePost.length && userId) populateUserVote()
 
-  }, [userId, selectedPostId, postStateValue])
+  }, [postStateValue.selectedPost, selectedPostId])
 
+  useEffect(() => {
+    if (!userId) return
+    if (postStateValue.posts.length < 1) return //console.log('STOP BY ZERO POST')
 
+    const new20PostId: [
+      string[],
+      string[]
+    ] = [[...postStateValue.posts].slice(-10).map(post => post.id), [...postStateValue.posts].slice(-20, -10).map(post => post.id)]
+
+    for (const postsId of new20PostId) {
+      let cleanPostsId = [...postsId]
+
+      for (const prevVote of postStateValue.userVotePost) {
+        cleanPostsId = cleanPostsId.filter(id => id !== prevVote.postId)
+      }
+      populateUserVote(cleanPostsId)
+    }
+
+  }, [postStateValue.posts, userId])
+
+  // lifecylce control
   useEffect(() => {
     const useFromHome = !communityId && !selectedPostId
     const fromCommunityNotFromCommentPage = !!communitySubs.currentCommunity.id && !postStateValue.selectedPost?.id
