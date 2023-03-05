@@ -101,7 +101,7 @@ const PostSkeleton = ({ selectedPost = false }) => (
 
 const PostsSkeleton = () => (
   <>
-    {[0, 1, 2, 3].map(i => <PostSkeleton key={i} />)}
+    {[0, 1].map(i => <PostSkeleton key={i} />)}
   </>
 )
 
