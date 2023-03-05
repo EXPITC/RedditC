@@ -4,17 +4,11 @@ import Head from 'next/head'
 import Image from 'next/image'
 import ButtonJoinLeave from '../buttonJoinLeave'
 
-interface HeaderProps {
-  communityId: string
-  communityName: string
-}
 
-
-const Header = ({ communityId, communityName }: HeaderProps) => {
-  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData({
-    communityId,
-    communityName
-  })
+const Header = () => {
+  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData()
+  const communityName = communitySubs.currentCommunity.communityName
+  const communityId = communitySubs.currentCommunity.id
 
   return (
     <>
@@ -44,9 +38,9 @@ const Header = ({ communityId, communityName }: HeaderProps) => {
                 </Text>
               </Flex>
               <ButtonJoinLeave
-                isJoin={isJoin}
-                loading={loading}
-                handleClick={joinOrleaveCommunity}
+                isJoin={isJoin(communityId)}
+                loading={communitySubs.totalSubs === -1 ? true : false || loading}
+                handleClick={() => joinOrleaveCommunity(communityId, communityName)}
               />
             </Flex>
           </Flex>

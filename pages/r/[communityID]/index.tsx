@@ -4,12 +4,13 @@ import PageR404 from '@/components/r/404'
 import Header from '@/components/r/header'
 import LinkPost from '@/components/r/linkpost'
 import PostTimeline from '@/components/r/postTimeline'
-import { communityData } from '@/libs/atoms/communitiesAtoms'
+import { communityData, communitySubsState } from '@/libs/atoms/communitiesAtoms'
 import { postState } from '@/libs/atoms/postsAtom'
 import getcommunityData from '@/libs/firebase/communityData'
+import useCommunityData from '@/libs/hooks/useCommunityData'
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 
 interface serverProps extends GetServerSideProps {
   params: {
@@ -31,8 +32,12 @@ export const getServerSideProps = async ({
 
 
 export default function communityPage({ communityData }: { communityData: communityData }) {
+
   if (!communityData) return <PageR404 />
+
+  const setCommunitySubs = useSetRecoilState(communitySubsState)
   const [postStateValue, setPostState] = useRecoilState(postState)
+
 
   useEffect(() => {
     // if there any post that not match with current community request new data.
@@ -44,12 +49,16 @@ export default function communityPage({ communityData }: { communityData: commun
     }))
   }, [])
 
+  useEffect(() => {
+    setCommunitySubs(prev => ({
+      ...prev,
+      currentCommunity: communityData
+    }))
+  }, [communityData])
+
   return (
     <>
-      <Header
-        communityId={communityData.id}
-        communityName={communityData.communityName}
-      />
+      <Header />
       <ContentLayouts>
         <>
           <LinkPost />

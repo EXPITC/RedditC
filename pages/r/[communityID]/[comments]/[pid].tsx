@@ -62,7 +62,7 @@ export default function PostCommentPage() {
 
       </>
       <>
-        <Info />
+        <Info communityIdFetch={communityID} />
       </>
     </ContentLayouts>
   )
