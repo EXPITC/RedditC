@@ -1,6 +1,5 @@
 import ContentLayouts from "@/components/layouts/content"
 import Post from "@/components/r/postTimeline/post"
-import Info from '@/components/info'
 import { auth } from "@/libs/firebase/clientApp"
 import usePost from "@/libs/hooks/usePosts"
 import { useRouter } from "next/router"
@@ -10,6 +9,7 @@ import Comments from "@/components/r/comments"
 import { PostSkeleton } from "@/components/skeleton/postSkeleton"
 import { useRecoilState } from "recoil"
 import { communitySubsState, currentCommunity } from "@/libs/atoms/communitiesAtoms"
+import Info from "@/components/info/info"
 
 
 
