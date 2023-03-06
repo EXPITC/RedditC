@@ -1,7 +1,10 @@
+import { authModalState } from "@/libs/atoms/authModalAtoms"
 import communityMenuState from "@/libs/atoms/communityMenuAtoms"
+import { auth } from "@/libs/firebase/clientApp"
 import { Box, Button, Divider, Flex, Stack, Text } from "@chakra-ui/react"
 import Image from "next/image"
 import { useState } from "react"
+import { useAuthState } from "react-firebase-hooks/auth"
 import { useSetRecoilState } from "recoil"
 import CreateComunityModal from "../modals/createCommunityModal"
 
@@ -9,11 +12,14 @@ import CreateComunityModal from "../modals/createCommunityModal"
 
 
 const HomeInfo = () => {
+  const [user] = useAuthState(auth)
   const setCommunityMenu = useSetRecoilState(communityMenuState)
   // const setCommun = useSetRecoilState()
   const [isOpen, setOpen] = useState(false)
+  const setAuthModal = useSetRecoilState(authModalState)
 
   const handleCreatePost = () => {
+    if (!user) return setAuthModal({ open: true, view: 'Login' })
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     setCommunityMenu(prev => ({ ...prev, isOpen: true }))
   }
