@@ -4,7 +4,7 @@ import { Box, Flex, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import ButtonJoinLeave from '../buttonJoinLeave'
+import ButtonJoinLeave from '../buttons/buttonJoinLeave'
 
 
 const Header = () => {

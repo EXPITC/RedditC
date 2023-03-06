@@ -6,7 +6,7 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react"
 import Image from "next/image"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilValue } from "recoil"
-import ButtonJoinLeave from "../buttonJoinLeave"
+import ButtonJoinLeave from "../buttons/buttonJoinLeave"
 
 
 
