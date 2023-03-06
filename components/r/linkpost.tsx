@@ -1,5 +1,6 @@
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { auth } from '@/libs/firebase/clientApp'
+import useCommunityMenu from '@/libs/hooks/useCommunityMenu'
 import { Box, Button, Flex, Input } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -40,16 +41,21 @@ const LinkPost = () => {
   const router = useRouter()
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
+  const { toggleCommunityMenu } = useCommunityMenu()
 
   const handleClick = (tabIndex: number = 0) => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
 
     const { communityID } = router.query
-    router.push({
+
+    if (communityID) return router.push({
       pathname: `${communityID}/submit`,
       query: { tabIndex }
     })
+
+    toggleCommunityMenu()
   }
+
 
   return (
     <Flex
@@ -81,7 +87,8 @@ const LinkPost = () => {
         _focus={{
           boxShadow: 'none',
           outline: 'none',
-          borderColor: 'purple.500'
+          borderColor: 'purple.500',
+          zIndex: '0'
         }}
       />
       <Button

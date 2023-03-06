@@ -1,5 +1,4 @@
-import { doesNotMatch } from 'assert'
-import { collection, deleteDoc, doc, getDoc, increment, writeBatch, where, query, getDocs } from 'firebase/firestore'
+import { collection, doc, getDoc, increment, writeBatch, where, query, getDocs } from 'firebase/firestore'
 import { deleteObject, ref } from 'firebase/storage'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
@@ -8,30 +7,23 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '../atoms/authModalAtoms'
 import { communitySub, communitySubsState } from '../atoms/communitiesAtoms'
 import { auth, firestore, storage } from '../firebase/clientApp'
-import getcommunityData, { getUserCommunitySubs } from '../firebase/communityData'
+import getcommunityData from '../firebase/communityData'
 import collections from '../firebase/firestoreCollectionsID'
 
-interface useCommunityDataT {
-  communityId: string
-  communityName: string
-}
 
-const useCommunityData = ({
-  communityId,
-  communityName
-}: useCommunityDataT) => {
-  communityId = communityId.toLowerCase()
+const useCommunityData = (communityIdFetch: string = '') => {
+  communityIdFetch = communityIdFetch.toString().toLowerCase()
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(communitySubs.currentCommunity.id ? false : true)
   const subsCollectionPath = `${collections.USERS.id}/${user?.uid}/${collections.USERS.COMMUNITYSUBS.id}`
 
   // Pass the communityId to check user join or not
-  const isJoin = !!communitySubs.subs.find(sub => sub.communityId === communityId)
+  const isJoin = (communityId: string) => !!communitySubs.subs.find(sub => sub.communityId === communityId)
 
   // Register user to community
-  const join = async () => {
+  const join = async (communityId: string, communityName: string) => {
     setLoading(true)
 
     try {
@@ -75,7 +67,7 @@ const useCommunityData = ({
     setLoading(false)
   }
 
-  const leave = async () => {
+  const leave = async (communityId: string) => {
     setLoading(true)
 
     try {
@@ -183,28 +175,34 @@ const useCommunityData = ({
     setLoading(false)
   }
 
-  const joinOrleaveCommunity = () => {
+  const joinOrleaveCommunity = (communityId: string, communityName: string) => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
-    if (isJoin) return leave()
+    if (isJoin(communityId)) return leave(communityId)
 
-    join()
+    join(communityId, communityName)
   }
 
   const getCurrentCommunity = async () => {
 
-    const currentCommunity = await getcommunityData(communityId)
-    if (!currentCommunity) return console.error('Fail to fetch community data to current community')
-    setCommunitySubs(prev => ({
-      ...prev,
-      currentCommunity
-    }))
+    setLoading(true)
+    try {
+      const currentCommunity = await getcommunityData(communityIdFetch)
+      if (!currentCommunity) return console.error('Fail to fetch community data to current community')
+      setCommunitySubs(prev => ({
+        ...prev,
+        currentCommunity
+      }))
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
-    if (communitySubs.currentCommunity.id === communityId) return // Its same data  
+    if (!communityIdFetch) return setLoading(false)
+    if (communitySubs.currentCommunity.id === communityIdFetch) return setLoading(false) // Its same data  
     getCurrentCommunity()
 
-  }, [communityId])
+  }, [communityIdFetch])
 
   return {
     communitySubs,

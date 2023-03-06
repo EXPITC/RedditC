@@ -12,9 +12,11 @@ import {
 } from '@chakra-ui/react'
 import moment from 'moment'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
-import { BsChat } from 'react-icons/bs'
+import { BsChat, BsDot } from 'react-icons/bs'
+import { FaReddit } from 'react-icons/fa'
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -27,9 +29,10 @@ import {
 interface PostProps extends PostType, usePost {
   isUserCreator: boolean
   userVoteValue: number
+  homeFeed?: boolean
 }
 
-const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<PostProps>) => (
+const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId }: Partial<PostProps>) => (
   <Flex
     direction="column"
     bg={postStateValue?.selectedPost ? "white" : "gray.100"}
@@ -39,7 +42,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<Po
     borderRadius="4"
   >
     <Button
-      onClick={(e) => onVote!(id!, 1, e)}
+      onClick={(e) => onVote!(id!, communityId!, 1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -54,7 +57,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<Po
     </Button>
     {vote}
     <Button
-      onClick={(e) => onVote!(id!, -1, e)}
+      onClick={(e) => onVote!(id!, communityId!, -1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
@@ -71,7 +74,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue }: Partial<Po
         color={userVoteValue === -1 ? 'brand.200' : 'gray.400'}
       />
     </Button>
-  </Flex>
+  </Flex >
 )
 
 const PostOptions = (Post: PostProps) => (
@@ -133,7 +136,7 @@ const Post = (Post: PostProps) => {
 
   return (
     <Flex
-      onClick={() => Post.onSelect(Post.id)}
+      onClick={() => Post.onSelect(Post.id, Post.communityId)}
       bg="white"
       border={selectedPost ? 'unset' : "1px solid"}
       borderColor="gray.300"
@@ -147,7 +150,20 @@ const Post = (Post: PostProps) => {
           {/* Header post */}
           <Stack direction="row" align="center" spacing="0.6" fontSize="9pt">
             {/* Community check */}
-            <Text>
+            {Post.homeFeed &&
+              <>
+                {Post.communityImgUrl ?
+                  <Image src={Post.communityImgUrl} width={24} height={24} alt="community profile" style={{ borderRadius: '50%', marginRight: "4px" }} />
+                  :
+                  <Icon as={FaReddit} fontSize="24px" mr="4px" color="purple.500" />
+                }
+                <Text _hover={{ textDecor: 'underline' }} fontSize={["8px", "10px", "12px"]} fontWeight="bold" onClick={(e) => e.stopPropagation()} as={Link} href={'r/' + Post.communityId}>
+                  r/{Post.communityId}
+                </Text>
+                <Icon as={BsDot} color="gray.500" fontSize="7pt" />
+              </>
+            }
+            <Text color="gray.500" fontSize={["8px", "10px", "12px"]}>
               Posted by u/{Post.creatorName}{' '}
               {moment(new Date(Post.createdAt.seconds * 1000)).fromNow()}
             </Text>
@@ -175,11 +191,10 @@ const Post = (Post: PostProps) => {
               <Image
                 src={Post.imgUrl}
                 alt={`Post Image by ${Post.creatorName}`}
-                loading="lazy"
                 fill
                 style={{
                   objectFit: 'contain',
-                  display: imgLoading ? 'unset' : 'initial'
+                  opacity: imgLoading ? '0%' : '100%'
                 }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 onLoadingComplete={() => setImgLoading(false)}
