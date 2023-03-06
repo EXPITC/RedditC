@@ -1,3 +1,6 @@
+import { authModalState } from '@/libs/atoms/authModalAtoms'
+import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
+import { communityBankState } from '@/libs/atoms/communityBankAtom'
 import { auth } from '@/libs/firebase/clientApp'
 import createCommunity from '@/libs/firebase/createCommunity'
 import {
@@ -18,10 +21,12 @@ import {
   Input,
   RadioGroup
 } from '@chakra-ui/react'
+import Router from 'next/router'
 import { ChangeEvent, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { FaRegEye, FaUser } from 'react-icons/fa'
+import { useSetRecoilState } from 'recoil'
 
 interface props {
   isOpen: boolean
@@ -31,6 +36,9 @@ interface props {
 export default function CreateComunityModal({ isOpen, onClose }: props) {
   const [user] = useAuthState(auth)
   const [communityName, setCommunityName] = useState('')
+  const setCommunitySubs = useSetRecoilState(communitySubsState)
+  const setCommunityBank = useSetRecoilState(communityBankState)
+  const setAuthModal = useSetRecoilState(authModalState)
   const [type, setType] = useState('Public')
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState('')
@@ -43,6 +51,7 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
 
   const handleCreate = async () => {
     if (err) setErr('')
+    if (!user) return setAuthModal({ open: true, view: "Login" })
 
     const regex = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/
     if (regex.test(communityName) || communityName.length < 3)
@@ -51,9 +60,29 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
       )
 
     setLoading(true)
-    const fail = await createCommunity(communityName, type, user)
-    if (fail) setErr(fail)
+    const communityData = await createCommunity(communityName, type, user)
+    if (communityData?.err) return setErr(communityData.err)
+
+    //update all value state
+    setCommunitySubs(prev => ({
+      ...prev,
+      totalSubs: prev.totalSubs + 1,
+      subs: [...prev.subs, {
+        communityId: communityData.data!.id,
+        communityName: communityData.data!.communityName,
+        isModerator: true,
+        imageUrl: communityData.data!.imageUrl
+      }]
+    }))
+    setCommunityBank(prev => ({
+      ...prev,
+      searchedCommunity: [...prev.searchedCommunity, communityData.data!]
+    }))
+
+
+
     setLoading(false)
+    Router.push('/r/' + communityName.toLowerCase())
   }
 
   return (

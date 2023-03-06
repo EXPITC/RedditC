@@ -1,3 +1,5 @@
+import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
+import { postState } from '@/libs/atoms/postsAtom'
 import { auth } from '@/libs/firebase/clientApp'
 import FirebaseErrMsg from '@/libs/firebase/errors'
 import storeAccToFirestore from '@/libs/firebase/storeAccToFirestore'
@@ -8,6 +10,7 @@ import {
   useSignInWithApple,
   useSignInWithGoogle
 } from 'react-firebase-hooks/auth'
+import { useRecoilValue, useResetRecoilState } from 'recoil'
 
 export default function OAuthButton() {
   const [signInWithGoogle, userGoogle, loadingGoogle, errorGoogle] =
@@ -15,11 +18,14 @@ export default function OAuthButton() {
   const [signInWithApple, userApple, loadingApple, errorApple] =
     useSignInWithApple(auth)
   const [err, setErr] = useState('')
+  const resetPostState = useResetRecoilState(postState)
+  const currentCommunity = useRecoilValue(communitySubsState).currentCommunity.id
+  const [attempt, setAttempt] = useState(false)
 
-  const handleClick = (platform: 'google' | 'apple') => {
+  const handleClick = async (platform: 'google' | 'apple') => {
     if (err) setErr('')
-    if (platform === 'google') return signInWithGoogle()
-    signInWithApple()
+    if (platform === 'google') return await signInWithGoogle().then(() => setAttempt(true))
+    await signInWithApple().then(() => setAttempt(true))
   }
 
   useEffect(() => {
@@ -32,7 +38,9 @@ export default function OAuthButton() {
         oAuthErr.split('/')[1].split(')')[0].replace('-', ' ')
       setErr(oAuthErr)
     }
-  }, [errorApple, errorGoogle])
+    if (attempt && !oAuthErr && !currentCommunity) resetPostState()
+    if (attempt) setAttempt(false)
+  }, [errorApple, errorGoogle, attempt, currentCommunity])
 
   useEffect(() => {
     const user = userApple || userGoogle

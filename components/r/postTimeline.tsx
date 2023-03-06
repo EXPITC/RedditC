@@ -9,7 +9,7 @@ import Post from './postTimeline/post'
 
 const PostTimeline = ({ communityId }: { communityId: string }) => {
   const [user] = useAuthState(auth)
-  const usePostHook = usePost(communityId, user?.uid)
+  const usePostHook = usePost(communityId)
   const ref = useRef<HTMLDivElement>(null)
   // const onViewPort = useOnViewport(ref)
   const isInView = useInView(ref)
@@ -22,16 +22,13 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
     if (isInView && postStateValue.posts.length != postStateValue.totalCollections) getNextCommunityPost()
   }, [isInView, loading])
 
-  // const if20NlastContent = (length: number, i: number) => (length >= 19 && length === i)
   return (
     <Stack mt="10px">
       {postStateValue.posts.map(post => (
         <Post
           key={post.id}
           isUserCreator={user?.uid === post.creatorId}
-          userVoteValue={
-            postStateValue.userVotePost.filter(i => i.postId === post.id)[0]
-              ?.vote
+          userVoteValue={postStateValue.userVotePost.find(i => i.postId === post.id)?.vote || 0
           }
           {...post}
           {...usePostHook}

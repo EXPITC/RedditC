@@ -7,7 +7,8 @@ import { SetterOrUpdater, useResetRecoilState, useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { signOut } from 'firebase/auth'
 import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
-import { postState } from '@/libs/atoms/postsAtom'
+import { defaultPostState, postState } from '@/libs/atoms/postsAtom'
+import { useRouter } from 'next/router'
 
 const LoginItem = ({ signOut }: { signOut: () => void }) => (
   <>
@@ -67,16 +68,24 @@ const UnLoginItem = ({
 export default function ProfileItems() {
   const [user, _loading, _error] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
-  const resetCommunitySubsState = useResetRecoilState(communitySubsState)
+  const setCommunitySubs = useSetRecoilState(communitySubsState)
   const setPostState = useSetRecoilState(postState)
+  const { communityID } = useRouter().query
 
   const logout = async () => {
     await signOut(auth)
-    resetCommunitySubsState()
-    setPostState(prev => ({
+    setCommunitySubs(prev => ({
+      ...prev,
+      totalSubs: -1,
+      subs: [],
+    }))
+    // if logout in community page then do not reset the post
+    if (communityID) return setPostState(prev => ({
       ...prev,
       userVotePost: []
     }))
+    // if logout in homepage we must show for non user 
+    setPostState(defaultPostState)
   }
 
   return (

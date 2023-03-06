@@ -41,6 +41,7 @@ const LinkPost = () => {
   const router = useRouter()
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
+  const { toggleCommunityMenu } = useCommunityMenu()
 
   const handleClick = (tabIndex: number = 0) => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
@@ -52,7 +53,7 @@ const LinkPost = () => {
       query: { tabIndex }
     })
 
-    useCommunityMenu().toggleCommunityMenu()
+    toggleCommunityMenu()
   }
 
 
@@ -86,7 +87,8 @@ const LinkPost = () => {
         _focus={{
           boxShadow: 'none',
           outline: 'none',
-          borderColor: 'purple.500'
+          borderColor: 'purple.500',
+          zIndex: '0'
         }}
       />
       <Button
