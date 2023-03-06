@@ -12,12 +12,12 @@ import useSelectImage from "@/libs/hooks/useSelectImage"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import uploadCommunityProfile from "@/libs/firebase/uploadCommunityProfile"
-import useCommunityData from "@/libs/hooks/useCommunityData"
 import communityMenuState from "@/libs/atoms/communityMenuAtoms"
+import useCommunityData from "@/libs/hooks/useCommunityData"
 
 
 
-const Info = () => {
+const Info = ({ communityIdFetch }: { communityIdFetch?: string }) => {
   const router = useRouter()
   let { communityID } = router.query
   communityID = typeof communityID === 'string' ? communityID.toLowerCase() : ''//just for safety
@@ -26,7 +26,7 @@ const Info = () => {
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const setCommunityMenu = useSetRecoilState(communityMenuState)
-  const { communitySubs, setCommunitySubs } = useCommunityData({ communityId: communityID, communityName: '' })
+  const { communitySubs, setCommunitySubs } = useCommunityData(communityIdFetch)
   const communityData = communitySubs.currentCommunity
 
   //Handle the image input variable

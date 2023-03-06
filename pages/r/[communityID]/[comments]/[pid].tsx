@@ -8,6 +8,8 @@ import { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Comments from "@/components/r/comments"
 import { PostSkeleton } from "@/components/skeleton/postSkeleton"
+import { useRecoilState } from "recoil"
+import { communitySubsState, currentCommunity } from "@/libs/atoms/communitiesAtoms"
 
 
 
@@ -19,16 +21,25 @@ export default function PostCommentPage() {
 
 
   const [user] = useAuthState(auth)
-  const usePostHook = usePost(communityID, user?.uid, pid)
+  const usePostHook = usePost(communityID, pid)
+  const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
 
-  const { postStateValue, setPostState, loading, err } = usePostHook
+  const { postStateValue, setPostState } = usePostHook
 
   useEffect(() => {
 
-    return () => setPostState(prev => ({
-      ...prev,
-      selectedPost: null
-    }))
+    return () => {
+      // lifecycle
+      setPostState(prev => ({
+        ...prev,
+        selectedPost: null
+      }))
+      if (communitySubs.currentCommunity.id === communityID) return
+      setCommunitySubs(prev => ({
+        ...prev,
+        currentCommunity
+      }))
+    }
   }, [])
 
   return (
@@ -37,10 +48,7 @@ export default function PostCommentPage() {
         {postStateValue.selectedPost ?
           <Post
             isUserCreator={user?.uid === postStateValue.selectedPost!.creatorId}
-            userVoteValue={
-              postStateValue.userVotePost.filter(i => i.postId === postStateValue.selectedPost!.id)[0]
-                ?.vote
-            }
+            userVoteValue={postStateValue.userVotePost.find(i => i.postId === postStateValue.selectedPost!.id)?.vote || 0}
             {...postStateValue.selectedPost}
             {...usePostHook} />
           :
@@ -54,7 +62,7 @@ export default function PostCommentPage() {
 
       </>
       <>
-        <Info />
+        <Info communityIdFetch={communityID} />
       </>
     </ContentLayouts>
   )

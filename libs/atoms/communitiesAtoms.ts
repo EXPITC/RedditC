@@ -26,25 +26,28 @@ export interface communitySubsCollection {
   currentCommunity: communityData
 }
 
+export const currentCommunity = {
+  id: '',
+  communityName: '',
+  imageUrl: '',
+  createdAt: {
+    seconds: 0,
+    nanoseconds: 0
+  },
+  creatorId: '',
+  numberOfmember: 0,
+  intractedUserId: [],
+  privacyType: ''
+}
+
 const defaultCommunitySubs: communitySubsCollection = {
   totalSubs: -1,
   subs: [],
-  currentCommunity: {
-    id: '',
-    communityName: '',
-    imageUrl: '',
-    createdAt: {
-      seconds: 0,
-      nanoseconds: 0
-    },
-    creatorId: '',
-    numberOfmember: 0,
-    intractedUserId: [],
-    privacyType: ''
-  }
+  currentCommunity
 }
 
 export const communitySubsState = atom<communitySubsCollection>({
   key: 'communitySubsState',
   default: defaultCommunitySubs
 })
+

@@ -18,8 +18,9 @@ import { User } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import uploadPost from '@/libs/firebase/uploadPost'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import useSelectImage from '@/libs/hooks/useSelectImage'
+import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
 
 const formTabs = [
   {
@@ -70,6 +71,7 @@ const PostForm = ({ user }: PostForm) => {
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
   const setPostState = useSetRecoilState(postState)
+  const communityImgUrl = useRecoilValue(communitySubsState).currentCommunity.imageUrl
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (err) setErr('')
@@ -89,6 +91,7 @@ const PostForm = ({ user }: PostForm) => {
       title: inputText.title,
       body: inputText.body,
       numberOfComments: 0,
+      communityImgUrl,
       vote: 0,
       createdAt: serverTimestamp() as Timestamp
     }
@@ -101,7 +104,7 @@ const PostForm = ({ user }: PostForm) => {
         ...prev,
         totalCollections: prev.totalCollections + 1,
         posts: [
-          { ...post, id: upload.id!, imgUrl: upload?.imgUrl },
+          { ...post, id: upload.id!, imgUrl: upload?.imgUrl, createdAt: { seconds: Date.now() / 1000 } as Timestamp },
           ...prev.posts
         ]
       }))

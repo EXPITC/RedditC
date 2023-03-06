@@ -1,50 +1,17 @@
+import { auth } from '@/libs/firebase/clientApp'
 import useCommunityData from '@/libs/hooks/useCommunityData'
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import ButtonJoinLeave from '../buttonJoinLeave'
 
-interface HeaderProps {
-  communityId: string
-  communityName: string
-}
 
-interface ButtonHeaderProps {
-  isJoin: boolean
-  loading: boolean
-  handleClick: () => void
-}
-
-const ButtonHeader = ({
-  isJoin = false,
-  loading,
-  handleClick
-}: ButtonHeaderProps) => {
-  const [joined, setJoined] = useState('Joined')
-
-  return (
-    <Button
-      onClick={handleClick}
-      isLoading={loading}
-      fontWeight="700"
-      fontSize="11pt"
-      minWidth="32px"
-      maxHeight="32px"
-      w="96px"
-      variant={isJoin ? 'outline' : 'solid'}
-      onMouseEnter={() => (isJoin ? setJoined('Leave') : null)}
-      onMouseLeave={() => (isJoin ? setJoined('Joined') : null)}
-    >
-      {isJoin ? joined : 'Join'}
-    </Button>
-  )
-}
-
-const Header = ({ communityId, communityName }: HeaderProps) => {
-  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData({
-    communityId,
-    communityName
-  })
+const Header = () => {
+  const [user] = useAuthState(auth)
+  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData()
+  const communityName = communitySubs.currentCommunity.communityName
+  const communityId = communitySubs.currentCommunity.id
 
   return (
     <>
@@ -73,10 +40,10 @@ const Header = ({ communityId, communityName }: HeaderProps) => {
                   r/{communityId}
                 </Text>
               </Flex>
-              <ButtonHeader
-                isJoin={isJoin}
-                loading={loading}
-                handleClick={joinOrleaveCommunity}
+              <ButtonJoinLeave
+                isJoin={isJoin(communityId)}
+                loading={user ? communitySubs.totalSubs === -1 ? true : false || loading : false}
+                handleClick={() => joinOrleaveCommunity(communityId, communityName)}
               />
             </Flex>
           </Flex>

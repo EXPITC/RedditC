@@ -2,7 +2,7 @@ import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { FaReddit } from "react-icons/fa"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { communitySubsState } from "../atoms/communitiesAtoms"
 import communityMenuState, { defaultMenuItem, menuListItem } from "../atoms/communityMenuAtoms"
 import { auth } from "../firebase/clientApp"
@@ -67,7 +67,7 @@ const useCommunityMenu = () => {
   }
 
   useEffect(() => {
-    if (user && communitySubs.totalSubs === -1) populateSubsList()
+    if (user && totalSubs === -1) populateSubsList()
   }, [])
 
   return {
