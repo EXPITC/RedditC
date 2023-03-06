@@ -1,5 +1,5 @@
 import AuthModal from '@/components/modals/authModal'
-import { Flex } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { User } from 'firebase/auth'
 import AuthButtons from './rightContents/authButton'
 import IconsDecoration from './rightContents/iconsDecoration'
@@ -11,12 +11,10 @@ interface props {
 
 export default function rightContents({ user }: props) {
   return (
-    <>
+    <Stack direction="row" justify="flex-end" align="center" >
       <AuthModal />
-      <Flex justify="center" align="center">
-        {user ? <IconsDecoration /> : <AuthButtons />}
-        <ProfileButton />
-      </Flex>
-    </>
+      {user ? <IconsDecoration /> : <AuthButtons />}
+      <ProfileButton />
+    </Stack>
   )
 }
