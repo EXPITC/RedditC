@@ -35,7 +35,6 @@ const RecommendationInfo = () => {
             <ButtonJoinLeave
               isJoin={!!communitySubs.subs.find(communitySubs => communitySubs.communityId === c.id)}
               loading={user ? communitySubs.totalSubs === -1 && true || loading === c.id ? true : false : false}
-              // handleClick={joinOrleaveCommunity}
               handleClick={() => joinOrleaveCommunity(c.id, c.communityName)}
             />
           </Flex>
