@@ -1,8 +1,10 @@
 import { communitySubsState } from "@/libs/atoms/communitiesAtoms"
+import { auth } from "@/libs/firebase/clientApp"
 import useCommunityBank from "@/libs/hooks/useCommunityBank"
 import useCommunityData from "@/libs/hooks/useCommunityData"
 import { Box, Button, Flex, Text } from "@chakra-ui/react"
 import Image from "next/image"
+import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilValue } from "recoil"
 import ButtonJoinLeave from "../buttonJoinLeave"
 
@@ -10,6 +12,7 @@ import ButtonJoinLeave from "../buttonJoinLeave"
 
 
 const RecommendationInfo = () => {
+  const [user] = useAuthState(auth)
   const { communityBank, getNextTopCommunity, loading } = useCommunityBank()
   const communitySubs = useRecoilValue(communitySubsState)
   const { joinOrleaveCommunity } = useCommunityData()
@@ -31,7 +34,7 @@ const RecommendationInfo = () => {
             </Flex>
             <ButtonJoinLeave
               isJoin={!!communitySubs.subs.find(communitySubs => communitySubs.communityId === c.id)}
-              loading={communitySubs.totalSubs === -1 && true || loading === c.id ? true : false}
+              loading={user ? communitySubs.totalSubs === -1 && true || loading === c.id ? true : false : false}
               // handleClick={joinOrleaveCommunity}
               handleClick={() => joinOrleaveCommunity(c.id, c.communityName)}
             />

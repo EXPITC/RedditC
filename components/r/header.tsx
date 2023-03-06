@@ -1,11 +1,14 @@
+import { auth } from '@/libs/firebase/clientApp'
 import useCommunityData from '@/libs/hooks/useCommunityData'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import ButtonJoinLeave from '../buttonJoinLeave'
 
 
 const Header = () => {
+  const [user] = useAuthState(auth)
   const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData()
   const communityName = communitySubs.currentCommunity.communityName
   const communityId = communitySubs.currentCommunity.id
@@ -39,7 +42,7 @@ const Header = () => {
               </Flex>
               <ButtonJoinLeave
                 isJoin={isJoin(communityId)}
-                loading={communitySubs.totalSubs === -1 ? true : false || loading}
+                loading={user ? communitySubs.totalSubs === -1 ? true : false || loading : false}
                 handleClick={() => joinOrleaveCommunity(communityId, communityName)}
               />
             </Flex>
