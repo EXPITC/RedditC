@@ -1,3 +1,7 @@
+import { ButtonBackToTop } from "@/components/buttons/ButtonBacktoTop";
+import HomeInfo from "@/components/info/homeInfo";
+import PremiumInfo from "@/components/info/premiumInfo";
+import RecommendationInfo from "@/components/info/recommendationInfo";
 import ContentLayouts from "@/components/layouts/content";
 import LinkPost from "@/components/r/linkpost";
 import Post from "@/components/r/postTimeline/post";
@@ -31,10 +35,18 @@ export default function Home() {
             isUserCreator={user?.uid === post.creatorId}
             userVoteValue={postStateValue.userVotePost.find(i => i.postId === post.id)?.vote || 0} {...post} {...postFunction} />)}
           {loading && <PostsSkeleton />}
-          <Box ref={ref} id="Hit this and fetch more content" />
         </Stack>
+        <Box ref={ref} position="relative" bottom="150px" id="Hit this and fetch more content" />
       </>
       <>
+        <Stack h="full" position="relative">
+          <RecommendationInfo />
+          <PremiumInfo />
+          <Stack direction="column" position="relative" flexGrow="1">
+            <HomeInfo />
+            <ButtonBackToTop />
+          </Stack>
+        </Stack>
       </>
     </ContentLayouts>
   )
