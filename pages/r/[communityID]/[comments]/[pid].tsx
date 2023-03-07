@@ -3,13 +3,15 @@ import Post from "@/components/r/postTimeline/post"
 import { auth } from "@/libs/firebase/clientApp"
 import usePost from "@/libs/hooks/usePosts"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Comments from "@/components/r/comments"
 import { PostSkeleton } from "@/components/skeleton/postSkeleton"
 import { useRecoilState } from "recoil"
 import { communitySubsState, currentCommunity } from "@/libs/atoms/communitiesAtoms"
 import Info from "@/components/info/info"
+import { Flex } from "@chakra-ui/react"
+import { ButtonBackToTop } from "@/components/buttons/ButtonBacktoTop"
 
 
 
@@ -20,6 +22,7 @@ export default function PostCommentPage() {
   pid = typeof pid === 'string' ? pid : ''
 
 
+  const ref = useRef<HTMLDivElement>(null)
   const [user] = useAuthState(auth)
   const usePostHook = usePost(communityID, pid)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
@@ -63,6 +66,11 @@ export default function PostCommentPage() {
       </>
       <>
         <Info communityIdFetch={communityID} />
+        <Flex ref={ref} direction="column" flexGrow="1" overflow="hidden">
+          <Flex display={ref.current?.clientHeight || 0 >= 1200 ? "initial" : 'none'} mt={ref.current?.clientHeight || 0 >= 1200 ? "1100px" : "0px"} direction="column" position="relative" flexGrow="1" >
+            <ButtonBackToTop />
+          </Flex>
+        </Flex>
       </>
     </ContentLayouts>
   )
