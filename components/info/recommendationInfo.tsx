@@ -2,8 +2,9 @@ import { communitySubsState } from "@/libs/atoms/communitiesAtoms"
 import { auth } from "@/libs/firebase/clientApp"
 import useCommunityBank from "@/libs/hooks/useCommunityBank"
 import useCommunityData from "@/libs/hooks/useCommunityData"
-import { Box, Button, Flex, Text } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, Box, Button, Flex, Text } from "@chakra-ui/react"
 import Image from "next/image"
+import { useMemo } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilValue } from "recoil"
 import ButtonJoinLeave from "../buttons/buttonJoinLeave"
@@ -13,7 +14,9 @@ import ButtonJoinLeave from "../buttons/buttonJoinLeave"
 
 const RecommendationInfo = () => {
   const [user] = useAuthState(auth)
-  const { communityBank, getNextTopCommunity, loading } = useCommunityBank()
+  const { communityBank, getNextTopCommunity, loading, err } = useCommunityBank()
+  const load = useMemo(() => loading, [loading])
+  const error = useMemo(() => err, [err])
   const communitySubs = useRecoilValue(communitySubsState)
   const { joinOrleaveCommunity } = useCommunityData()
 
@@ -34,13 +37,19 @@ const RecommendationInfo = () => {
             </Flex>
             <ButtonJoinLeave
               isJoin={!!communitySubs.subs.find(communitySubs => communitySubs.communityId === c.id)}
-              loading={user ? communitySubs.totalSubs === -1 && true || loading === c.id ? true : false : false}
+              loading={user ? communitySubs.totalSubs === -1 && true || load === c.id ? true : false : false}
               handleClick={() => joinOrleaveCommunity(c.id, c.communityName)}
             />
           </Flex>
         </Flex>
       )}
-      {communityBank.topCommunity.length < 10 &&
+      {err ?
+        <Alert status='error'>
+          <AlertIcon />
+          <AlertDescription>{err}</AlertDescription>
+        </Alert>
+        :
+        communityBank.topCommunity.length < 10 &&
         <Flex justify="center" my="3" px="2" >
           <Button onClick={getNextTopCommunity}
             h="34px"

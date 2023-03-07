@@ -9,18 +9,15 @@ import { getTopCommunity } from "../firebase/commmunityBank"
 const useCommunityBank = () => {
   const [communityBank, setCommunityBank] = useRecoilState(communityBankState)
   const [loading, setLoading] = useState('') //string stroe id
-  const [err, setErr] = useState<{ id: 'topCommunityData' | 'searchBar' | '', msg: string }>({
-    id: '',
-    msg: ''
-  })
+  const [err, setErr] = useState('')
 
   const populateTopCommunity = async (lastCommunity?: string) => {
     setLoading('true')
     try {
-      if (err) setErr({ id: '', msg: '' })
+      if (err) setErr('')
       const topCommunityData = await getTopCommunity(lastCommunity)
 
-      if (topCommunityData.err) return setErr({ id: 'topCommunityData', msg: topCommunityData.err })
+      if (topCommunityData.err) return setErr(topCommunityData.err)
 
       communityBank.searchedCommunity.map(prevCommunity =>
         topCommunityData.data = topCommunityData.data.filter(community => community.id !== prevCommunity.id)
