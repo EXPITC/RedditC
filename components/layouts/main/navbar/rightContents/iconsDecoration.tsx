@@ -1,4 +1,4 @@
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Stack } from '@chakra-ui/react'
 import { BsArrowUpRightCircle } from 'react-icons/bs'
 import { TbMessageCircle } from 'react-icons/tb'
 import { TfiBell } from 'react-icons/tfi'
@@ -7,8 +7,8 @@ import { IoFilter, IoVideocamOutline } from 'react-icons/io5'
 
 export default function IconsDecoration() {
   return (
-    <Flex>
-      <Flex
+    <Stack direction="row" spacing={["0", "0", "0", "1", "2"]} justify={['space-between', 'none', 'none', 'none']}  >
+      <Stack direction="row" spacing={["0", "0", "0", "1", "2"]}
         display={['none', 'none', 'flex']}
         align="center"
         borderRight="1px solid"
@@ -23,16 +23,17 @@ export default function IconsDecoration() {
         <Button variant="iconList">
           <IoVideocamOutline />
         </Button>
-      </Flex>
-      <Button variant="iconList" minW={["9", "10"]}>
+      </Stack>
+      <Button variant="iconList" minW={["2", "9", "10"]} display={['none', 'none', 'inherit', 'inherit']}
+      >
         <TbMessageCircle />
       </Button>
-      <Button variant="iconList" minW={["9", "10"]}>
+      <Button variant="iconList" minW={["2", "9", "10"]}>
         <TfiBell />
       </Button>
-      <Button variant="iconList" minW={["9", "10"]}>
+      <Button variant="iconList" minW={["2", "9", "10"]}>
         <AiOutlinePlus />
       </Button>
-    </Flex>
+    </Stack>
   )
 }

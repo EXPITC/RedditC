@@ -14,9 +14,9 @@ export default function Navbar() {
       <Flex
         bg="white"
         h="47px"
-        p={['3px 2px', '3px 10px', '3px 15px', '3px 20px']}
+        p={['3px 2px', '3px 10px', '3px 13px']}
         align="center"
-        justifyContent="space-between"
+        justify="space-around"
       >
         <Logo />
 
