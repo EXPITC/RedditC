@@ -1,4 +1,4 @@
-import { limit, collection, CollectionReference, DocumentData, orderBy, QueryLimitConstraint, QueryOrderByConstraint, query, getDocs, getDoc, startAfter, doc, QueryDocumentSnapshot } from "firebase/firestore"
+import { limit, collection, CollectionReference, DocumentData, orderBy, QueryLimitConstraint, QueryOrderByConstraint, query, getDocs, getDoc, startAfter, doc, QueryDocumentSnapshot, startAt, endAt } from "firebase/firestore"
 import { communityData } from "../atoms/communitiesAtoms"
 import { firestore } from "./clientApp"
 import collections from "./firestoreCollectionsID"
@@ -55,4 +55,36 @@ export const getTopCommunity = async (lastCommunityId: string | undefined) => {
 
 }
 
-export const searchCommunity = async () => { }
+export const getCommunityLike = async (keyword: string) => {
+  const collectionPath = collection(firestore, collections.COMMUNITIES.id)
+  const communityQuery = query(
+    collectionPath,
+    orderBy('id', 'asc'),
+    startAt(keyword),
+    endAt(keyword + "\uf8ff"),
+    limit(10)
+  )
+  try {
+    console.log(communityQuery)
+    const getCommunity = await getDocs(communityQuery)
+    getCommunity.forEach(doc => console.log(doc.id))
+    console.log(getCommunity.empty)
+
+    if (getCommunity.empty) return {
+      err: `Sorry community not found... 🧑‍🦽`,
+      data: [] as communityData[]
+    }
+
+    return {
+      err: '',
+      data: getCommunity.docs.map(doc => ({ id: doc.id, ...doc.data() })) as communityData[]
+    }
+  } catch (e: any) {
+    console.log('get community like', e.message)
+
+    return {
+      err: 'Fail to search community',
+      data: [] as communityData[]
+    }
+  }
+}
