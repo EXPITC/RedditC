@@ -18,7 +18,7 @@ const useSearchBar = () => {
   })
 
   const topFiveCommunity = useMemo(() => communityBank.topCommunity.filter((_, i) => i <= 4), [communityBank.topCommunity])
-  const communityFound: { title: string, data: communityData[] } = useMemo(() => keyword === '' ? { title: 'Top Community', data: topFiveCommunity } : { title: 'Communities', data: communityBank.searchedCommunity.filter((community, index) => community.id.includes(keyword) && index <= 9) }, [keyword, topFiveCommunity])
+  const communityFound: { title: string, data: communityData[] } = useMemo(() => keyword === '' ? { title: 'Top Community', data: topFiveCommunity } : { title: 'Communities', data: communityBank.searchedCommunity.filter((community, index) => community.id.startsWith(keyword) || community.id.endsWith(keyword) && index <= 9) }, [keyword, topFiveCommunity])
 
   const updateKeyword = useCallback(debounce((text: string) => {
     setKeyword(text.replaceAll(' ', '').toLowerCase())
@@ -50,8 +50,9 @@ const useSearchBar = () => {
       if (keyword === '') return
       const communityResult = await getCommunityLike(keyword)
 
-      if (communityResult.err) return setErr(communityResult.err)
+      if (communityResult.err && communityFound.data.length === 0) return setErr(communityResult.err)
 
+      if (communityResult.data.length === 0) return
       setResult({
         title: 'Communities',
         data: communityResult.data
@@ -71,7 +72,6 @@ const useSearchBar = () => {
   }
 
   useEffect(() => {
-
 
     setResult(communityFound)
     if (communityFound.data.length <= 10) { requestFromFirestore(keyword); return }
