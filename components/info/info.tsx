@@ -14,6 +14,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react"
 import uploadCommunityProfile from "@/libs/firebase/uploadCommunityProfile"
 import communityMenuState from "@/libs/atoms/communityMenuAtoms"
 import useCommunityData from "@/libs/hooks/useCommunityData"
+import formatNumber from "@/libs/formatNumber"
 
 
 
@@ -124,7 +125,7 @@ const Info = ({ communityIdFetch }: { communityIdFetch?: string }) => {
 
         <Flex align="center"  >
           <Box mr="60px">
-            <Text fontSize="16px">{communityData.numberOfmember}</Text>
+            <Text fontSize="16px">{formatNumber(communityData.numberOfmember)}</Text>
             <Text fontSize="12px" color="gray.500">Members</Text>
           </Box>
           <Box>
