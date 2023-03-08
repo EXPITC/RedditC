@@ -69,7 +69,7 @@ export default function communityPage({ communityData }: { communityData: commun
         <>
           <Info />
           <Flex ref={ref} direction="column" flexGrow="1" >
-            <Flex display={ref.current?.clientHeight || 0 >= 420 ? "initial" : 'none'} mt={ref.current?.clientHeight || 0 >= 420 ? "420px" : "0px"} direction="column" position="relative" flexGrow="1" >
+            <Flex display={(ref.current?.clientHeight || 0) >= 420 ? "initial" : 'none'} mt={(ref.current?.clientHeight || 0) >= 420 ? "420px" : "0px"} direction="column" position="relative" flexGrow="1" >
               <ButtonBackToTop />
             </Flex>
           </Flex>
