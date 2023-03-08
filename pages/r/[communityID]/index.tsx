@@ -58,6 +58,8 @@ export default function communityPage({ communityData }: { communityData: commun
     }))
   }, [communityData])
 
+  console.log(ref.current?.clientHeight)
+
   return (
     <>
       <Header />
@@ -68,12 +70,13 @@ export default function communityPage({ communityData }: { communityData: commun
         </>
         <>
           <Info />
-          <Flex ref={ref} direction="column" flexGrow="1" >
-            <Flex display={(ref.current?.clientHeight || 0) >= 420 ? "initial" : 'none'} mt={(ref.current?.clientHeight || 0) >= 420 ? "420px" : "0px"} direction="column" position="relative" flexGrow="1" >
-              <ButtonBackToTop />
+          {postStateValue.totalCollections !== -1 &&
+            <Flex ref={ref} direction="column" flexGrow="1" >
+              <Flex display={(ref.current?.clientHeight || 0) >= 420 ? "initial" : 'none'} mt={(ref.current?.clientHeight || 0) >= 420 ? "420px" : "0px"} direction="column" position="relative" flexGrow="1" >
+                <ButtonBackToTop />
+              </Flex>
             </Flex>
-          </Flex>
-
+          }
         </>
       </ContentLayouts>
     </>
