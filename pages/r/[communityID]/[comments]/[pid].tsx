@@ -57,6 +57,7 @@ export default function PostCommentPage() {
             {...usePostHook}
             openModalInfoProps={openModalInfoProps}
             alreadyInComment={true}
+            link={'http://localhost:3000/r/' + postStateValue.selectedPost.communityId + '/comments/' + postStateValue.selectedPost.id}
           />
           :
           <PostSkeleton selectedPost={true} />

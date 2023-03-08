@@ -31,12 +31,12 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
         <Post
           key={post.id}
           isUserCreator={user?.uid === post.creatorId}
-          userVoteValue={postStateValue.userVotePost.find(i => i.postId === post.id)?.vote || 0
-          }
-          {...post}
-          {...usePostHook}
+          userVoteValue={postStateValue.userVotePost.find(i => i.postId === post.id)?.vote || 0}
+          link={'http://localhost:3000/r/' + post.communityId + '/comments/' + post.id}
           openModalInfoProps={openModalInfoProps}
           alreadyInComment={false}
+          {...post}
+          {...usePostHook}
         />
       ))}
 

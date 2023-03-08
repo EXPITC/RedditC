@@ -14,7 +14,7 @@ import {
 import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsChat, BsDot } from 'react-icons/bs'
 import { FaReddit } from 'react-icons/fa'
@@ -26,6 +26,7 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline
 } from 'react-icons/io5'
+import { text } from 'stream/consumers'
 
 interface PostProps extends PostType, usePost {
   isUserCreator: boolean
@@ -33,6 +34,11 @@ interface PostProps extends PostType, usePost {
   homeFeed?: boolean
   openModalInfoProps: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   alreadyInComment: boolean
+  link: string
+}
+interface postOptions extends PostProps {
+  shareValue: { first: boolean, text: "Share" | "Copied" },
+  setShareValue: React.Dispatch<React.SetStateAction<{ first: boolean, text: "Share" | "Copied" }>>
 }
 
 const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId }: Partial<PostProps>) => (
@@ -80,7 +86,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId 
   </Flex >
 )
 
-const PostOptions = (Post: PostProps) => (
+const PostOptions = (Post: postOptions) => (
   <Flex mb="0.5" color="gray.500" >
     <Button
       variant="iconList"
@@ -101,9 +107,10 @@ const PostOptions = (Post: PostProps) => (
       p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
+      onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(Post.link); Post.setShareValue(prev => ({ ...prev, text: 'Copied' })) }}
     >
       <Icon as={IoArrowRedoOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
-      Share
+      {Post.shareValue.text}
     </Button>
     <Button
       variant="iconList"
@@ -138,6 +145,24 @@ const PostOptions = (Post: PostProps) => (
 const Post = (Post: PostProps) => {
   const [imgLoading, setImgLoading] = useState(true)
   const selectedPost = Post.postStateValue.selectedPost
+  const [shareValue, setShareValue] = useState<{ first: boolean, text: 'Share' | 'Copied' }>({ first: true, text: 'Share' })
+
+
+  useEffect(() => {
+    if (shareValue.first) return setShareValue(prev => ({ ...prev, first: false }))
+    let timeout: NodeJS.Timeout
+
+    if (shareValue.text === 'Share') return
+
+    timeout = setTimeout(() => {
+      setShareValue(prev => ({ ...prev, text: 'Share' }))
+    }, 1000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [shareValue])
+
 
   return (
     <Flex
@@ -209,7 +234,7 @@ const Post = (Post: PostProps) => {
             </Flex>
           )}
 
-          <PostOptions {...Post} />
+          <PostOptions {...Post} shareValue={shareValue} setShareValue={setShareValue} />
         </Stack>
         {Post.err.id === Post.id && (
           <Alert status="error">

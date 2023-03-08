@@ -39,6 +39,7 @@ export default function Home() {
             userVoteValue={postStateValue.userVotePost.find(i => i.postId === post.id)?.vote || 0} {...post} {...postFunction}
             openModalInfoProps={openModalInfoProps}
             alreadyInComment={false}
+            link={'http://localhost:3000/r/' + post.communityId + '/comments/' + post.id}
           />)}
           {loading && <PostsSkeleton />}
         </Stack>
