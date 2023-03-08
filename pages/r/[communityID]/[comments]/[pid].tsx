@@ -12,12 +12,12 @@ import { communitySubsState, currentCommunity } from "@/libs/atoms/communitiesAt
 import Info from "@/components/info/info"
 import { Flex } from "@chakra-ui/react"
 import { ButtonBackToTop } from "@/components/buttons/ButtonBacktoTop"
+import useInfoModalProps from "@/libs/hooks/useInfoModalProps"
 
 
 
 export default function PostCommentPage() {
-  const router = useRouter()
-  let { communityID, pid } = router.query
+  let { communityID, pid } = useRouter().query
   communityID = typeof communityID === 'string' ? communityID : ''
   pid = typeof pid === 'string' ? pid : ''
 
@@ -26,6 +26,7 @@ export default function PostCommentPage() {
   const [user] = useAuthState(auth)
   const usePostHook = usePost(communityID, pid)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
+  const openModalInfoProps = useInfoModalProps()
 
   const { postStateValue, setPostState } = usePostHook
 
@@ -53,7 +54,10 @@ export default function PostCommentPage() {
             isUserCreator={user?.uid === postStateValue.selectedPost!.creatorId}
             userVoteValue={postStateValue.userVotePost.find(i => i.postId === postStateValue.selectedPost!.id)?.vote || 0}
             {...postStateValue.selectedPost}
-            {...usePostHook} />
+            {...usePostHook}
+            openModalInfoProps={openModalInfoProps}
+            alreadyInComment={true}
+          />
           :
           <PostSkeleton selectedPost={true} />
         }
@@ -66,7 +70,7 @@ export default function PostCommentPage() {
       </>
       <>
         <Info communityIdFetch={communityID} />
-        <Flex ref={ref} direction="column" flexGrow="1" overflow="hidden">
+        <Flex ref={ref} direction="column" flexGrow="1" >
           <Flex display={(ref.current?.clientHeight || 0) >= 1100 ? "initial" : 'none'} mt={(ref.current?.clientHeight || 0) >= 1100 ? "1100px" : "0px"} direction="column" position="relative" flexGrow="1" >
             <ButtonBackToTop />
           </Flex>

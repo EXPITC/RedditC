@@ -13,9 +13,9 @@ import { BsChevronDown } from 'react-icons/bs'
 import CommunityListItem from './communityHome/communityListItem'
 
 export default function ComunityHome() {
-  const { communityMenu, toggleCommunityMenu } = useCommunityMenu()
+  const { communityMenu, toggleCommunityMenu, handleClose } = useCommunityMenu()
   return (
-    <Menu isOpen={communityMenu.isOpen} >
+    <Menu onClose={handleClose} isOpen={communityMenu.isOpen} >
       <MenuButton
         as={Button}
         onClick={toggleCommunityMenu}

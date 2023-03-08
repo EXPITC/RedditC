@@ -20,11 +20,12 @@ export interface commentProps {
   userId: string,
   err: { id: string, msg: string }
   loadingDelete: string,
-  loadingEdit: string
+  loadingEdit: string,
+  openModalInfoProps: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 interface props extends commentProps, comment { }
 
-const Comment = ({ onDeleteComment, err, loadingEdit, id, userId, creatorId, creatorPhotoUrl, creatorUserName, text, createdAt, loadingDelete }: props) =>
+const Comment = ({ onDeleteComment, err, openModalInfoProps, loadingEdit, id, userId, creatorId, creatorPhotoUrl, creatorUserName, text, createdAt, loadingDelete }: props) =>
 (
   <Flex align="start" pl="2">
     <Image src={creatorPhotoUrl ? creatorPhotoUrl : '/images/redditFace.svg'} width={29} height={30} alt="creator photo" style={{ borderRadius: "50%", marginRight: "8px" }} />
@@ -76,7 +77,7 @@ const Comment = ({ onDeleteComment, err, loadingEdit, id, userId, creatorId, cre
 
         {userId === creatorId &&
           <>
-            <Button onClick={() => { }}
+            <Button onClick={openModalInfoProps}
               isLoading={loadingEdit === id ? true : false}
               variant="iconList" fontSize="9pt"
               maxH="20pt" minW="fit-content" px="6pt" fontWeight="bold"

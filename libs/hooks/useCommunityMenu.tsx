@@ -18,6 +18,7 @@ const useCommunityMenu = () => {
   const { currentCommunity, totalSubs } = communitySubs
 
   const toggleCommunityMenu = () => setCommunityMenu(prev => ({ ...prev, isOpen: !prev.isOpen }))
+  const handleClose = () => setCommunityMenu(prev => ({ ...prev, isOpen: false }))
 
   const onSelectMenuItem = (Menu: menuListItem) => {
     setCommunityMenu(prev => ({
@@ -74,6 +75,7 @@ const useCommunityMenu = () => {
     communityMenu,
     setCommunityMenu,
     toggleCommunityMenu,
+    handleClose,
     onSelectMenuItem
   }
 }

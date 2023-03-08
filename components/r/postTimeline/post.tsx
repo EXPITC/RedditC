@@ -1,5 +1,6 @@
 import { ImageSkeleton } from '@/components/skeleton/postSkeleton'
 import { Post as PostType } from '@/libs/atoms/postsAtom'
+import formatNumber from '@/libs/formatNumber'
 import { usePost } from '@/libs/hooks/usePosts'
 import {
   Flex,
@@ -30,6 +31,8 @@ interface PostProps extends PostType, usePost {
   isUserCreator: boolean
   userVoteValue: number
   homeFeed?: boolean
+  openModalInfoProps: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  alreadyInComment: boolean
 }
 
 const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId }: Partial<PostProps>) => (
@@ -55,7 +58,7 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId 
         color={userVoteValue === 1 ? 'brand.100' : 'gray.400'}
       />
     </Button>
-    {vote}
+    {formatNumber(vote!)}
     <Button
       onClick={(e) => onVote!(id!, communityId!, -1, e)}
       variant="iconList"
@@ -86,6 +89,7 @@ const PostOptions = (Post: PostProps) => (
       p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
+      onClick={(e) => Post.alreadyInComment ? (e.stopPropagation(), window.scrollTo({ top: 850, behavior: 'smooth' })) : null}
     >
       <Icon as={BsChat} mr={['1', '2']} fontSize={["16px", "20px"]} />
       {Post.numberOfComments} Comments
@@ -108,6 +112,7 @@ const PostOptions = (Post: PostProps) => (
       p={['0px 2px', '4px 5px', "8px 10px"]}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
+      onClick={Post.openModalInfoProps}
     >
       <Icon as={IoBookmarkOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
       Save

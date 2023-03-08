@@ -10,6 +10,8 @@ import { serverTimestamp, Timestamp } from "firebase/firestore"
 import handleComment, { deleteComment, getComments } from "@/libs/firebase/handleComment"
 import CommentsSkeleton from "../skeleton/commentsSkeleton"
 import { useInView } from "framer-motion"
+import { infoModalState } from "@/libs/atoms/infoPropsModalAtoms"
+import useInfoModalProps from "@/libs/hooks/useInfoModalProps"
 
 interface commentsProps {
   user: User | null | undefined
@@ -36,6 +38,7 @@ const comments = ({ user, selectedPost, setPostState }: commentsProps) => {
     msg: ''
   })
   const setAuthModal = useSetRecoilState(authModalState)
+  const openModalInfoProps = useInfoModalProps()
 
   const openModalLogin = () => setAuthModal({ open: true, view: 'Login' })
 
@@ -151,6 +154,7 @@ const comments = ({ user, selectedPost, setPostState }: commentsProps) => {
   }
   const commentProps: commentProps = {
     onDeleteComment,
+    openModalInfoProps,
     userId: user?.uid || '',
     loadingDelete,
     err,

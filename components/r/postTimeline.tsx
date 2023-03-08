@@ -1,4 +1,5 @@
 import { auth } from '@/libs/firebase/clientApp'
+import useInfoModalProps from '@/libs/hooks/useInfoModalProps'
 import usePost from '@/libs/hooks/usePosts'
 import { Stack, Box, Alert, AlertIcon, Text } from '@chakra-ui/react'
 import { useInView } from 'framer-motion'
@@ -15,12 +16,14 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
   const isInView = useInView(ref)
 
   const { postStateValue, loading, getNextCommunityPost, err } = usePostHook
+  const openModalInfoProps = useInfoModalProps()
 
   useEffect(() => {
     if (loading) return
     if (postStateValue.totalCollections < 20) return //Mean disable this feature if there is no yet 20 post in the community, cuz by default it fetch 20 post
     if (isInView && postStateValue.posts.length != postStateValue.totalCollections) getNextCommunityPost()
   }, [isInView, loading])
+
 
   return (
     <Stack mt="10px">
@@ -32,6 +35,8 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
           }
           {...post}
           {...usePostHook}
+          openModalInfoProps={openModalInfoProps}
+          alreadyInComment={false}
         />
       ))}
 
