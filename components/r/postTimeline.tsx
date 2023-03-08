@@ -1,7 +1,7 @@
 import { auth } from '@/libs/firebase/clientApp'
 import useInfoModalProps from '@/libs/hooks/useInfoModalProps'
 import usePost from '@/libs/hooks/usePosts'
-import { Stack, Box, Alert, AlertIcon, Text } from '@chakra-ui/react'
+import { Stack, Box, Alert, AlertIcon, Text, Flex } from '@chakra-ui/react'
 import { useInView } from 'framer-motion'
 import { useRef, useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -25,6 +25,11 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
   }, [isInView, loading])
 
 
+  if (postStateValue.totalCollections === 0) return (
+    <Flex h={['80px', "175px"]} justify="center" align="center">
+      <Text color="gray.400" fontWeight="semibold" fontSize={["10pt", "14pt"]}>No Post Yet..., I think I should have put dino here</Text>
+    </Flex>
+  )
   return (
     <Stack mt="10px">
       {postStateValue.posts.map(post => (
