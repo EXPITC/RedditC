@@ -43,10 +43,10 @@ const RecommendationInfo = () => {
           </Flex>
         </Flex>
       )}
-      {err ?
+      {error ?
         <Alert status='error'>
           <AlertIcon />
-          <AlertDescription>{err}</AlertDescription>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
         :
         communityBank.topCommunity.length < 10 &&
