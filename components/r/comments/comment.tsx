@@ -24,7 +24,7 @@ export interface commentProps {
 }
 interface props extends commentProps, comment { }
 
-const Comment = ({ onDeleteComment, err, loadingEdit, id, userId, creatorPhotoUrl, creatorUserName, text, createdAt, loadingDelete }: props) =>
+const Comment = ({ onDeleteComment, err, loadingEdit, id, userId, creatorId, creatorPhotoUrl, creatorUserName, text, createdAt, loadingDelete }: props) =>
 (
   <Flex align="start" pl="2">
     <Image src={creatorPhotoUrl ? creatorPhotoUrl : '/images/redditFace.svg'} width={29} height={30} alt="creator photo" style={{ borderRadius: "50%", marginRight: "8px" }} />
@@ -74,7 +74,7 @@ const Comment = ({ onDeleteComment, err, loadingEdit, id, userId, creatorPhotoUr
           />
         </Button>
 
-        {userId &&
+        {userId === creatorId &&
           <>
             <Button onClick={() => { }}
               isLoading={loadingEdit === id ? true : false}
