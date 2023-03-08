@@ -98,7 +98,7 @@ const PostOptions = (Post: postOptions) => (
       onClick={(e) => Post.alreadyInComment ? (e.stopPropagation(), window.scrollTo({ top: 850, behavior: 'smooth' })) : null}
     >
       <Icon as={BsChat} mr={['1', '2']} fontSize={["16px", "20px"]} />
-      {Post.numberOfComments} Comments
+      {formatNumber(Post.numberOfComments)} Comments
     </Button>
     <Button
       variant="iconList"
