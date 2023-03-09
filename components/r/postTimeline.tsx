@@ -19,17 +19,13 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
   const openModalInfoProps = useInfoModalProps()
 
   useEffect(() => {
+    console.log(postStateValue.posts.length, postStateValue.totalCollections)
     if (loading) return
     if (postStateValue.totalCollections < 20) return //Mean disable this feature if there is no yet 20 post in the community, cuz by default it fetch 20 post
     if (isInView && postStateValue.posts.length != postStateValue.totalCollections) getNextCommunityPost()
   }, [isInView, loading])
 
 
-  if (postStateValue.totalCollections === 0) return (
-    <Flex h={['80px', "175px"]} justify="center" align="center">
-      <Text color="gray.400" fontWeight="semibold" fontSize={["10pt", "14pt"]}>No Post Yet..., I think I should have put dino here</Text>
-    </Flex>
-  )
   return (
     <Stack mt="10px">
       {postStateValue.posts.map(post => (
@@ -44,6 +40,12 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
           {...usePostHook}
         />
       ))}
+
+      {postStateValue.totalCollections === 0 && (
+        <Flex h={['80px', "175px"]} justify="center" align="center">
+          <Text color="gray.400" fontWeight="semibold" fontSize={["10pt", "14pt"]}>No Post Yet..., I think I should have put dino here</Text>
+        </Flex>
+      )}
 
       {loading && <PostsSkeleton />}
 
