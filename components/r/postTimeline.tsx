@@ -19,7 +19,6 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
   const openModalInfoProps = useInfoModalProps()
 
   useEffect(() => {
-    console.log(postStateValue.posts.length, postStateValue.totalCollections)
     if (loading) return
     if (postStateValue.totalCollections < 20) return //Mean disable this feature if there is no yet 20 post in the community, cuz by default it fetch 20 post
     if (isInView && postStateValue.posts.length != postStateValue.totalCollections) getNextCommunityPost()
