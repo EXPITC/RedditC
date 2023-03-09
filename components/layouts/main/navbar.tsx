@@ -16,7 +16,7 @@ export default function Navbar() {
         h="47px"
         p={['3px 2px', '3px 10px', '3px 13px']}
         align="center"
-        justify="space-around"
+        justify="space-between"
       >
         <Logo />
 

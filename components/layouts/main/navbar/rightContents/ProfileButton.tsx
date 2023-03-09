@@ -10,16 +10,14 @@ import {
 import { IoPersonOutline } from 'react-icons/io5'
 import { BsChevronDown } from 'react-icons/bs'
 import ProfileItems from './profileButton/profileItems'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '@/libs/firebase/clientApp'
 import Image from 'next/image'
+import { User } from 'firebase/auth'
 
-export default function ProfileButton() {
-  const [user, _loading, _error] = useAuthState(auth)
+export default function ProfileButton({ user }: { user: User | null | undefined }) {
 
   return (
     <Menu>
-      <MenuButton as={Button} variant="icon" borderColor="transparent" _hover={{ borderColor: "gray.200" }} m={["0", "initial"]} px={['1px', '15px']} h="40px" maxW="213px" w={["full", "full", "full", "213px"]}>
+      <MenuButton as={Button} variant="icon" borderColor="transparent" _hover={{ borderColor: "gray.200" }} m={["0", "initial"]} px={['1px', '15px']} h="40px" maxW="213px" w={user ? ["full", "full", "full", "213px"] : 'fit-content'}>
         {user ? (
           <Flex align="center" justify={['center', "space-between", "space-between"]} >
             <Flex>

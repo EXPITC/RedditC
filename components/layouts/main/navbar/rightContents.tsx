@@ -14,7 +14,7 @@ export default function rightContents({ user }: props) {
     <Stack direction="row" justify="flex-end" align="center" >
       <AuthModal />
       {user ? <IconsDecoration /> : <AuthButtons />}
-      <ProfileButton />
+      <ProfileButton user={user} />
     </Stack>
   )
 }

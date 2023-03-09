@@ -17,6 +17,7 @@ export default function IconsDecoration() {
       <Stack direction="row" spacing={["0", "0", "0", "1", "2"]}
         display={['none', 'none', 'flex']}
         align="center"
+        pr="2"
         borderRight="1px solid"
         borderColor="gray.200"
       >
