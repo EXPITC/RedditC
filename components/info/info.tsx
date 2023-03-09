@@ -18,7 +18,7 @@ import formatNumber from "@/libs/formatNumber"
 
 
 
-const Info = ({ communityIdFetch }: { communityIdFetch?: string }) => {
+const Info = ({ communityIdFetch = false }: { communityIdFetch?: boolean }) => {
   const router = useRouter()
   let { communityID } = router.query
   communityID = typeof communityID === 'string' ? communityID.toLowerCase() : ''//just for safety
@@ -27,7 +27,7 @@ const Info = ({ communityIdFetch }: { communityIdFetch?: string }) => {
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const setCommunityMenu = useSetRecoilState(communityMenuState)
-  const { communitySubs, setCommunitySubs } = useCommunityData(communityIdFetch)
+  const { communitySubs, setCommunitySubs } = useCommunityData(communityIdFetch ? communityID : '')
   const communityData = communitySubs.currentCommunity
 
   //Handle the image input variable

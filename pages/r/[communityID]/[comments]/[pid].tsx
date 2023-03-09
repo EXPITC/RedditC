@@ -70,7 +70,7 @@ export default function PostCommentPage() {
 
       </>
       <>
-        <Info communityIdFetch={communityID} />
+        <Info communityIdFetch={true} />
         <Flex ref={ref} direction="column" flexGrow="1" >
           <Flex display={(ref.current?.clientHeight || 0) >= 1100 ? "initial" : 'none'} mt={(ref.current?.clientHeight || 0) >= 1100 ? "1100px" : "0px"} direction="column" position="relative" flexGrow="1" >
             <ButtonBackToTop />

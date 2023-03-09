@@ -198,6 +198,7 @@ const useCommunityData = (communityIdFetch: string = '') => {
   }
 
   useEffect(() => {
+
     if (!communityIdFetch) return setLoading(false)
     if (communitySubs.currentCommunity.id === communityIdFetch) return setLoading(false) // Its same data  
     getCurrentCommunity()

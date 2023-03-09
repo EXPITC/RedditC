@@ -58,8 +58,6 @@ export default function communityPage({ communityData }: { communityData: commun
     }))
   }, [communityData])
 
-  console.log(ref.current?.clientHeight)
-
   return (
     <>
       <Header />
