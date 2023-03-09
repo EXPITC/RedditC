@@ -18,9 +18,10 @@ import { User } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import uploadPost from '@/libs/firebase/uploadPost'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import useSelectImage from '@/libs/hooks/useSelectImage'
 import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
+import { infoModalState } from '@/libs/atoms/infoPropsModalAtoms'
 
 const formTabs = [
   {
@@ -56,11 +57,17 @@ interface PostForm {
 
 const PostForm = ({ user }: PostForm) => {
   const router = useRouter()
+  let { tabIndex } = router.query
+  tabIndex = typeof tabIndex === 'string' ? tabIndex : '0'
+
   const [tab, setTab] = useState(0)
   useEffect(() => {
     // This useEffect handle click image from linkPost component for tab
-    const { tabIndex } = router.query
     if (!tabIndex) return
+
+    const tabIndexNotYetFeatureAvailable = tabIndex !== '1' && tabIndex !== '0'
+    if (tabIndexNotYetFeatureAvailable) return
+
     setTab(parseInt(tabIndex as string))
   }, [])
   const [inputText, setInputText] = useState({
@@ -71,7 +78,16 @@ const PostForm = ({ user }: PostForm) => {
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
   const setPostState = useSetRecoilState(postState)
+  const setInfoModal = useSetRecoilState(infoModalState)
+  const [isInfo, setInfo] = useState(false)
   const communityImgUrl = useRecoilValue(communitySubsState).currentCommunity.imageUrl
+
+  const handleTab = (n: number) => {
+    if (n !== 0 && n !== 1 && isInfo) return setInfo(false)
+    if (n !== 0 && n !== 1 && !isInfo) return (setInfoModal(true), setInfo(true))
+
+    setTab(n)
+  }
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (err) setErr('')
@@ -131,7 +147,7 @@ const PostForm = ({ user }: PostForm) => {
 
   return (
     <Flex direction="column" bg="white" borderRadius="4">
-      <Tabs index={tab} onChange={setTab} overflow="hidden" borderRadius="4px">
+      <Tabs index={tab} onChange={handleTab} overflow="hidden" borderRadius="4px">
         <TabList justifyContent="space-between" bg="gray.200">
           {formTabs.map((i, index) => (
             <Tab
