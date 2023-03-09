@@ -66,7 +66,6 @@ export const getCommunityLike = async (keyword: string) => {
   )
   try {
     const getCommunity = await getDocs(communityQuery)
-    getCommunity.forEach(doc => console.log(doc.id))
 
     if (getCommunity.empty) return {
       err: `Sorry community not found... 🧑‍🦽`,
