@@ -4,6 +4,7 @@ import useCommunityBank from "@/libs/hooks/useCommunityBank"
 import useCommunityData from "@/libs/hooks/useCommunityData"
 import { Alert, AlertDescription, AlertIcon, Box, Button, Flex, Text } from "@chakra-ui/react"
 import Image from "next/image"
+import Link from "next/link"
 import { useMemo } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilValue } from "recoil"
@@ -31,9 +32,9 @@ const RecommendationInfo = () => {
             <Text >{index + 1}</Text>
           </Flex>
           <Flex flexGrow="1" justify="space-between">
-            <Flex align="center" >
+            <Flex align="center" as={Link} href={'/r/' + c.id}>
               <Image src={c.imageUrl ? c.imageUrl : '/images/redditFace.svg'} width={35} height={35} alt="community profile" style={{ borderRadius: '50%' }} priority />
-              <Text mx="2" fontWeight="semibold" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">{c.communityName}</Text>
+              <Text _hover={{ textDecoration: "underline", textDecorationColor: "purple.500" }} mx="2" fontWeight="semibold" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">{c.communityName}</Text>
             </Flex>
             <ButtonJoinLeave
               isJoin={!!communitySubs.subs.find(communitySubs => communitySubs.communityId === c.id)}
