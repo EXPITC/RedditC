@@ -1,12 +1,15 @@
-import Info from '@/components/info'
+import Info from '@/components/info/info'
 import ContentLayouts from '@/components/layouts/content'
 import PostForm from '@/components/r/submit/postForm'
 import { auth } from '@/libs/firebase/clientApp'
 import { Box, Divider, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 export default function Submit() {
   const [user] = useAuthState(auth)
+  let { communityID } = useRouter().query
+  communityID = typeof communityID === 'string' ? communityID : ''
 
   return (
     <ContentLayouts>
@@ -19,7 +22,7 @@ export default function Submit() {
       </>
       <>
         <Box pt="8">
-          <Info />
+          <Info communityIdFetch={communityID} />
         </Box>
       </>
     </ContentLayouts>
