@@ -5,7 +5,7 @@ import moment from "moment"
 import { useRouter } from "next/router"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "@/libs/firebase/clientApp"
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { authModalState } from "@/libs/atoms/authModalAtoms"
 import { GoPrimitiveDot } from 'react-icons/go'
 import useSelectImage from "@/libs/hooks/useSelectImage"
@@ -15,6 +15,8 @@ import uploadCommunityProfile from "@/libs/firebase/uploadCommunityProfile"
 import communityMenuState from "@/libs/atoms/communityMenuAtoms"
 import useCommunityData from "@/libs/hooks/useCommunityData"
 import formatNumber from "@/libs/formatNumber"
+import { postState } from "@/libs/atoms/postsAtom"
+import { getTotalPost } from "@/libs/firebase/getPosts"
 
 
 
@@ -27,6 +29,8 @@ const Info = ({ communityIdFetch = false }: { communityIdFetch?: boolean }) => {
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const setCommunityMenu = useSetRecoilState(communityMenuState)
+  const postStateValue = useRecoilValue(postState)
+  const [totalCollections, setTotalCollection] = useState(0)
   const { communitySubs, setCommunitySubs } = useCommunityData(communityIdFetch ? communityID : '')
   const communityData = communitySubs.currentCommunity
 
@@ -41,6 +45,21 @@ const Info = ({ communityIdFetch = false }: { communityIdFetch?: boolean }) => {
   useEffect(() => {
     setErr(errHook)
   }, [errHook])
+
+  const getTotalCollection = async (communityId: string) => {
+    const totalCollections = await getTotalPost(communityId)
+
+    setTotalCollection(totalCollections)
+  }
+
+  useEffect(() => {
+    if (postStateValue.totalCollections !== -1 || !communityIdFetch) return
+
+    if (typeof communityID !== 'string' || !communityID) return
+    getTotalCollection(communityID)
+
+  }, [postStateValue.totalCollections, communityIdFetch, communityID])
+
 
   const handleClick = () => {
     if (!user) return setAuthModal({ open: true, view: 'Login' })
@@ -131,9 +150,9 @@ const Info = ({ communityIdFetch = false }: { communityIdFetch?: boolean }) => {
           <Box>
             <Flex align="center" fontSize="16px">
               <Icon as={GoPrimitiveDot} color="green.300" />
-              <Text>{communityData.numberOfmember}</Text>
+              <Text>{formatNumber(postStateValue.totalCollections === -1 ? totalCollections : postStateValue.totalCollections)}</Text>
             </Flex>
-            <Text fontSize="12px" color="gray.500">Online</Text>
+            <Text fontSize="12px" color="gray.500">Contribution</Text>
           </Box>
         </Flex>
 

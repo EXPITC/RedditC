@@ -80,4 +80,15 @@ const getPosts = async (communityId: string, lastPostId?: string | null) => {
   }
 }
 
+export const getTotalPost = async (communityId: string) => {
+  const collectionPath = collection(firestore, collections.POSTS.id)
+  const thisPostCommunity = query(
+    collectionPath,
+    where('communityId', '==', communityId)
+  )
+  const snapshot = await getCountFromServer(thisPostCommunity)
+
+  return snapshot.data().count
+}
+
 export default getPosts
