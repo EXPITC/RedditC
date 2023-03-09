@@ -3,7 +3,7 @@ import { Divider, Flex, MenuItem } from '@chakra-ui/react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { CiLogout, CiLogin } from 'react-icons/ci'
 import { CgProfile } from 'react-icons/cg'
-import { SetterOrUpdater, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { SetterOrUpdater, useSetRecoilState } from 'recoil'
 import { authModalState } from '@/libs/atoms/authModalAtoms'
 import { signOut } from 'firebase/auth'
 import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
@@ -66,7 +66,7 @@ const UnLoginItem = ({
 )
 
 export default function ProfileItems() {
-  const [user, _loading, _error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const setCommunitySubs = useSetRecoilState(communitySubsState)
   const setPostState = useSetRecoilState(postState)
@@ -77,14 +77,15 @@ export default function ProfileItems() {
     setCommunitySubs(prev => ({
       ...prev,
       totalSubs: -1,
-      subs: [],
+      subs: []
     }))
     // if logout in community page then do not reset the post
-    if (communityID) return setPostState(prev => ({
-      ...prev,
-      userVotePost: []
-    }))
-    // if logout in homepage we must show for non user 
+    if (communityID)
+      return setPostState(prev => ({
+        ...prev,
+        userVotePost: []
+      }))
+    // if logout in homepage we must show for non user
     setPostState(defaultPostState)
   }
 

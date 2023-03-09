@@ -1,4 +1,13 @@
-import { collection, doc, getDoc, increment, writeBatch, where, query, getDocs } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDoc,
+  increment,
+  writeBatch,
+  where,
+  query,
+  getDocs
+} from 'firebase/firestore'
 import { deleteObject, ref } from 'firebase/storage'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
@@ -10,17 +19,19 @@ import { auth, firestore, storage } from '../firebase/clientApp'
 import getcommunityData from '../firebase/communityData'
 import collections from '../firebase/firestoreCollectionsID'
 
-
 const useCommunityData = (communityIdFetch: string = '') => {
   communityIdFetch = communityIdFetch.toString().toLowerCase()
   const [user] = useAuthState(auth)
   const setAuthModal = useSetRecoilState(authModalState)
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
-  const [loading, setLoading] = useState(communitySubs.currentCommunity.id ? false : true)
+  const [loading, setLoading] = useState(
+    communitySubs.currentCommunity.id ? false : true
+  )
   const subsCollectionPath = `${collections.USERS.id}/${user?.uid}/${collections.USERS.COMMUNITYSUBS.id}`
 
   // Pass the communityId to check user join or not
-  const isJoin = (communityId: string) => !!communitySubs.subs.find(sub => sub.communityId === communityId)
+  const isJoin = (communityId: string) =>
+    !!communitySubs.subs.find(sub => sub.communityId === communityId)
 
   // Register user to community
   const join = async (communityId: string, communityName: string) => {
@@ -97,12 +108,25 @@ const useCommunityData = (communityIdFetch: string = '') => {
 
           //Variable need to get the data
           const postCollectionPath = collection(firestore, collections.POSTS.id)
-          const commentCollectionPath = collection(firestore, collections.COMMENTS.id)
+          const commentCollectionPath = collection(
+            firestore,
+            collections.COMMENTS.id
+          )
 
-          const selectOnlyCommunityRelated = where('communityId', '==', communityId)
+          const selectOnlyCommunityRelated = where(
+            'communityId',
+            '==',
+            communityId
+          )
 
-          const postQuery = query(postCollectionPath, selectOnlyCommunityRelated)
-          const commentQuery = query(commentCollectionPath, selectOnlyCommunityRelated)
+          const postQuery = query(
+            postCollectionPath,
+            selectOnlyCommunityRelated
+          )
+          const commentQuery = query(
+            commentCollectionPath,
+            selectOnlyCommunityRelated
+          )
 
           //Get the data
           const postCollection = await getDocs(postQuery)
@@ -110,8 +134,14 @@ const useCommunityData = (communityIdFetch: string = '') => {
 
           //execute
           for (const userId of latestCommunityData.data().intractedUserId) {
-            const voteUserCollectionPath = collection(firestore, `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`)
-            const voteUserQuery = query(voteUserCollectionPath, selectOnlyCommunityRelated)
+            const voteUserCollectionPath = collection(
+              firestore,
+              `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
+            )
+            const voteUserQuery = query(
+              voteUserCollectionPath,
+              selectOnlyCommunityRelated
+            )
 
             //get the latest data
             const voteUserCollection = await getDocs(voteUserQuery)
@@ -123,51 +153,53 @@ const useCommunityData = (communityIdFetch: string = '') => {
           commentCollection.forEach(doc => batch2.delete(doc.ref))
 
           // execute for storage
-          await batch2.commit()
-            .then(() => {
-              // delete image posted
-              postCollection.forEach(async doc => {
-                if (doc.data().imgUrl) {
-                  const imgRef = ref(storage, `${collections.POSTS.id}/${doc.id}/${collections.POSTS.storage.image.id}`)
-                  await deleteObject(imgRef)
-                }
-              })
+          await batch2.commit().then(() => {
+            // delete image posted
+            postCollection.forEach(async doc => {
+              if (doc.data().imgUrl) {
+                const imgRef = ref(
+                  storage,
+                  `${collections.POSTS.id}/${doc.id}/${collections.POSTS.storage.image.id}`
+                )
+                await deleteObject(imgRef)
+              }
+            })
 
-              setCommunitySubs(prev => ({
-                ...prev,
-                subs: communitySubs.subs.filter(prev => prev.communityId != communityId),
-                currentCommunity: {
-                  id: '',
-                  communityName: '',
-                  imageUrl: '',
-                  createdAt: {
-                    seconds: 0,
-                    nanoseconds: 0
-                  },
-                  creatorId: '',
-                  numberOfmember: 0,
-                  intractedUserId: [],
-                  privacyType: ''
-                }
-              })
-              )
+            setCommunitySubs(prev => ({
+              ...prev,
+              subs: communitySubs.subs.filter(
+                prev => prev.communityId != communityId
+              ),
+              currentCommunity: {
+                id: '',
+                communityName: '',
+                imageUrl: '',
+                createdAt: {
+                  seconds: 0,
+                  nanoseconds: 0
+                },
+                creatorId: '',
+                numberOfmember: 0,
+                intractedUserId: [],
+                privacyType: ''
+              }
+            }))
 
-              setLoading(false)
-              router.push('/')
-            }
-            )
+            setLoading(false)
+            router.push('/')
+          })
         }
       }
       setCommunitySubs(prev => ({
         ...prev,
-        subs: communitySubs.subs.filter(prev => prev.communityId != communityId),
+        subs: communitySubs.subs.filter(
+          prev => prev.communityId != communityId
+        ),
         currentCommunity: {
           ...prev.currentCommunity,
           numberOfmember: prev.currentCommunity.numberOfmember - 1
         }
-      })
-      )
-
+      }))
     } catch (e: any) {
       console.log('leave err ', e.message)
     }
@@ -183,11 +215,13 @@ const useCommunityData = (communityIdFetch: string = '') => {
   }
 
   const getCurrentCommunity = async () => {
-
     setLoading(true)
     try {
       const currentCommunity = await getcommunityData(communityIdFetch)
-      if (!currentCommunity) return console.error('Fail to fetch community data to current community')
+      if (!currentCommunity)
+        return console.error(
+          'Fail to fetch community data to current community'
+        )
       setCommunitySubs(prev => ({
         ...prev,
         currentCommunity
@@ -198,11 +232,10 @@ const useCommunityData = (communityIdFetch: string = '') => {
   }
 
   useEffect(() => {
-
     if (!communityIdFetch) return setLoading(false)
-    if (communitySubs.currentCommunity.id === communityIdFetch) return setLoading(false) // Its same data  
+    if (communitySubs.currentCommunity.id === communityIdFetch)
+      return setLoading(false) // Its same data
     getCurrentCommunity()
-
   }, [communityIdFetch])
 
   return {

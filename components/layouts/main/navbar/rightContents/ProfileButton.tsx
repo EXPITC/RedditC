@@ -13,13 +13,30 @@ import ProfileItems from './profileButton/profileItems'
 import Image from 'next/image'
 import { User } from 'firebase/auth'
 
-export default function ProfileButton({ user }: { user: User | null | undefined }) {
-
+export default function ProfileButton({
+  user
+}: {
+  user: User | null | undefined
+}) {
   return (
     <Menu>
-      <MenuButton as={Button} variant="icon" borderColor="transparent" _hover={{ borderColor: "gray.200" }} m={["0", "initial"]} px={['1px', '15px']} h="40px" maxW="213px" w={user ? ["full", "full", "full", "213px"] : 'fit-content'}>
+      <MenuButton
+        as={Button}
+        variant="icon"
+        borderColor="transparent"
+        _hover={{ borderColor: 'gray.200' }}
+        m={['0', 'initial']}
+        px={['1px', '15px']}
+        h="40px"
+        maxW="213px"
+        aria-label="Profile Button"
+        w={user ? ['full', 'full', 'full', '213px'] : 'fit-content'}
+      >
         {user ? (
-          <Flex align="center" justify={['center', "space-between", "space-between"]} >
+          <Flex
+            align="center"
+            justify={['center', 'space-between', 'space-between']}
+          >
             <Flex>
               <Box>
                 <Flex position="relative" mr="1">
@@ -52,7 +69,10 @@ export default function ProfileButton({ user }: { user: User | null | undefined 
                 <Text fontSize="7pt">This karma</Text>
               </Flex>
             </Flex>
-            <Box ml={[0, 0, 0, '50px']} display={['none', 'initial', 'initial']}>
+            <Box
+              ml={[0, 0, 0, '50px']}
+              display={['none', 'initial', 'initial']}
+            >
               <BsChevronDown fontSize="10pt" />
             </Box>
           </Flex>

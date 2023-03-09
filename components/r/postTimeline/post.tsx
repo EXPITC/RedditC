@@ -26,38 +26,50 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline
 } from 'react-icons/io5'
-import { text } from 'stream/consumers'
 
 interface PostProps extends PostType, usePost {
   isUserCreator: boolean
   userVoteValue: number
   homeFeed?: boolean
-  openModalInfoProps: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  openModalInfoProps: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void
   alreadyInComment: boolean
   link: string
 }
 interface postOptions extends PostProps {
-  shareValue: { first: boolean, text: "Share" | "Copied" },
-  setShareValue: React.Dispatch<React.SetStateAction<{ first: boolean, text: "Share" | "Copied" }>>
+  shareValue: { first: boolean; text: 'Share' | 'Copied' }
+  setShareValue: React.Dispatch<
+    React.SetStateAction<{ first: boolean; text: 'Share' | 'Copied' }>
+  >
 }
 
-const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId }: Partial<PostProps>) => (
+const Votebar = ({
+  userVoteValue,
+  vote,
+  onVote,
+  id,
+  postStateValue,
+  communityId
+}: Partial<PostProps>) => (
   <Flex
     direction="column"
-    bg={postStateValue?.selectedPost ? "white" : "gray.100"}
+    bg={postStateValue?.selectedPost ? 'white' : 'gray.100'}
     align="center"
-    width={['30px', "40px"]}
+    width={['30px', '40px']}
     p="2"
     borderRadius="4"
   >
     <Button
-      onClick={(e) => onVote!(id!, communityId!, 1, e)}
+      aria-label="Up vote button"
+      onClick={e => onVote!(id!, communityId!, 1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
       maxH="20pt"
     >
       <Icon
+        aria-label="Up vote icon"
         fontSize="20pt"
         _hover={{ color: 'brand.100' }}
         as={userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline}
@@ -66,13 +78,15 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId 
     </Button>
     {formatNumber(vote!)}
     <Button
-      onClick={(e) => onVote!(id!, communityId!, -1, e)}
+      aria-label="Down vote button"
+      onClick={e => onVote!(id!, communityId!, -1, e)}
       variant="iconList"
       _hover={{ bg: 'gray.200' }}
       minW="0"
       maxH="20pt"
     >
       <Icon
+        aria-label="Down vote icon"
         fontSize="20pt"
         _hover={{ color: 'brand.200' }}
         as={
@@ -83,59 +97,84 @@ const Votebar = ({ userVoteValue, vote, onVote, id, postStateValue, communityId 
         color={userVoteValue === -1 ? 'brand.200' : 'gray.400'}
       />
     </Button>
-  </Flex >
+  </Flex>
 )
 
 const PostOptions = (Post: postOptions) => (
-  <Flex mb="0.5" color="gray.500" >
+  <Flex mb="0.5" color="gray.500">
     <Button
       variant="iconList"
+      aria-label="Comments button"
       alignItems="center"
-      fontSize={["10px", "12px"]}
-      p={['0px 2px', '4px 5px', "8px 10px"]}
+      fontSize={['10px', '12px']}
+      p={['0px 2px', '4px 5px', '8px 10px']}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
-      onClick={(e) => Post.alreadyInComment ? (e.stopPropagation(), window.scrollTo({ top: 850, behavior: 'smooth' })) : null}
+      onClick={e =>
+        Post.alreadyInComment
+          ? (e.stopPropagation(),
+            window.scrollTo({ top: 850, behavior: 'smooth' }))
+          : null
+      }
     >
-      <Icon as={BsChat} mr={['1', '2']} fontSize={["16px", "20px"]} />
+      <Icon as={BsChat} mr={['1', '2']} fontSize={['16px', '20px']} />
       {formatNumber(Post.numberOfComments)} Comments
     </Button>
     <Button
       variant="iconList"
       alignItems="center"
-      fontSize={["10px", "12px"]}
-      p={['0px 2px', '4px 5px', "8px 10px"]}
+      aria-label="Share button"
+      fontSize={['10px', '12px']}
+      p={['0px 2px', '4px 5px', '8px 10px']}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
-      onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(Post.link); Post.setShareValue(prev => ({ ...prev, text: 'Copied' })) }}
+      onClick={e => {
+        e.stopPropagation()
+        navigator.clipboard.writeText(Post.link)
+        Post.setShareValue(prev => ({ ...prev, text: 'Copied' }))
+      }}
     >
-      <Icon as={IoArrowRedoOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
+      <Icon
+        as={IoArrowRedoOutline}
+        mr={['1', '2']}
+        fontSize={['16px', '20px']}
+      />
       {Post.shareValue.text}
     </Button>
     <Button
       variant="iconList"
+      aria-label="Bookmark button"
       alignItems="center"
-      fontSize={["10px", "12px"]}
-      p={['0px 2px', '4px 5px', "8px 10px"]}
+      fontSize={['10px', '12px']}
+      p={['0px 2px', '4px 5px', '8px 10px']}
       borderRadius="4px"
       _hover={{ bg: 'gray.200' }}
       onClick={Post.openModalInfoProps}
     >
-      <Icon as={IoBookmarkOutline} mr={['1', '2']} fontSize={["16px", "20px"]} />
+      <Icon
+        as={IoBookmarkOutline}
+        mr={['1', '2']}
+        fontSize={['16px', '20px']}
+      />
       Save
     </Button>
     {Post.isUserCreator && (
       <Button
-        onClick={(e) => Post.onDelete(Post.id, Post?.imgUrl, e)}
+        aria-label="Delete button"
+        onClick={e => Post.onDelete(Post.id, Post?.imgUrl, e)}
         isLoading={Post.loading === Post.id && true}
         variant="iconList"
         alignItems="center"
-        fontSize={["10px", "12px"]}
-        p={['0px 2px', '4px 5px', "8px 10px"]}
+        fontSize={['10px', '12px']}
+        p={['0px 2px', '4px 5px', '8px 10px']}
         borderRadius="4px"
         _hover={{ bg: 'gray.200' }}
       >
-        <Icon as={AiOutlineDelete} mr={['1', '2']} fontSize={["16px", "20px"]} />
+        <Icon
+          as={AiOutlineDelete}
+          mr={['1', '2']}
+          fontSize={['16px', '20px']}
+        />
         Delete
       </Button>
     )}
@@ -145,11 +184,14 @@ const PostOptions = (Post: postOptions) => (
 const Post = (Post: PostProps) => {
   const [imgLoading, setImgLoading] = useState(true)
   const selectedPost = Post.postStateValue.selectedPost
-  const [shareValue, setShareValue] = useState<{ first: boolean, text: 'Share' | 'Copied' }>({ first: true, text: 'Share' })
-
+  const [shareValue, setShareValue] = useState<{
+    first: boolean
+    text: 'Share' | 'Copied'
+  }>({ first: true, text: 'Share' })
 
   useEffect(() => {
-    if (shareValue.first) return setShareValue(prev => ({ ...prev, first: false }))
+    if (shareValue.first)
+      return setShareValue(prev => ({ ...prev, first: false }))
     let timeout: NodeJS.Timeout
 
     if (shareValue.text === 'Share') return
@@ -163,16 +205,15 @@ const Post = (Post: PostProps) => {
     }
   }, [shareValue])
 
-
   return (
     <Flex
       onClick={() => Post.onSelect(Post.id, Post.communityId)}
       bg="white"
-      border={selectedPost ? 'unset' : "1px solid"}
+      border={selectedPost ? 'unset' : '1px solid'}
       borderColor="gray.300"
-      borderRadius={selectedPost ? "4px 4px 0 0" : "4"}
+      borderRadius={selectedPost ? '4px 4px 0 0' : '4'}
       _hover={{ borderColor: 'gray.500' }}
-      cursor={selectedPost ? 'unset' : "pointer"}
+      cursor={selectedPost ? 'unset' : 'pointer'}
     >
       <Votebar {...Post} />
       <Flex direction="column" flexGrow="1">
@@ -180,20 +221,38 @@ const Post = (Post: PostProps) => {
           {/* Header post */}
           <Stack direction="row" align="center" spacing="0.6" fontSize="9pt">
             {/* Community check */}
-            {Post.homeFeed &&
+            {Post.homeFeed && (
               <>
-                {Post.communityImgUrl ?
-                  <Image src={Post.communityImgUrl} width={24} height={24} alt="community profile" style={{ borderRadius: '50%', marginRight: "4px" }} />
-                  :
-                  <Icon as={FaReddit} fontSize="24px" mr="4px" color="purple.500" />
-                }
-                <Text _hover={{ textDecor: 'underline' }} fontSize={["8px", "10px", "12px"]} fontWeight="bold" onClick={(e) => e.stopPropagation()} as={Link} href={'r/' + Post.communityId}>
+                {Post.communityImgUrl ? (
+                  <Image
+                    src={Post.communityImgUrl}
+                    width={24}
+                    height={24}
+                    alt="community profile"
+                    style={{ borderRadius: '50%', marginRight: '4px' }}
+                  />
+                ) : (
+                  <Icon
+                    as={FaReddit}
+                    fontSize="24px"
+                    mr="4px"
+                    color="purple.500"
+                  />
+                )}
+                <Text
+                  _hover={{ textDecor: 'underline' }}
+                  fontSize={['8px', '10px', '12px']}
+                  fontWeight="bold"
+                  onClick={e => e.stopPropagation()}
+                  as={Link}
+                  href={'r/' + Post.communityId}
+                >
                   r/{Post.communityId}
                 </Text>
                 <Icon as={BsDot} color="gray.500" fontSize="7pt" />
               </>
-            }
-            <Text color="gray.500" fontSize={["8px", "10px", "12px"]}>
+            )}
+            <Text color="gray.500" fontSize={['8px', '10px', '12px']}>
               Posted by u/{Post.creatorName}{' '}
               {moment(new Date(Post.createdAt.seconds * 1000)).fromNow()}
             </Text>
@@ -234,7 +293,11 @@ const Post = (Post: PostProps) => {
             </Flex>
           )}
 
-          <PostOptions {...Post} shareValue={shareValue} setShareValue={setShareValue} />
+          <PostOptions
+            {...Post}
+            shareValue={shareValue}
+            setShareValue={setShareValue}
+          />
         </Stack>
         {Post.err.id === Post.id && (
           <Alert status="error">

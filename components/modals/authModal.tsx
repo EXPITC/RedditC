@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   Divider
 } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useRecoilState } from 'recoil'
 import AuthForm from './authModal/authForm'
@@ -19,19 +19,19 @@ import OAuthButton from './authModal/oAuthButton'
 import ResetPassword from './authModal/resetPassword'
 
 export default function AuthModal() {
-  const [user, _loading, _error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
   const [modalState, setModalState] = useRecoilState(authModalState)
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setModalState(prev => ({
       ...prev,
       open: false
     }))
-  }
+  }, [setModalState])
 
   useEffect(() => {
     if (user) handleClose()
-  }, [user])
+  }, [user, handleClose])
 
   return (
     <>

@@ -6,10 +6,10 @@ import Image from 'next/image'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import ButtonJoinLeave from '../buttons/buttonJoinLeave'
 
-
 const Header = () => {
   const [user] = useAuthState(auth)
-  const { isJoin, joinOrleaveCommunity, loading, communitySubs } = useCommunityData()
+  const { isJoin, joinOrleaveCommunity, loading, communitySubs } =
+    useCommunityData()
   const communityName = communitySubs.currentCommunity.communityName
   const communityId = communitySubs.currentCommunity.id
 
@@ -24,7 +24,11 @@ const Header = () => {
           <Flex width="95%" maxWidth="976px" mt="-14px" mb="12px">
             <Box>
               <Image
-                src={communitySubs.currentCommunity.imageUrl ? communitySubs.currentCommunity.imageUrl : "/images/redditFace.svg"}
+                src={
+                  communitySubs.currentCommunity.imageUrl
+                    ? communitySubs.currentCommunity.imageUrl
+                    : '/images/redditFace.svg'
+                }
                 alt="community logo"
                 style={{ border: '4px solid white', borderRadius: '100%' }}
                 width={72}
@@ -42,8 +46,16 @@ const Header = () => {
               </Flex>
               <ButtonJoinLeave
                 isJoin={isJoin(communityId)}
-                loading={user ? communitySubs.totalSubs === -1 ? true : false || loading : false}
-                handleClick={() => joinOrleaveCommunity(communityId, communityName)}
+                loading={
+                  user
+                    ? communitySubs.totalSubs === -1
+                      ? true
+                      : false || loading
+                    : false
+                }
+                handleClick={() =>
+                  joinOrleaveCommunity(communityId, communityName)
+                }
               />
             </Flex>
           </Flex>

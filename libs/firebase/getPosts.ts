@@ -29,11 +29,11 @@ const getPosts = async (communityId: string, lastPostId?: string | null) => {
     QueryOrderByConstraint,
     QueryLimitConstraint
   ] = [
-      collectionPath,
-      where('communityId', '==', communityId),
-      orderBy('createdAt', 'desc'),
-      limit(20)
-    ]
+    collectionPath,
+    where('communityId', '==', communityId),
+    orderBy('createdAt', 'desc'),
+    limit(20)
+  ]
   const thisPostCommunity = query(
     collectionPath,
     where('communityId', '==', communityId)

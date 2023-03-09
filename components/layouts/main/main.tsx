@@ -8,13 +8,14 @@ interface props {
 
 export default function Main({ children }: props) {
   const applicationIdJson = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": "https://www.reddit.com/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://www.reddit.com/search?q={search_term_string}\u0026referrer=sitelinks_searchbox",
-      "query-input": "required name=search_term_string"
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: 'https://www.reddit.com/',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target:
+        'https://www.reddit.com/search?q={search_term_string}\u0026referrer=sitelinks_searchbox',
+      'query-input': 'required name=search_term_string'
     }
   }
 
@@ -125,15 +126,24 @@ export default function Main({ children }: props) {
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.reddit.com/" />
-        <meta property="og:image" content="https://www.redditstatic.com/icon.png" />
+        <meta
+          property="og:image"
+          content="https://www.redditstatic.com/icon.png"
+        />
         <meta property="og:image:width" content="256" />
         <meta property="og:image:height" content="256" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(applicationIdJson) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(applicationIdJson)
+          }}
         />
         <link rel="alternate" hrefLang="en" href="https://www.reddit.com/" />
-        <link rel="alternate" hrefLang="x-default" href="https://www.reddit.com/" />
+        <link
+          rel="alternate"
+          hrefLang="x-default"
+          href="https://www.reddit.com/"
+        />
         <link rel="alternate" hrefLang="de" href="https://www.reddit.com/de/" />
         <link rel="alternate" hrefLang="es" href="https://www.reddit.com/es/" />
         <link rel="alternate" hrefLang="fr" href="https://www.reddit.com/fr/" />

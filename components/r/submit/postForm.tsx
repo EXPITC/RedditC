@@ -18,7 +18,7 @@ import { User } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import uploadPost from '@/libs/firebase/uploadPost'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import useSelectImage from '@/libs/hooks/useSelectImage'
 import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
 import { infoModalState } from '@/libs/atoms/infoPropsModalAtoms'
@@ -61,6 +61,8 @@ const PostForm = ({ user }: PostForm) => {
   tabIndex = typeof tabIndex === 'string' ? tabIndex : '0'
 
   const [tab, setTab] = useState(0)
+
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     // This useEffect handle click image from linkPost component for tab
     if (!tabIndex) return
@@ -74,17 +76,23 @@ const PostForm = ({ user }: PostForm) => {
     title: '',
     body: ''
   })
-  const { imgUrl, setImgUrl, convertToDataUrlAndSaveToImgUrl, err: selectImgErr } = useSelectImage()
+  const {
+    imgUrl,
+    setImgUrl,
+    convertToDataUrlAndSaveToImgUrl,
+    err: selectImgErr
+  } = useSelectImage()
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | undefined>()
   const setPostState = useSetRecoilState(postState)
   const setInfoModal = useSetRecoilState(infoModalState)
   const [isInfo, setInfo] = useState(false)
-  const communityImgUrl = useRecoilValue(communitySubsState).currentCommunity.imageUrl
+  const communityImgUrl =
+    useRecoilValue(communitySubsState).currentCommunity.imageUrl
 
   const handleTab = (n: number) => {
     if (n !== 0 && n !== 1 && isInfo) return setInfo(false)
-    if (n !== 0 && n !== 1 && !isInfo) return (setInfoModal(true), setInfo(true))
+    if (n !== 0 && n !== 1 && !isInfo) return setInfoModal(true), setInfo(true)
 
     setTab(n)
   }
@@ -120,7 +128,12 @@ const PostForm = ({ user }: PostForm) => {
         ...prev,
         totalCollections: prev.totalCollections + 1,
         posts: [
-          { ...post, id: upload.id!, imgUrl: upload?.imgUrl, createdAt: { seconds: Date.now() / 1000 } as Timestamp },
+          {
+            ...post,
+            id: upload.id!,
+            imgUrl: upload?.imgUrl,
+            createdAt: { seconds: Date.now() / 1000 } as Timestamp
+          },
           ...prev.posts
         ]
       }))
@@ -147,7 +160,12 @@ const PostForm = ({ user }: PostForm) => {
 
   return (
     <Flex direction="column" bg="white" borderRadius="4">
-      <Tabs index={tab} onChange={handleTab} overflow="hidden" borderRadius="4px">
+      <Tabs
+        index={tab}
+        onChange={handleTab}
+        overflow="hidden"
+        borderRadius="4px"
+      >
         <TabList justifyContent="space-between" bg="gray.200">
           {formTabs.map((i, index) => (
             <Tab
@@ -160,7 +178,7 @@ const PostForm = ({ user }: PostForm) => {
               w={['full', 'auto']}
               // minWidth={['auto', 'auto', 'auto']}
               flexGrow="1"
-              ml={index == 0 ? 'unset' : "1px"}
+              ml={index == 0 ? 'unset' : '1px'}
               borderBottom="1px"
               borderColor="gray.200"
               _selected={{

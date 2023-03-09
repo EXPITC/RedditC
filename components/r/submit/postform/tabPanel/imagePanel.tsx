@@ -15,7 +15,8 @@ const ImagePanel = ({
   const isVideoFormat = (type: string) => {
     const videoFormat = type.search(/video/i) === 0
 
-    if (videoFormat) setErr('Sorry type video under maintenance at these moments')
+    if (videoFormat)
+      setErr('Sorry type video under maintenance at these moments')
 
     return videoFormat
   }
@@ -26,8 +27,8 @@ const ImagePanel = ({
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const typeNotImageOrVideo =
-        e.dataTransfer.files[0].type.search(/image/i) === -1 && e.dataTransfer.files[0].type.search(/video/i) === -1
-
+        e.dataTransfer.files[0].type.search(/image/i) === -1 &&
+        e.dataTransfer.files[0].type.search(/video/i) === -1
 
       if (err) setErr('')
       if (typeNotImageOrVideo) return setErr('File Is Not Type Video or Image')

@@ -12,16 +12,16 @@ const ImageSkeleton = () => <Skeleton height="460px" width="full" />
 const PostSkeleton = ({ selectedPost = false }) => (
   <Flex
     bg="white"
-    border={selectedPost ? 'unset' : "1px solid"}
+    border={selectedPost ? 'unset' : '1px solid'}
     borderColor="gray.300"
-    borderRadius={selectedPost ? "4px 4px 0 0" : "4"}
+    borderRadius={selectedPost ? '4px 4px 0 0' : '4'}
     cursor="progress"
   >
     <Flex
       direction="column"
-      bg={selectedPost ? "white" : "gray.100"}
+      bg={selectedPost ? 'white' : 'gray.100'}
       align="center"
-      width={['30px', "40px"]}
+      width={['30px', '40px']}
       p="2"
       borderRadius="4"
     >
@@ -101,7 +101,9 @@ const PostSkeleton = ({ selectedPost = false }) => (
 
 const PostsSkeleton = () => (
   <>
-    {[0, 1].map(i => <PostSkeleton key={i} />)}
+    {[0, 1].map(i => (
+      <PostSkeleton key={i} />
+    ))}
   </>
 )
 

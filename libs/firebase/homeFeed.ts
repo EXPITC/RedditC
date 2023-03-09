@@ -1,8 +1,23 @@
-import { collection, CollectionReference, doc, DocumentData, getDoc, getDocs, limit, orderBy, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryLimitConstraint, QueryOrderByConstraint, startAfter, where } from "firebase/firestore"
-import { Post } from "../atoms/postsAtom"
-import { firestore } from "./clientApp"
-import collections from "./firestoreCollectionsID"
-
+import {
+  collection,
+  CollectionReference,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  QueryDocumentSnapshot,
+  QueryFieldFilterConstraint,
+  QueryLimitConstraint,
+  QueryOrderByConstraint,
+  startAfter,
+  where
+} from 'firebase/firestore'
+import { Post } from '../atoms/postsAtom'
+import { firestore } from './clientApp'
+import collections from './firestoreCollectionsID'
 
 const packPostToObject = (doc: QueryDocumentSnapshot<DocumentData>) => ({
   id: doc.id,
@@ -19,11 +34,11 @@ const getUserHomeFeed = async (subsId: string[], lastPostId?: string) => {
     QueryOrderByConstraint,
     QueryLimitConstraint
   ] = [
-      collectionPath,
-      where('communityId', 'in', subsId),
-      orderBy('createdAt', 'desc'),
-      limit(20)
-    ]
+    collectionPath,
+    where('communityId', 'in', subsId),
+    orderBy('createdAt', 'desc'),
+    limit(20)
+  ]
 
   try {
     if (!lastPostId) {
@@ -51,9 +66,7 @@ const getUserHomeFeed = async (subsId: string[], lastPostId?: string) => {
     return {
       err: 'Fail to get home feed please try again'
     }
-
   }
-
 }
 
 const getNoUserHomeFeed = async (lastPostId?: string) => {
@@ -64,11 +77,7 @@ const getNoUserHomeFeed = async (lastPostId?: string) => {
     CollectionReference<DocumentData>,
     QueryOrderByConstraint,
     QueryLimitConstraint
-  ] = [
-      collectionPath,
-      orderBy('vote', 'desc'),
-      limit(20)
-    ]
+  ] = [collectionPath, orderBy('vote', 'desc'), limit(20)]
 
   try {
     if (!lastPostId) {
@@ -96,11 +105,7 @@ const getNoUserHomeFeed = async (lastPostId?: string) => {
     return {
       err: 'Fail to get home feed please try again'
     }
-
   }
 }
 
-export {
-  getUserHomeFeed,
-  getNoUserHomeFeed,
-}
+export { getUserHomeFeed, getNoUserHomeFeed }

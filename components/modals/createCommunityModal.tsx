@@ -51,7 +51,7 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
 
   const handleCreate = async () => {
     if (err) setErr('')
-    if (!user) return setAuthModal({ open: true, view: "Login" })
+    if (!user) return setAuthModal({ open: true, view: 'Login' })
 
     const regex = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/
     if (regex.test(communityName) || communityName.length < 3)
@@ -67,19 +67,20 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
     setCommunitySubs(prev => ({
       ...prev,
       totalSubs: prev.totalSubs + 1,
-      subs: [...prev.subs, {
-        communityId: communityData.data!.id,
-        communityName: communityData.data!.communityName,
-        isModerator: true,
-        imageUrl: communityData.data!.imageUrl
-      }]
+      subs: [
+        ...prev.subs,
+        {
+          communityId: communityData.data!.id,
+          communityName: communityData.data!.communityName,
+          isModerator: true,
+          imageUrl: communityData.data!.imageUrl
+        }
+      ]
     }))
     setCommunityBank(prev => ({
       ...prev,
       searchedCommunity: [...prev.searchedCommunity, communityData.data!]
     }))
-
-
 
     setLoading(false)
     Router.push('/r/' + communityName.toLowerCase())

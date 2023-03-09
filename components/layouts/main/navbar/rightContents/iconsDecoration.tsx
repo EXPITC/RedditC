@@ -13,16 +13,21 @@ export default function IconsDecoration() {
   const setMenuState = useSetRecoilState(communityMenuState)
 
   return (
-    <Stack direction="row" spacing={["0", "0", "0", "1", "2"]} justify={['space-between', 'none', 'none', 'none']}  >
-      <Stack direction="row" spacing={["0", "0", "0", "1", "2"]}
+    <Stack
+      direction="row"
+      spacing={['0', '0', '0', '1', '2']}
+      justify={['space-between', 'none', 'none', 'none']}
+    >
+      <Stack
+        direction="row"
+        spacing={['0', '0', '0', '1', '2']}
         display={['none', 'none', 'flex']}
         align="center"
         pr="2"
         borderRight="1px solid"
         borderColor="gray.200"
       >
-        <Button variant="iconList" onClick={openModalInfoProps}
-        >
+        <Button variant="iconList" onClick={openModalInfoProps}>
           <BsArrowUpRightCircle />
         </Button>
         <Button variant="iconList" onClick={openModalInfoProps}>
@@ -32,14 +37,26 @@ export default function IconsDecoration() {
           <IoVideocamOutline />
         </Button>
       </Stack>
-      <Button variant="iconList" onClick={openModalInfoProps} minW={["2", "9", "10"]} display={['none', 'none', 'inherit', 'inherit']}
+      <Button
+        variant="iconList"
+        onClick={openModalInfoProps}
+        minW={['2', '9', '10']}
+        display={['none', 'none', 'inherit', 'inherit']}
       >
         <TbMessageCircle />
       </Button>
-      <Button variant="iconList" onClick={openModalInfoProps} minW={["2", "9", "10"]}>
+      <Button
+        variant="iconList"
+        onClick={openModalInfoProps}
+        minW={['2', '9', '10']}
+      >
         <TfiBell />
       </Button>
-      <Button variant="iconList" onClick={() => setMenuState(prev => ({ ...prev, isOpen: true }))} minW={["2", "9", "10"]}>
+      <Button
+        variant="iconList"
+        onClick={() => setMenuState(prev => ({ ...prev, isOpen: true }))}
+        minW={['2', '9', '10']}
+      >
         <AiOutlinePlus />
       </Button>
     </Stack>

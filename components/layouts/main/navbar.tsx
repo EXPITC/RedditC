@@ -7,7 +7,7 @@ import RightContents from './navbar/rightContents'
 import SearchInput from './navbar/searchInput'
 
 export default function Navbar() {
-  const [user, _loading, _error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
 
   return (
     <nav>
