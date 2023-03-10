@@ -1,9 +1,7 @@
-import { doc, getDoc } from "firebase/firestore"
-import { Post } from "../atoms/postsAtom"
-import { firestore } from "./clientApp"
-import collections from "./firestoreCollectionsID"
-
-
+import { doc, getDoc } from 'firebase/firestore'
+import { Post } from '../atoms/postsAtom'
+import { firestore } from './clientApp'
+import collections from './firestoreCollectionsID'
 
 const getPost = async (postId: string) => {
   const postDocRef = doc(firestore, collections.POSTS.id, postId)
@@ -25,9 +23,7 @@ const getPost = async (postId: string) => {
       data: null,
       err: 'Fail to get post, please try again.'
     }
-
   }
-
 }
 
 export default getPost

@@ -12,16 +12,27 @@ const ImagePanel = ({
 }: ImagePanelProps) => {
   const ref = useRef<HTMLInputElement>(null)
 
+  const isVideoFormat = (type: string) => {
+    const videoFormat = type.search(/video/i) === 0
+
+    if (videoFormat)
+      setErr('Sorry type video under maintenance at these moments')
+
+    return videoFormat
+  }
+
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const typeNotImageOrVideo =
-        e.dataTransfer.files[0].type.search(/image/i || /video/i) === -1
+        e.dataTransfer.files[0].type.search(/image/i) === -1 &&
+        e.dataTransfer.files[0].type.search(/video/i) === -1
 
       if (err) setErr('')
       if (typeNotImageOrVideo) return setErr('File Is Not Type Video or Image')
+      if (isVideoFormat(e.dataTransfer.files[0].type)) return
       convertToDataUrlAndSaveToImgUrl(e.dataTransfer.files[0])
     }
   }
@@ -33,8 +44,9 @@ const ImagePanel = ({
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     if (err) setErr('')
-    if (e.target.files && e.target.files[0])
-      convertToDataUrlAndSaveToImgUrl(e.target.files[0])
+    if (!(e.target.files && e.target.files[0])) return
+    if (isVideoFormat(e.target.files[0].type)) return
+    convertToDataUrlAndSaveToImgUrl(e.target.files[0])
   }
 
   return (

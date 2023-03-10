@@ -19,12 +19,14 @@ export default function OAuthButton() {
     useSignInWithApple(auth)
   const [err, setErr] = useState('')
   const resetPostState = useResetRecoilState(postState)
-  const currentCommunity = useRecoilValue(communitySubsState).currentCommunity.id
+  const currentCommunity =
+    useRecoilValue(communitySubsState).currentCommunity.id
   const [attempt, setAttempt] = useState(false)
 
   const handleClick = async (platform: 'google' | 'apple') => {
     if (err) setErr('')
-    if (platform === 'google') return await signInWithGoogle().then(() => setAttempt(true))
+    if (platform === 'google')
+      return await signInWithGoogle().then(() => setAttempt(true))
     await signInWithApple().then(() => setAttempt(true))
   }
 
@@ -40,7 +42,7 @@ export default function OAuthButton() {
     }
     if (attempt && !oAuthErr && !currentCommunity) resetPostState()
     if (attempt) setAttempt(false)
-  }, [errorApple, errorGoogle, attempt, currentCommunity])
+  }, [errorApple, errorGoogle, attempt, currentCommunity, resetPostState])
 
   useEffect(() => {
     const user = userApple || userGoogle

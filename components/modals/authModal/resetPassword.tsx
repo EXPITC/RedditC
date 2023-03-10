@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react'
 import Image from 'next/image'
 import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth'
 import { useSetRecoilState } from 'recoil'
+import FirebaseErrMsg from '@/libs/firebase/errors'
 
 export default function ResetPassword() {
   const setAuthModal = useSetRecoilState(authModalState)

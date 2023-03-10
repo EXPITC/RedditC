@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { auth } from "../firebase/clientApp"
+import { useEffect, useState } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '../firebase/clientApp'
 import { getNoUserHomeFeed, getUserHomeFeed } from 'libs/firebase/homeFeed'
-import { useRecoilState, useRecoilValue } from "recoil"
-import { communitySubsState } from "../atoms/communitiesAtoms"
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { communitySubsState } from '../atoms/communitiesAtoms'
 import { postState } from '@/libs/atoms/postsAtom'
-
-
 
 const useHomeFeed = () => {
   const communitySubs = useRecoilValue(communitySubsState)
@@ -24,17 +22,16 @@ const useHomeFeed = () => {
 
       if (posts.err) return //set err
 
-      if (posts.data?.length === 0) return setPostState(prev => ({ ...prev, totalCollections: -1 }))
+      if (posts.data?.length === 0)
+        return setPostState(prev => ({ ...prev, totalCollections: -1 }))
       setPostState(prev => ({
         ...prev,
         totalCollections: prev.totalCollections + posts.data!.length,
         posts: [...prev.posts, ...posts.data!]
       }))
-
     } finally {
       setLoading(false)
     }
-
   }
 
   //No login
@@ -45,14 +42,14 @@ const useHomeFeed = () => {
 
       if (posts.err) return //set err
 
-      if (posts.data?.length === 0) return setPostState(prev => ({ ...prev, totalCollections: -1 }))
+      if (posts.data?.length === 0)
+        return setPostState(prev => ({ ...prev, totalCollections: -1 }))
       setPostState(prev => ({
         ...prev,
         totalCollections: prev.totalCollections + posts.data!.length,
         posts: [...prev.posts, ...posts.data!]
       }))
     } finally {
-
       setLoading(false)
     }
   }
@@ -82,9 +79,13 @@ const useHomeFeed = () => {
 
     if (communitySubs.totalSubs === -1) return //console.log('DOUBLE BLOCK')
     if (!!user) populateUserHomeFeed()
-
-  }, [user, loadingUser, communitySubs.totalSubs, postStateValue.posts, postStateValue.selectedPost])
-
+  }, [
+    user,
+    loadingUser,
+    communitySubs.totalSubs,
+    postStateValue.posts,
+    postStateValue.selectedPost
+  ])
 
   return {
     populateUserHomeFeed,
@@ -95,8 +96,5 @@ const useHomeFeed = () => {
     user
   }
 }
-
-
-
 
 export default useHomeFeed
