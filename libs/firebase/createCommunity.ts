@@ -4,7 +4,6 @@ import {
   getDoc,
   runTransaction,
   serverTimestamp,
-  Timestamp
 } from 'firebase/firestore'
 import { firestore } from './clientApp'
 import collections from './firestoreCollectionsID'

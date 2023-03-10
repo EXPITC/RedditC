@@ -83,6 +83,7 @@ export default function CreateComunityModal({ isOpen, onClose }: props) {
     }))
 
     setLoading(false)
+    onClose()
     Router.push('/r/' + communityName.toLowerCase())
   }
 
