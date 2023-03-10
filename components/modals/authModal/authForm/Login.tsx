@@ -11,7 +11,8 @@ import { communitySubsState } from '@/libs/atoms/communitiesAtoms'
 export default function Login() {
   const setAuthModal = useSetRecoilState(authModalState)
   const resetPostState = useResetRecoilState(postState)
-  const currentCommunity = useRecoilValue(communitySubsState).currentCommunity.id
+  const currentCommunity =
+    useRecoilValue(communitySubsState).currentCommunity.id
   const [signInWithEmailAndPassword, _user, loading, error] =
     useSignInWithEmailAndPassword(auth)
   const [form, setForm] = useState({
@@ -37,15 +38,15 @@ export default function Login() {
   }
 
   useEffect(() => {
-
-    if (error) setErr(
-      FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] ||
-      error.message.split('/')[1].split(')')[0].replace('-', ' ')
-    )
+    if (error)
+      setErr(
+        FirebaseErrMsg[error.message as keyof typeof FirebaseErrMsg] ||
+          error.message.split('/')[1].split(')')[0].replace('-', ' ')
+      )
     // console.log(attempt, !error, currentCommunity, !currentCommunity)
     if (attempt && !error && !currentCommunity) resetPostState()
     if (attempt) setAttempt(false)
-  }, [error, attempt, currentCommunity])
+  }, [error, attempt, currentCommunity, resetPostState])
 
   return (
     <form onSubmit={onSubmit}>

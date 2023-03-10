@@ -8,21 +8,21 @@ export type communitySub = {
 }
 export type communityData = {
   id: string
-  communityName: string,
-  imageUrl: string,
+  communityName: string
+  imageUrl: string
   createdAt: {
     seconds: number
     nanoseconds: number
   }
   creatorId: string
   numberOfmember: number
-  intractedUserId: string[],
+  intractedUserId: string[]
   privacyType: string
 }
 
 export interface communitySubsCollection {
-  totalSubs: number,
-  subs: communitySub[],
+  totalSubs: number
+  subs: communitySub[]
   currentCommunity: communityData
 }
 
@@ -50,4 +50,3 @@ export const communitySubsState = atom<communitySubsCollection>({
   key: 'communitySubsState',
   default: defaultCommunitySubs
 })
-

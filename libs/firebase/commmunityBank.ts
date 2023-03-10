@@ -1,21 +1,35 @@
-import { limit, collection, CollectionReference, DocumentData, orderBy, QueryLimitConstraint, QueryOrderByConstraint, query, getDocs, getDoc, startAfter, doc, QueryDocumentSnapshot } from "firebase/firestore"
-import { communityData } from "../atoms/communitiesAtoms"
-import { firestore } from "./clientApp"
-import collections from "./firestoreCollectionsID"
-
+import {
+  limit,
+  collection,
+  CollectionReference,
+  DocumentData,
+  orderBy,
+  QueryLimitConstraint,
+  QueryOrderByConstraint,
+  query,
+  getDocs,
+  getDoc,
+  startAfter,
+  doc,
+  QueryDocumentSnapshot,
+  startAt,
+  endAt
+} from 'firebase/firestore'
+import { communityData } from '../atoms/communitiesAtoms'
+import { firestore } from './clientApp'
+import collections from './firestoreCollectionsID'
 
 export const getTopCommunity = async (lastCommunityId: string | undefined) => {
-  const communityCollectionPath = collection(firestore, collections.COMMUNITIES.id)
+  const communityCollectionPath = collection(
+    firestore,
+    collections.COMMUNITIES.id
+  )
 
   const keyword: [
     CollectionReference<DocumentData>,
     QueryOrderByConstraint,
     QueryLimitConstraint
-  ] = [
-      communityCollectionPath,
-      orderBy('numberOfmember', 'desc'),
-      limit(5)
-    ]
+  ] = [communityCollectionPath, orderBy('numberOfmember', 'desc'), limit(5)]
 
   const packToObject = (doc: QueryDocumentSnapshot<DocumentData>) => ({
     id: doc.id,
@@ -34,7 +48,9 @@ export const getTopCommunity = async (lastCommunityId: string | undefined) => {
       }
     }
 
-    const lastCommunity = await getDoc(doc(communityCollectionPath, lastCommunityId))
+    const lastCommunity = await getDoc(
+      doc(communityCollectionPath, lastCommunityId)
+    )
 
     const nextTopCommunityQuery = query(...keyword, startAfter(lastCommunity))
 
@@ -52,7 +68,39 @@ export const getTopCommunity = async (lastCommunityId: string | undefined) => {
       data: []
     }
   }
-
 }
 
-export const searchCommunity = async () => { }
+export const getCommunityLike = async (keyword: string) => {
+  const collectionPath = collection(firestore, collections.COMMUNITIES.id)
+  const communityQuery = query(
+    collectionPath,
+    orderBy('id', 'asc'),
+    startAt(keyword),
+    endAt(keyword + '\uf8ff'),
+    limit(10)
+  )
+  try {
+    const getCommunity = await getDocs(communityQuery)
+
+    if (getCommunity.empty)
+      return {
+        err: `Sorry community not found... 🧑‍🦽`,
+        data: [] as communityData[]
+      }
+
+    return {
+      err: '',
+      data: getCommunity.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as communityData[]
+    }
+  } catch (e: any) {
+    console.log('get community like', e.message)
+
+    return {
+      err: 'Fail to search community',
+      data: [] as communityData[]
+    }
+  }
+}

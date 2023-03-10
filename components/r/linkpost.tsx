@@ -10,7 +10,7 @@ import { TfiLink } from 'react-icons/tfi'
 import { useSetRecoilState } from 'recoil'
 
 const ImageProfileHead = () => (
-  <Box position="relative" w="75px" >
+  <Box position="relative" w="75px">
     <Box
       position="relative"
       borderRadius="0 0 50% 50%"
@@ -48,14 +48,14 @@ const LinkPost = () => {
 
     const { communityID } = router.query
 
-    if (communityID) return router.push({
-      pathname: `${communityID}/submit`,
-      query: { tabIndex }
-    })
+    if (communityID)
+      return router.push({
+        pathname: `${communityID}/submit`,
+        query: { tabIndex }
+      })
 
     toggleCommunityMenu()
   }
-
 
   return (
     <Flex
@@ -96,10 +96,12 @@ const LinkPost = () => {
         variant="iconList"
         border="unset"
         mr="1"
+        aria-label="Submit Image Button"
       >
         <IoImageOutline fontSize="20pt" />
       </Button>
-      <Button onClick={() => handleClick(2)} variant="iconList" border="unset">
+      <Button onClick={() => handleClick(2)} aria-label="Submit Link Button"
+        variant="iconList" border="unset">
         <TfiLink fontSize="15pt" />
       </Button>
     </Flex>

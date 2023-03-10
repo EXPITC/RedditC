@@ -1,7 +1,6 @@
-import { IconType } from "react-icons"
-import { AiFillHome } from "react-icons/ai"
-import { atom } from "recoil"
-
+import { IconType } from 'react-icons'
+import { AiFillHome } from 'react-icons/ai'
+import { atom } from 'recoil'
 
 export interface menuListItem {
   displayText: string
@@ -12,7 +11,7 @@ export interface menuListItem {
 }
 
 interface communityMenuState {
-  isOpen: boolean,
+  isOpen: boolean
   currentMenuItem: menuListItem
 }
 
@@ -29,11 +28,9 @@ const defaultCommunityMenuState: communityMenuState = {
   currentMenuItem: defaultMenuItem
 }
 
-
 const communityMenuState = atom<communityMenuState>({
   key: 'communityMenuState',
   default: defaultCommunityMenuState
 })
-
 
 export default communityMenuState

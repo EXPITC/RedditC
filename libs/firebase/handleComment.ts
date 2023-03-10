@@ -1,11 +1,27 @@
-import { comment } from "@/components/r/comments/comment"
-import { collection, doc, getDocs, increment, orderBy, query, Timestamp, where, writeBatch } from "firebase/firestore"
-import { firestore } from "./clientApp"
-import collections from "./firestoreCollectionsID"
-
+import { comment } from '@/components/r/comments/comment'
+import {
+  collection,
+  CollectionReference,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  increment,
+  limit,
+  orderBy,
+  query,
+  QueryFieldFilterConstraint,
+  QueryLimitConstraint,
+  QueryOrderByConstraint,
+  startAfter,
+  Timestamp,
+  where,
+  writeBatch
+} from 'firebase/firestore'
+import { firestore } from './clientApp'
+import collections from './firestoreCollectionsID'
 
 const handleComment = async (newComment: comment) => {
-
   try {
     const batch = writeBatch(firestore)
 
@@ -41,7 +57,6 @@ const handleComment = async (newComment: comment) => {
       err: 'Fail to send comment'
     }
   }
-
 }
 
 const deleteComment = async (cid: string, pid: string) => {
@@ -74,18 +89,43 @@ const deleteComment = async (cid: string, pid: string) => {
   }
 }
 
-const getComments = async (pid: string) => {
+const getComments = async (pid: string, lastCommentId?: string) => {
+  const collectionPath = collection(firestore, collections.COMMENTS.id)
+  const keyword: [
+    CollectionReference<DocumentData>,
+    QueryFieldFilterConstraint,
+    QueryOrderByConstraint,
+    QueryLimitConstraint
+  ] = [
+    collectionPath,
+    where('postId', '==', pid),
+    orderBy('createdAt', 'asc'),
+    limit(10)
+  ]
   try {
-    const collectionPath = collection(firestore, collections.COMMENTS.id)
-    const commentQuery = query(
-      collectionPath,
-      where("postId", "==", pid),
-      orderBy("createdAt", "asc")
-    )
-    const commentsDoc = await getDocs(commentQuery)
+    if (!lastCommentId) {
+      const commentQuery = query(...keyword)
+      const commentsDoc = await getDocs(commentQuery)
+
+      return {
+        data: commentsDoc.docs.map(comment => ({
+          id: comment.id,
+          ...comment.data()
+        })) as comment[],
+        err: ''
+      }
+    }
+    const lastComment = await getDoc(doc(collectionPath, lastCommentId))
+    // add last post to query
+    const commentNextQuery = query(...keyword, startAfter(lastComment))
+    // get from 10 more after last post from db
+    const nextCommentsDoc = await getDocs(commentNextQuery)
 
     return {
-      data: commentsDoc.docs.map(comment => ({ id: comment.id, ...comment.data() })) as comment[],
+      data: nextCommentsDoc.docs.map(comment => ({
+        id: comment.id,
+        ...comment.data()
+      })) as comment[],
       err: ''
     }
   } catch (e: any) {
@@ -96,7 +136,6 @@ const getComments = async (pid: string) => {
       data: null
     }
   }
-
 }
 
 export { handleComment as default, deleteComment, getComments }

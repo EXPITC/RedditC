@@ -1,12 +1,10 @@
-import { atom } from "recoil"
-import { communityData } from "./communitiesAtoms"
-
+import { atom } from 'recoil'
+import { communityData } from './communitiesAtoms'
 
 interface communityBankState {
-  topCommunity: communityData[],
+  topCommunity: communityData[]
   searchedCommunity: communityData[]
 }
-
 
 const defaultCommunityBank: communityBankState = {
   topCommunity: [],

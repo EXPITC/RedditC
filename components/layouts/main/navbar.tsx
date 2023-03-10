@@ -7,16 +7,16 @@ import RightContents from './navbar/rightContents'
 import SearchInput from './navbar/searchInput'
 
 export default function Navbar() {
-  const [user, _loading, _error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
 
   return (
     <nav>
       <Flex
         bg="white"
         h="47px"
-        p={['3px 2px', '3px 10px', '3px 15px', '3px 20px']}
+        p={['3px 2px', '3px 10px', '3px 13px']}
         align="center"
-        justifyContent="space-between"
+        justify="space-between"
       >
         <Logo />
 

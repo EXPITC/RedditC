@@ -1,14 +1,15 @@
-import { useRouter } from "next/router"
-import { useEffect } from "react"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { FaReddit } from "react-icons/fa"
-import { useRecoilState } from "recoil"
-import { communitySubsState } from "../atoms/communitiesAtoms"
-import communityMenuState, { defaultMenuItem, menuListItem } from "../atoms/communityMenuAtoms"
-import { auth } from "../firebase/clientApp"
-import { getUserCommunitySubs } from "../firebase/communityData"
-
-
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { FaReddit } from 'react-icons/fa'
+import { useRecoilState } from 'recoil'
+import { communitySubsState } from '../atoms/communitiesAtoms'
+import communityMenuState, {
+  defaultMenuItem,
+  menuListItem
+} from '../atoms/communityMenuAtoms'
+import { auth } from '../firebase/clientApp'
+import { getUserCommunitySubs } from '../firebase/communityData'
 
 const useCommunityMenu = () => {
   const router = useRouter()
@@ -17,7 +18,10 @@ const useCommunityMenu = () => {
   const [communitySubs, setCommunitySubs] = useRecoilState(communitySubsState)
   const { currentCommunity, totalSubs } = communitySubs
 
-  const toggleCommunityMenu = () => setCommunityMenu(prev => ({ ...prev, isOpen: !prev.isOpen }))
+  const toggleCommunityMenu = () =>
+    setCommunityMenu(prev => ({ ...prev, isOpen: !prev.isOpen }))
+  const handleClose = () =>
+    setCommunityMenu(prev => ({ ...prev, isOpen: false }))
 
   const onSelectMenuItem = (Menu: menuListItem) => {
     setCommunityMenu(prev => ({
@@ -31,15 +35,21 @@ const useCommunityMenu = () => {
   useEffect(() => {
     const { communityID } = router.query
 
-    if (!communityID) return setCommunityMenu(prev => ({
-      ...prev,
-      currentMenuItem: defaultMenuItem
-    }))
+    if (!communityID)
+      return setCommunityMenu(prev => ({
+        ...prev,
+        currentMenuItem: defaultMenuItem
+      }))
   }, [router.query])
 
   // for sync with current community that user visit
   useEffect(() => {
-    if (!currentCommunity.id || communityMenu.currentMenuItem.displayText === currentCommunity.communityName) return
+    if (
+      !currentCommunity.id ||
+      communityMenu.currentMenuItem.displayText ===
+        currentCommunity.communityName
+    )
+      return
 
     setCommunityMenu(prev => ({
       ...prev,
@@ -47,7 +57,7 @@ const useCommunityMenu = () => {
         displayText: currentCommunity.communityName,
         icon: FaReddit,
         link: currentCommunity.id,
-        iconColor: "brand.100",
+        iconColor: 'brand.100',
         imageUrl: currentCommunity.imageUrl
       }
     }))
@@ -57,7 +67,8 @@ const useCommunityMenu = () => {
     const subs = user ? await getUserCommunitySubs(user.uid) : null
 
     if (!subs) return
-    if (subs.length === 0) return setCommunitySubs(prev => ({ ...prev, totalSubs: 0 }))
+    if (subs.length === 0)
+      return setCommunitySubs(prev => ({ ...prev, totalSubs: 0 }))
 
     setCommunitySubs(prev => ({
       ...prev,
@@ -74,6 +85,7 @@ const useCommunityMenu = () => {
     communityMenu,
     setCommunityMenu,
     toggleCommunityMenu,
+    handleClose,
     onSelectMenuItem
   }
 }

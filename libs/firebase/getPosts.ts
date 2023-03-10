@@ -29,11 +29,11 @@ const getPosts = async (communityId: string, lastPostId?: string | null) => {
     QueryOrderByConstraint,
     QueryLimitConstraint
   ] = [
-      collectionPath,
-      where('communityId', '==', communityId),
-      orderBy('createdAt', 'desc'),
-      limit(20)
-    ]
+    collectionPath,
+    where('communityId', '==', communityId),
+    orderBy('createdAt', 'desc'),
+    limit(20)
+  ]
   const thisPostCommunity = query(
     collectionPath,
     where('communityId', '==', communityId)
@@ -78,6 +78,17 @@ const getPosts = async (communityId: string, lastPostId?: string | null) => {
       data: []
     }
   }
+}
+
+export const getTotalPost = async (communityId: string) => {
+  const collectionPath = collection(firestore, collections.POSTS.id)
+  const thisPostCommunity = query(
+    collectionPath,
+    where('communityId', '==', communityId)
+  )
+  const snapshot = await getCountFromServer(thisPostCommunity)
+
+  return snapshot.data().count
 }
 
 export default getPosts

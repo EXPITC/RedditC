@@ -21,13 +21,21 @@ type handleVoteProps = (
   userAlreadyInteracted: string | undefined | false
 ) => Promise<{ err: string; vote: number }>
 
-const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInteracted) => {
-
+const handleVote: handleVoteProps = async (
+  userId,
+  voteData,
+  n,
+  userAlreadyInteracted
+) => {
   const userVotePath = `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
   const postVotePath = `${collections.POSTS.id}`
   const userVote = doc(firestore, userVotePath, voteData.postId)
   const postVote = doc(firestore, postVotePath, voteData.postId)
-  const communityVoteDoc = doc(firestore, collections.COMMUNITIES.id, voteData.communityId.toLowerCase())
+  const communityVoteDoc = doc(
+    firestore,
+    collections.COMMUNITIES.id,
+    voteData.communityId.toLowerCase()
+  )
 
   const vote = voteData.vote * -1 + n
   // First press up = 1
@@ -47,7 +55,7 @@ const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInter
       batch.delete(userVote)
       // bring back the existency of post vote value to neutral 0
       batch.update(postVote, {
-        vote: increment(n * -1),
+        vote: increment(n * -1)
       })
     }
 
@@ -56,20 +64,22 @@ const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInter
       // Modify/set value
       batch.set(userVote, {
         ...voteData,
-        vote: n,
+        vote: n
       })
 
-      //record new intracted userId 
+      //record new intracted userId
       if (!userAlreadyInteracted) {
         // if there is not currentCommunity in state we retrive intractedUserId data from firebase
         const checkInFirestore = async () => {
           const communityData = await getDoc(communityVoteDoc)
 
-          return communityData.data()!.intractedUserId.find((prevUserId: string) => prevUserId === userId)
+          return communityData
+            .data()!
+            .intractedUserId.find((prevUserId: string) => prevUserId === userId)
         }
 
         if (userAlreadyInteracted === false)
-          // update the value userAlreadyInteracted by db data 
+          // update the value userAlreadyInteracted by db data
           userAlreadyInteracted = await checkInFirestore()
 
         if (!userAlreadyInteracted) {
@@ -80,7 +90,7 @@ const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInter
       }
 
       batch.update(postVote, {
-        vote: increment(vote),
+        vote: increment(vote)
       })
     }
     await batch.commit()
@@ -101,7 +111,10 @@ const handleVote: handleVoteProps = async (userId, voteData, n, userAlreadyInter
 
 const getUserVote = async (userId: string, postsId: string[]) => {
   try {
-    const userVotePath = collection(firestore, `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`)
+    const userVotePath = collection(
+      firestore,
+      `${collections.USERS.id}/${userId}/${collections.USERS.VOTEPOST.id}`
+    )
     const userVoteQuery = query(userVotePath, where('postId', 'in', postsId))
 
     const userVotesDoc = await getDocs(userVoteQuery)
@@ -110,15 +123,12 @@ const getUserVote = async (userId: string, postsId: string[]) => {
       err: '',
       data: userVotesDoc.docs.map(doc => doc.data()) as votePost[]
     }
-
   } catch (e: any) {
     console.error('get user vote', e.message)
     return {
       err: 'Fail to get user vote history'
     }
-
   }
-
 }
 
 const deleteVote = async (userId: string, voteId: string) => {

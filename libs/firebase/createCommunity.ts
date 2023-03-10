@@ -22,13 +22,11 @@ const createcommunity = async (
     communityCollectionID
   )
   try {
-
-
     const community = await getDoc(docRef)
 
     if (community.exists())
       return {
-        err: `sorry r/${communityName} is already taken. Try another.`,
+        err: `sorry r/${communityName} is already taken. Try another.`
       }
 
     const newCommunity = {
@@ -64,7 +62,10 @@ const createcommunity = async (
       err: '',
       data: {
         ...newCommunity,
-        createdAt: { seconds: Date.now() / 1000, nanoseconds: Date.now() / 10000 }
+        createdAt: {
+          seconds: Date.now() / 1000,
+          nanoseconds: Date.now() / 10000
+        }
       }
     }
   } catch (e: any) {

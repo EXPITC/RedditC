@@ -1,4 +1,4 @@
-import Info from '@/components/info'
+import Info from '@/components/info/info'
 import ContentLayouts from '@/components/layouts/content'
 import PostForm from '@/components/r/submit/postForm'
 import { auth } from '@/libs/firebase/clientApp'
@@ -19,7 +19,7 @@ export default function Submit() {
       </>
       <>
         <Box pt="8">
-          <Info />
+          <Info communityIdFetch={true} />
         </Box>
       </>
     </ContentLayouts>
