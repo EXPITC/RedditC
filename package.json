@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Reddit Clone",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "p": "prettier -w .",
     "lint": "next lint"
@@ -25,7 +25,8 @@
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-icons": "^4.7.1",
-    "recoil": "^0.7.6"
+    "recoil": "^0.7.6",
+    "sharp": "^0.31.3"
   },
   "devDependencies": {
     "@types/node": "^18.13.0",
