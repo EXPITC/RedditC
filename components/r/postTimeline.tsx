@@ -37,9 +37,9 @@ const PostTimeline = ({ communityId }: { communityId: string }) => {
 
   return (
     <Stack mt="10px">
-      {postStateValue.posts.map(post => (
+      {postStateValue.posts.map((post, idx) => (
         <Post
-          key={post.id}
+          key={post.id + idx + communityId}
           isUserCreator={user?.uid === post.creatorId}
           userVoteValue={
             postStateValue.userVotePost.find(i => i.postId === post.id)?.vote ||

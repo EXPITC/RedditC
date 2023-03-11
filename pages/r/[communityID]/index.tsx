@@ -48,16 +48,14 @@ export default function CommunityPage({
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     // if there any post that not match with current community request new data.
-    if (
-      postStateValue.posts.find(post => post.communityId === communityData.id)
-    )
-      return
-
-    setPostState(prev => ({
-      ...prev,
-      posts: []
-    }))
-  }, [])
+    if (postStateValue.posts.find(post => post.communityId !== communityData.id)) {
+      setPostState(prev => ({
+        ...prev,
+        totalCollections: -1,
+        posts: []
+      }))
+    }
+  }, [postStateValue.posts])
 
   useEffect(() => {
     setCommunitySubs(prev => ({
